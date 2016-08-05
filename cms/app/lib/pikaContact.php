@@ -280,6 +280,17 @@ class pikaContact extends plBase
 					}
 			
 				}
+				
+				$result = mysql_query("DESCRIBE cases child_id");
+				
+				if (mysql_num_rows($result) == 1)
+				{
+					$sql = "UPDATE cases
+						SET child_id='{$this->contact_id}'
+						WHERE child_id='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+				}
+				
 				$sql = "UPDATE conflict 
 						SET contact_id='{$this->contact_id}' 
 						WHERE contact_id='{$merge_contact->contact_id}';";
