@@ -281,6 +281,7 @@ class pikaContact extends plBase
 			
 				}
 				
+				// Begin section to handle custom fields used at a program.
 				$result = mysql_query("DESCRIBE cases child_id");
 				
 				if (mysql_num_rows($result) == 1)
@@ -290,6 +291,7 @@ class pikaContact extends plBase
 						WHERE child_id='{$merge_contact->contact_id}';";
 					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
 				}
+				// End custom fields section.
 				
 				$sql = "UPDATE conflict 
 						SET contact_id='{$this->contact_id}' 
