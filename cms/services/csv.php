@@ -88,6 +88,10 @@ fclose($output);
 
 switch ($action)
 {
+	case 'activities':
+		chunk_table('activities', 'act_id');
+		break;
+
 	case 'users':
 		sql_to_csv('SELECT * FROM ' . $action, 'password');
 		break;
