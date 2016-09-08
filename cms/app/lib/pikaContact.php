@@ -290,6 +290,21 @@ class pikaContact extends plBase
 						SET child_id='{$this->contact_id}'
 						WHERE child_id='{$merge_contact->contact_id}';";
 					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET birth_mother='{$this->contact_id}'
+						WHERE birth_mother='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET birth_father='{$this->contact_id}'
+						WHERE birth_father='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET attorney_id='{$this->contact_id}'
+						WHERE attorney_id='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
 				}
 				// End custom fields section.
 				
