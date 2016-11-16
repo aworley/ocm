@@ -25,7 +25,17 @@ function json_clean_sub($j)
     
     else 
     {
-      $j[$key] = pl_clean_form_input($value);
+      if ($key == 'ssn' && strlen($value) == 9 && is_numeric($value))
+      {
+        $j[$key] = substr($value, 0, 3) . '-' . substr($value, 3, 2) . '-' 
+          . substr($value, 5, 4);
+        $j[$key] = $value;
+      }
+      
+      else 
+      {
+        $j[$key] = pl_clean_form_input($value);
+      }
     }
   }
   
