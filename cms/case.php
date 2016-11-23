@@ -322,6 +322,8 @@ function pika_heading() {}
 
 $pk = new pikaMisc();
 $user_id = $auth_row['user_id'];
+$_SESSION['username']=$auth_row['username'];
+setcookie('username', $auth_row['username'], time() + (86400 * 30), "/"); // 86400 = 1 day
 // 2013-08-13 AMW - Removed =& for compatibility with PHP 5.3.
 $clean_case_screen = $case_row;
 $client = array();
