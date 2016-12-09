@@ -10,6 +10,7 @@ pika_init();
 
 function potential_conflicts($row, $relation_code, $description)
 {
+	$base_url = pl_settings_get('base_url');
 	$z = "<h2>Conflict Check for {$description}</h2>";
 	$row['relation_code'] = $relation_code;
 	$row['contact_id'] = '0';  // Placeholder value.
@@ -52,7 +53,7 @@ function potential_conflicts($row, $relation_code, $description)
 		$conflict_array[] = $tmp_row;
 		
 		$z .= "<p>{$tmp_row['first_name']} {$tmp_row['last_name']} was a(n) {$tmp_row['role']} on ";
-		$z .= "<a href=\"{$base_url}/case.php?case_id={{$tmp_row['case_id']}}\">";
+		$z .= "<a href=\"{$base_url}/case.php?case_id={$tmp_row['case_id']}\">";
 		$z .= "{$tmp_row['number']}</a></p>";
 	}
 	
@@ -76,7 +77,7 @@ function potential_conflicts($row, $relation_code, $description)
 			$conflict_array[] = $tmp_row;
 
 		$z .= "<p>{$tmp_row['first_name']} {$tmp_row['last_name']} was a(n) {$tmp_row['role']} on ";
-		$z .= "<a href=\"{$base_url}/case.php?case_id={{$tmp_row['case_id']}}\">";
+		$z .= "<a href=\"{$base_url}/case.php?case_id={$tmp_row['case_id']}\">";
 		$z .= "{$tmp_row['number']}</a></p>";
 		}
 	}
