@@ -20,12 +20,14 @@ FULLTEXT index feature.  The version of MariaDB that ships with CentOS 7 does
 not include InnoDB FULLTEXT.  Here are sample commands for installing version 5.6
 of MySQL (which does have this feature) on CentOS 7.
 
+~~~~
 wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
 yum localinstall mysql57-community-release-el7-9.noarch.rpm
 rm -i mysql57-community-release-el7-9.noarch.rpm
 yum-config-manager --disable mysql57-community
 yum-config-manager --enable mysql56-community
 yum install mysql-community-server
+~~~~
 
 * OCM requires the following PHP modules:  curl, DOM, JSON, mbstring, mcrypt,
 mysql, SimpleXML, SOAP, and zip.  This command will install the additional
