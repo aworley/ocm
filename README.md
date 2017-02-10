@@ -13,7 +13,19 @@ commercial hosting is available from www.pikasoftware.com.
 These instructions are for CentOS 5, 6, and 7.  Instructions for other operating
 systems are on the way!
 
-* Install Apache web server, PHP, mod_ssl, and MySQL or MariaDB.
+* Install Apache web server, PHP, and mod_ssl.
+
+* Install MySQL or MariaDB.  The version you install needs to support the InnoDB
+FULLTEXT index feature.  The version of MariaDB that ships with CentOS 7 does
+not include InnoDB FULLTEXT.  Here are sample commands for installing version 5.6
+of MySQL (which does have this feature) on CentOS 7.
+
+wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+yum localinstall mysql57-community-release-el7-9.noarch.rpm
+rm -i mysql57-community-release-el7-9.noarch.rpm
+yum-config-manager --disable mysql57-community
+yum-config-manager --enable mysql56-community
+yum install mysql-community-server
 
 * Install additional required PHP modules with the command:
 	yum install php-mysql php-cli php-xml php-mcrypt php-mbstring php-soap
