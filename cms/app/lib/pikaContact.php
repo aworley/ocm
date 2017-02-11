@@ -269,17 +269,12 @@ class pikaContact extends plBase
 								. $full_address;				
 				$this->notes .= $notes_addendum . "\n\n" . $merge_contact->notes;
 				$this->save();
-				$result = $merge_contact->getCasesDb();
-				require_once('pikaCase.php');
-				while ($row = mysql_fetch_assoc($result)) {
-					//print_r($row);
-					$case = new pikaCase($row['case_id']);
-					if($case->client_id == $merge_contact->contact_id) {
-						$case->client_id = $this->contact_id;
-						$case->save();
-					}
-			
-				}
+				
+				$clean_new_id = mysql_real_escape_string($this->contact_id);
+				$clean_old_id = mysql_real_escape_string($contact_id);
+				$sql = "UPDATE cases SET client_id={$clean_new_id} WHERE client_id="
+					. $clean_old_id;
+				$result = mysql_query($sql);
 				
 				// Begin section to handle custom fields used at a program.
 				$result = mysql_query("DESCRIBE cases child_id");
