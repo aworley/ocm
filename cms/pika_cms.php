@@ -109,7 +109,7 @@ $plSettings = pikaSettings::getInstance();
 session_set_cookie_params(0,$plSettings['base_url']);
 
 // Set this to avoid other php websites (such as SugarCRM) from invading the current session w/ serialized objects
-$session_name = 'PikaCMS' . PIKA_VERSION . PIKA_REVISION;
+$session_name = 'PikaCMS' . PIKA_VERSION . PIKA_REVISION . PIKA_PATCH_LEVEL;
 if(isset($plSettings['cookie_prefix']) && strlen($plSettings['cookie_prefix']))
 { // Session Name only accepts letters and numbers so remove all non letters and/or numbers
 	$session_name = preg_replace('/[^a-z0-9]/i','',$plSettings['cookie_prefix']);
