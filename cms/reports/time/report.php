@@ -44,7 +44,7 @@ $user_id = pl_grab_post('user_id');
 $pba_id = pl_grab_post('pba_id');
 $date_start = pl_grab_post('date_start');
 $date_end = pl_grab_post('date_end');
-
+$funding = pl_grab_post(‘funding’); 
 $report_format = pl_grab_post('report_format');
 $show_sql = pl_grab_post('show_sql');
 $sort_order = pl_grab_post('sort_order');
