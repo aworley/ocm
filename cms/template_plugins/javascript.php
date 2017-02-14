@@ -37,6 +37,12 @@ function javascript($file_name = null, $field_value = null, $menu_array = null, 
 	} elseif (file_exists(getcwd() . "/js/{$file_name}")) {
 		$js_file_string = file_get_contents(getcwd() . "/js/{$file_name}");
 	}
+	
+	else 
+	{
+		$js_file_string = htmlspecialchars($file_name) . " not found";
+	}
+	
 	// If the js file needs to be templated (usually for base_url) then run another template object
 	if ($temp_args['parse'] === true) {
 		$javascript_template = new pikaTempLib($js_file_string,$field_value);
