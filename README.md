@@ -32,7 +32,7 @@ yum install mysql-community-server
 * OCM requires the following PHP modules:  curl, DOM, JSON, mbstring, mcrypt,
 mysql, SimpleXML, SOAP, and zip.  This command will install the additional
 required PHP modules on CentOS 7:
-	yum install php-mysql php-cli php-xml php-mcrypt php-mbstring php-soap
+	yum install php-mysqlnd php-cli php-xml php-mcrypt php-mbstring php-soap
 
 * Create a new MySQL database named 'cms'.
 
