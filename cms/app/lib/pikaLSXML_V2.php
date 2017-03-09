@@ -328,7 +328,8 @@ class pikaLSXML
 		
 		foreach ($tmp1 as $tmp2)
 		{
-			if ($tmp2->getNodePath()  == '/ClientIntake/CaseInformation/Custom')
+			if ($tmp2->getNodePath()  == '/ClientIntake/CaseInformation/Custom'
+					|| $tmp2->getNodePath() == '/ClientIntake/Eligibility/Custom')
 			{
 				foreach ($tmp2->childNodes as $tmp3) 
 				{
