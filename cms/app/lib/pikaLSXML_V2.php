@@ -323,7 +323,23 @@ class pikaLSXML
 			$fieldvalue = $this->getXMLValue($field);
 			$case_row[$fieldname] = $fieldvalue;
 		}
-
+		
+		$tmp1 = $this->xml_obj->getElementsByTagName('Custom');
+		
+		foreach ($tmp1 as $tmp2)
+		{
+			if ($tmp2->getNodePath()  == '/ClientIntake/CaseInformation/Custom')
+			{
+				foreach ($tmp2->childNodes as $tmp3) 
+				{
+					if ($tmp3->nodeName != '#text')
+					{
+						$case_row[$tmp3->nodeName] = $tmp3->nodeValue;
+					}
+				}
+			}
+		}
+		
 		// Eligibility
 		$case_row['adults'] = $this->getXMLValue('/ClientIntake/Eligibility/Adults');
 		$case_row['children'] = $this->getXMLValue('/ClientIntake/Eligibility/Children');
@@ -596,6 +612,26 @@ class pikaLSXML
 					$middle_name = $this->getXMLValue($alias . '/Middle_Name');
 					$last_name = $this->getXMLValue($alias . '/Last_Name');
 					$contact_row['aliases'][] = array('first_name' => $first_name, 'middle_name' => $middle_name, 'last_name' => $last_name);
+				}
+			}
+			
+			// See if this contact has any custom fields.
+			$tmp0 = explode('/', $contact);
+			$this_contact_node_name = array_pop($tmp0);
+			
+			$tmp1 = $this->xml_obj->getElementsByTagName('Custom');
+			
+			foreach ($tmp1 as $tmp2)
+			{
+				if ($tmp2->getNodePath()  == '/ClientIntake/Contacts/' . $this_contact_node_name . '/Custom')
+				{
+					foreach ($tmp2->childNodes as $tmp3) 
+					{
+						if ($tmp3->nodeName != '#text')
+						{
+							$contact_row[$tmp3->nodeName] = $tmp3->nodeValue;
+						}
+					}
 				}
 			}
 			
