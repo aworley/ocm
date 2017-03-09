@@ -317,13 +317,6 @@ class pikaLSXML
 		$case_row['outcome'] = $this->lookupXMLValue('outcome',$case_row['outcome']);
 		
 		// Custom
-		$custom_fields = $this->getXMLValue('/ClientIntake/CaseInformation/Custom');
-		foreach ($custom_fields as $field) {
-			$fieldname = $this->getXMLValue($field . "/@FieldName");
-			$fieldvalue = $this->getXMLValue($field);
-			$case_row[$fieldname] = $fieldvalue;
-		}
-		
 		$tmp1 = $this->xml_obj->getElementsByTagName('Custom');
 		
 		foreach ($tmp1 as $tmp2)
@@ -482,15 +475,7 @@ class pikaLSXML
 		}
 		
 
-		// Custom
-		$custom_fields = $this->getXMLValue('/ClientIntake/Eligibility/Custom');
-		if(is_array($custom_fields)) {
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$case_row[$fieldname] = $fieldvalue;
-			}
-		}
+		// Custom Eligibility elements are handled earlier.
 		// print_r($case_row);
 		
 
@@ -505,13 +490,8 @@ class pikaLSXML
 			$activity_row['summary'] = $note_summary;
 			$activity_row['notes'] = $note_text;
 			$activity_row['act_date'] = $note_date;
-
-			$custom_fields = $this->getXMLValue($note . "/Custom");
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$activity_row[$fieldname] = $fieldvalue;
-			}
+			
+			// Custom Notes elements are not supported.
 			
 			$activities_array[] = $activity_row;
 			//print_r($activity_row);
@@ -636,12 +616,6 @@ class pikaLSXML
 				}
 			}
 			
-			$custom_fields = $this->getXMLValue($contact . "/Custom");
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$contact_row[$fieldname] = $fieldvalue;
-			}
 			$contacts_array[] = $contact_row;
 			
 			//print_r($contact_row);
