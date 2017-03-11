@@ -1,7 +1,7 @@
 <?php
 // 11-20-2013 - caw - LSAC project, new case tab
 $a = array();
-$a['screen'] = 'lsca';
+$a['screen'] = 'lsac';
 
 $a = array_merge($case_row,$a);
 

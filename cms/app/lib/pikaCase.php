@@ -530,7 +530,6 @@ class pikaCase extends plBase
 		{
 			// if this is unset, the case number won't generate properly
 			$dup->setValue('office', $this->getValue('office'));
-			$dup->setValue('number', 'auto');
 		}
 		
 		// now take care of setting up the new conflict record for the primary client

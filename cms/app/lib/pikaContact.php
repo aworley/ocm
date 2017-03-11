@@ -269,17 +269,40 @@ class pikaContact extends plBase
 								. $full_address;				
 				$this->notes .= $notes_addendum . "\n\n" . $merge_contact->notes;
 				$this->save();
-				$result = $merge_contact->getCasesDb();
-				require_once('pikaCase.php');
-				while ($row = mysql_fetch_assoc($result)) {
-					//print_r($row);
-					$case = new pikaCase($row['case_id']);
-					if($case->client_id == $merge_contact->contact_id) {
-						$case->client_id = $this->contact_id;
-						$case->save();
-					}
-			
+				
+				$clean_new_id = mysql_real_escape_string($this->contact_id);
+				$clean_old_id = mysql_real_escape_string($contact_id);
+				$sql = "UPDATE cases SET client_id={$clean_new_id} WHERE client_id="
+					. $clean_old_id;
+				$result = mysql_query($sql);
+				
+				// Begin section to handle custom fields used at a program.
+				$result = mysql_query("DESCRIBE cases child_id");
+				
+				if (mysql_num_rows($result) == 1)
+				{
+					$sql = "UPDATE cases
+						SET child_id='{$this->contact_id}'
+						WHERE child_id='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET birth_mother='{$this->contact_id}'
+						WHERE birth_mother='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET birth_father='{$this->contact_id}'
+						WHERE birth_father='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					
+					$sql = "UPDATE contacts
+						SET attorney_id='{$this->contact_id}'
+						WHERE attorney_id='{$merge_contact->contact_id}';";
+					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
 				}
+				// End custom fields section.
+				
 				$sql = "UPDATE conflict 
 						SET contact_id='{$this->contact_id}' 
 						WHERE contact_id='{$merge_contact->contact_id}';";

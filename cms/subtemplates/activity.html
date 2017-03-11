@@ -15,7 +15,7 @@
 		%%[deleteActivity]%%
 		</td>
 	    <td class="de">
-	    
+
 	    Hours:<br/>
 		%%[hours,input_text]%%<br/>
 		Date:<br/>
@@ -26,10 +26,10 @@
 		%%[category,category]%%<br/>
 		%%[owner_menu]%%
 		Funding Source:<br/>
-		%%[funding,funding]%%<br/>          
+		%%[funding,funding]%%<br/>
 		</td>
 	</tr>
-	
+
 </table>
 <input type="hidden" name="screen" value="act"/>
 <input type="hidden" name="act_url" value="%%[act_url]%%"/>
@@ -50,8 +50,8 @@
 
 <script language="JavaScript" type="text/javascript">
 <!--
-document.ea.summary.focus();
-//--> 
+document.ws.summary.focus();
+//-->
 </script>
 
 %%[textFormat.js,javascript]%%
@@ -63,7 +63,7 @@ document.ea.summary.focus();
 
 
 %%[begin:C]%%
-<form action="%%[base_url]%%/ops/update_activity.php" name="ea" method=POST>
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method=POST>
 <table>
 	<tr valign="top">
 		<td>
@@ -76,10 +76,10 @@ document.ea.summary.focus();
 		%%[textFormat]%%
 		&nbsp;&nbsp;
 		%%[deleteActivity]%%
-		
+
 		</td>
 		<td class="de">
-		
+
 		Date: <br/>
 		%%[act_date,input_date_selector]%%<br/>
 		Start Time:<br/>
@@ -93,7 +93,7 @@ document.ea.summary.focus();
 		%%[new_case_menu]%%<br/>
 		Funding Source:<br/>
 		%%[funding,funding]%%<br/>
-    	
+
 		</td>
 	</tr>
 	<tr>
@@ -114,8 +114,8 @@ document.ea.summary.focus();
 
 <script language="JavaScript" type="text/javascript">
 <!--
-document.ea.summary.focus();
-//--> 
+document.ws.summary.focus();
+//-->
 </script>
 
 %%[textFormat.js,javascript]%%
@@ -127,7 +127,7 @@ document.ea.summary.focus();
 
 %%[begin:K]%%
 
-<form action="%%[base_url]%%/ops/update_activity.php" name="ea" method="POST">
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method="POST">
 <table>
 	<tr valign="top">
 		<td>
@@ -135,15 +135,15 @@ document.ea.summary.focus();
 		%%[summary,input_textarea,rows=1,cols=44,class=notes]%%<br/>
 		Notes (private):<br/>
 		%%[notes,input_textarea,rows=11,cols=44,class=notes]%%<br/>
-		<img src="%%[base_url]%%/images/point.gif"> 
+		<img src="%%[base_url]%%/images/point.gif">
 		<a href="javascript:toggleBox('demodiv',1);">Text Highlighting</a>
 		%%[textFormat]%%
 		&nbsp;&nbsp;
 		%%[deleteActivity]%%
-		
+
 		</td>
 		<td class="de">
-		
+
 		Date: <br/>
 		%%[act_date,input_date_selector]%%<br/>
 		Start Time:<br/>
@@ -178,8 +178,8 @@ document.ea.summary.focus();
 
 <script language="JavaScript" type="text/javascript">
 <!--
-document.ea.summary.focus();
-//--> 
+document.ws.summary.focus();
+//-->
 </script>
 
 
@@ -194,9 +194,9 @@ document.ea.summary.focus();
 
 
 %%[begin:L]%%
-<form action="%%[base_url]%%/ops/update_activity.php" name="ea" method="POST">
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method="POST">
 <table>
-	<tr valign="top"> 
+	<tr valign="top">
     	<td class="de" nowrap>
 		<strong>Persons Helped</strong><br/>
 		Measured:<br/>
@@ -206,7 +206,7 @@ document.ea.summary.focus();
 		Service Provided:<br/>
         %%[om_code,lsc_other_services]%%<br/>
 		</td>
-		<td> 
+		<td>
 		Summary (public):<br/>
 		%%[summary,input_textarea,cols=35,rows=1,class=notes]%%<br/>
       	Estimate Narrative:<br/>
@@ -251,8 +251,8 @@ document.ea.summary.focus();
 
 <script language="JavaScript" type="text/javascript">
 <!--
-document.ea.summary.focus();
-//--> 
+document.ws.summary.focus();
+//-->
 </script>
 
 %%[ajax_init.js,javascript]%%
@@ -262,7 +262,7 @@ document.ea.summary.focus();
 %%[end:L]%%
 
 %%[begin:T]%%
-<form action="%%[base_url]%%/ops/update_activity.php" name="ea" method="POST">
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method="POST">
 <table>
 	<tr valign="top">
 		<td>
@@ -277,7 +277,7 @@ document.ea.summary.focus();
 		%%[deleteActivity]%%
 		</td>
 	    <td class="de">
-	    
+
 	    Hours:<br/>
 		%%[hours,input_text]%%<br/>
 		Date:<br/>
@@ -288,9 +288,9 @@ document.ea.summary.focus();
 		%%[category,category]%%<br/>
 		%%[owner_menu]%%
 		Case: %%[number]%%<br/>
-		%%[new_case_menu]%%<br/>      
+		%%[new_case_menu]%%<br/>
 		Funding Source:<br/>
-		%%[funding,funding]%%<br/>          
+		%%[funding,funding]%%<br/>
 		</td>
 	</tr>
 	<tr>
@@ -311,8 +311,8 @@ document.ea.summary.focus();
 
 <script language="JavaScript" type="text/javascript">
 <!--
-document.ea.summary.focus();
-//--> 
+document.ws.summary.focus();
+//-->
 </script>
 
 %%[textFormat.js,javascript]%%
@@ -353,8 +353,6 @@ document.ea.summary.focus();
 	%%[act_url,input_hidden]%%
 	%%[act_id,input_hidden]%%
 	%%[act_type,input_hidden]%%
-	<input type="submit" name="cancel" value="Cancel" tabindex="1" class="save" />		
+	<input type="submit" name="cancel" value="Cancel" tabindex="1" class="save" />
 </form>
 %%[end:access_denied]%%
-
-

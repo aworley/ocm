@@ -3,26 +3,42 @@
 ### What is OCM? ###
 
 Open Case Management is a case management system featuring a browser-based user
-interface.  It is user friendly and tailored to meet the specific needs of the 
+interface.  It is user friendly and tailored to meet the specific needs of the
 not-for-profit legal services program.  It is freely available under the GPL v2
-open source license.  For programs that don't wish to run their own server, 
+open source license.  For programs that don't wish to run their own server,
 commercial hosting is available from www.pikasoftware.com.
 
 ### Installing OCM ###
 
-These instructions are for CentOS 5, 6, and 7.  Instructions for other operating 
+These instructions are for CentOS 5, 6, and 7.  Instructions for other operating
 systems are on the way!
 
-* Install Apache web server, PHP, mod_ssl, and MySQL or MariaDB.
+* Install Apache web server, PHP, and mod_ssl.
 
-* Install additional required PHP modules with the command:
-	yum install php-mysql php-cli php-xml php-mcrypt php-mbstring php-soap
+* Install MySQL or MariaDB.  The version you install needs to support the InnoDB
+FULLTEXT index feature.  The version of MariaDB that ships with CentOS 7 does
+not include InnoDB FULLTEXT.  Here are sample commands for installing version 5.6
+of MySQL (which does have this feature) on CentOS 7.
+
+~~~~
+wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+yum localinstall mysql57-community-release-el7-9.noarch.rpm
+rm -i mysql57-community-release-el7-9.noarch.rpm
+yum-config-manager --disable mysql57-community
+yum-config-manager --enable mysql56-community
+yum install mysql-community-server
+~~~~
+
+* OCM requires the following PHP modules:  curl, DOM, JSON, mbstring, mcrypt,
+mysql, SimpleXML, SOAP, and zip.  This command will install the additional
+required PHP modules on CentOS 7:
+	yum install php-mysqlnd php-cli php-xml php-mcrypt php-mbstring php-soap
 
 * Create a new MySQL database named 'cms'.
 
 * Download the OCM software from https://github.com/aworley/ocm
 
-* Move the cms directory to /var/www/html/cms and the cms-custom directory to 
+* Move the cms directory to /var/www/html/cms and the cms-custom directory to
 /var/www/html/cms-custom
 
 * Create a CMS database with the command:
@@ -38,7 +54,7 @@ MySQL username and password.
 * Set a new Pika CMS account by running this statement in MySQL:
 	use cms; update users set username='my.username', password=MD5('my.password');
 It's a good idea to replace my.username and my.password with more secure values.
-The insecure md5 password will be replaced by a bcrypt value the first time you 
+The insecure md5 password will be replaced by a bcrypt value the first time you
 log in, as long as the server is running PHP 5.3.3 or higher.
 
 * Optionally, copy the file httpd-config/ocm.conf to /etc/httpd/conf.d.  This
@@ -49,5 +65,5 @@ in your conf.d/ssl.conf file, then uncommented, for it to take effect.
 * If you have made httpd configuration changes in the previous step, restart
 httpd and apply the new settings with the command "service httpd graceful".
 
-* The system is now ready to use.  You can log in and set up additional user 
+* The system is now ready to use.  You can log in and set up additional user
 accounts for everyone who needs access to the system.

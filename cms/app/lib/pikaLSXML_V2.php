@@ -317,13 +317,23 @@ class pikaLSXML
 		$case_row['outcome'] = $this->lookupXMLValue('outcome',$case_row['outcome']);
 		
 		// Custom
-		$custom_fields = $this->getXMLValue('/ClientIntake/CaseInformation/Custom');
-		foreach ($custom_fields as $field) {
-			$fieldname = $this->getXMLValue($field . "/@FieldName");
-			$fieldvalue = $this->getXMLValue($field);
-			$case_row[$fieldname] = $fieldvalue;
+		$tmp1 = $this->xml_obj->getElementsByTagName('Custom');
+		
+		foreach ($tmp1 as $tmp2)
+		{
+			if ($tmp2->getNodePath()  == '/ClientIntake/CaseInformation/Custom'
+					|| $tmp2->getNodePath() == '/ClientIntake/Eligibility/Custom')
+			{
+				foreach ($tmp2->childNodes as $tmp3) 
+				{
+					if ($tmp3->nodeName != '#text')
+					{
+						$case_row[$tmp3->nodeName] = $tmp3->nodeValue;
+					}
+				}
+			}
 		}
-
+		
 		// Eligibility
 		$case_row['adults'] = $this->getXMLValue('/ClientIntake/Eligibility/Adults');
 		$case_row['children'] = $this->getXMLValue('/ClientIntake/Eligibility/Children');
@@ -465,15 +475,7 @@ class pikaLSXML
 		}
 		
 
-		// Custom
-		$custom_fields = $this->getXMLValue('/ClientIntake/Eligibility/Custom');
-		if(is_array($custom_fields)) {
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$case_row[$fieldname] = $fieldvalue;
-			}
-		}
+		// Custom Eligibility elements are handled earlier.
 		// print_r($case_row);
 		
 
@@ -488,13 +490,8 @@ class pikaLSXML
 			$activity_row['summary'] = $note_summary;
 			$activity_row['notes'] = $note_text;
 			$activity_row['act_date'] = $note_date;
-
-			$custom_fields = $this->getXMLValue($note . "/Custom");
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$activity_row[$fieldname] = $fieldvalue;
-			}
+			
+			// Custom Notes elements are not supported.
 			
 			$activities_array[] = $activity_row;
 			//print_r($activity_row);
@@ -599,12 +596,26 @@ class pikaLSXML
 				}
 			}
 			
-			$custom_fields = $this->getXMLValue($contact . "/Custom");
-			foreach ($custom_fields as $field) {
-				$fieldname = $this->getXMLValue($field . "/@FieldName");
-				$fieldvalue = $this->getXMLValue($field);
-				$contact_row[$fieldname] = $fieldvalue;
+			// See if this contact has any custom fields.
+			$tmp0 = explode('/', $contact);
+			$this_contact_node_name = array_pop($tmp0);
+			
+			$tmp1 = $this->xml_obj->getElementsByTagName('Custom');
+			
+			foreach ($tmp1 as $tmp2)
+			{
+				if ($tmp2->getNodePath()  == '/ClientIntake/Contacts/' . $this_contact_node_name . '/Custom')
+				{
+					foreach ($tmp2->childNodes as $tmp3) 
+					{
+						if ($tmp3->nodeName != '#text')
+						{
+							$contact_row[$tmp3->nodeName] = $tmp3->nodeValue;
+						}
+					}
+				}
 			}
+			
 			$contacts_array[] = $contact_row;
 			
 			//print_r($contact_row);

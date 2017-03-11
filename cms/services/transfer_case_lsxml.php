@@ -27,6 +27,7 @@ $case = new pikaCase($case_id);
 $case->intake_user_id = $auth_row['user_id'];
 $case->save();
 
+echo "[{$case_id}] ";
 print_r($case);
 
 exit();
