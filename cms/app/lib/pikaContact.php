@@ -156,8 +156,8 @@ class pikaContact extends plBase
 		$first = $this->firstNameOnly($this->first_name);
 		$last = $this->last_name;
 		
-		$this->mp_first = metaphone($first);
-		$this->mp_last = metaphone($last);
+		$this->mp_first = metaphone($first, 8);
+		$this->mp_last = metaphone($last, 8);
 	}
 		
 	public function capitolizeAddress()
