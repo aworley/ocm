@@ -77,8 +77,12 @@ class pikaAlias extends plBase
 		
 		$this->mp_first = metaphone($first);
 		$this->mp_last = metaphone($last);
-		$this->keywords = pl_keywords_build($this->first_name, $this->middle_name,
-				$this->last_name, $this->extra_name);
+		
+		if (pl_mysql_column_exists('aliases', 'keywords'))
+		{
+			$this->keywords = pl_keywords_build($this->first_name, $this->middle_name,
+					$this->last_name, $this->extra_name);
+		}
 	}
 }
 

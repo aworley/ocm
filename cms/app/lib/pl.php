@@ -1467,6 +1467,22 @@ function pl_menu_set_temp($menu_name, $menu_array)
 
 // MYSQL DATABASE UTILITY FUNCTIONS
 
+function pl_mysql_column_exists($table, $column)
+{
+	$clean_table = mysql_real_escape_string($clean_table);
+	$clean_column = mysql_real_escape_string($clean_column);
+	
+	$result = mysql_fetch_assoc("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	
+	if (mysql_num_rows($result) == 1)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+
 function pl_mysql_init()
 {
 	/*	Don't trigger any errors if the connection fails, just return false

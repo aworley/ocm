@@ -101,12 +101,17 @@ switch ($action) {
 		while ($row = mysql_fetch_assoc($result)) 
 		{
 						$x = new pikaAlias($row['alias_id']);
-						$old_keywords = $x->keywords;
+
 						$x->genMetaphone();
 						
-						if ($old_keywords != $x->keywords)
+						if (pl_mysql_column_exists('aliases', 'keywords'))
 						{
-							mysql_query("UPDATE aliases SET keywords = '" . mysql_real_escape_string($x->keywords) . "' WHERE alias_id = '{$row['alias_id']}'");
+							$old_keywords = $x->keywords;
+							
+							if ($old_keywords != $x->keywords)
+							{
+								mysql_query("UPDATE aliases SET keywords = '" . mysql_real_escape_string($x->keywords) . "' WHERE alias_id = '{$row['alias_id']}'");
+							}
 						}
 						
 						//$x->save();
@@ -185,6 +190,12 @@ switch ($action) {
 		{
 			$disabled = ' disabled';
 			$not_available = '<p>The SSN Truncate function is not available because this database does not have a full length, 11-character SSN field.</p>';
+		}
+		
+		if (!pl_mysql_column_exists('aliases', 'keywords'))
+		{
+			$disabled = ' disabled';
+			$not_available = '<p>The SSN Truncate function is not available because this database does not have the weighted name search installed.</p>';
 		}
 		
 		$main_html['content'] .= '<form action="' . $base_url . '/system-maint.php" method="POST">
