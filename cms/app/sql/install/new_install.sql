@@ -51,8 +51,7 @@ CREATE TABLE `aliases` (
   `extra_name` char(20) default NULL,
   `mp_first` char(8) default NULL,
   `mp_last` char(8) default NULL,
-  `ssn` char(11) default NULL,
-  `keywords` text,
+  `ssn` char(11) default NULL
   PRIMARY KEY  (`alias_id`),
   KEY `first_name` (`first_name`),
   KEY `middle_name` (`middle_name`),
@@ -63,8 +62,7 @@ CREATE TABLE `aliases` (
   KEY `mp_last` (`mp_last`),
   KEY `sorting` (`last_name`,`first_name`,`extra_name`,`middle_name`),
   KEY `last_name` (`last_name`),
-  KEY `test` (`primary_name`,`contact_id`,`mp_first`,`mp_last`,`ssn`),
-  FULLTEXT KEY `keywords` (`keywords`)
+  KEY `test` (`primary_name`,`contact_id`,`mp_first`,`mp_last`,`ssn`)
 ) ENGINE = INNODB;
 
 -- 
