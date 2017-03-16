@@ -1469,8 +1469,8 @@ function pl_menu_set_temp($menu_name, $menu_array)
 
 function pl_mysql_column_exists($table, $column)
 {
-	$clean_table = mysql_real_escape_string($clean_table);
-	$clean_column = mysql_real_escape_string($clean_column);
+	$clean_table = mysql_real_escape_string($table);
+	$clean_column = mysql_real_escape_string($column);
 	
 	$result = mysql_fetch_assoc("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
 	
