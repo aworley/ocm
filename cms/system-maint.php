@@ -108,8 +108,7 @@ switch ($action) {
 		
 		$sql = "SELECT contact_id FROM contacts";
 		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . mysql_error());
-		$a['num_found'] = mysql_num_rows($result);
-		$a['num_updated'] = 0;
+		$a['num_found'] += mysql_num_rows($result);
 		
 		while ($row = mysql_fetch_assoc($result)) 
 		{
