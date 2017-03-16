@@ -101,20 +101,8 @@ switch ($action) {
 		while ($row = mysql_fetch_assoc($result)) 
 		{
 						$x = new pikaAlias($row['alias_id']);
-
 						$x->genMetaphone();
-						
-						if (pl_mysql_column_exists('aliases', 'keywords'))
-						{
-							$old_keywords = $x->keywords;
-							
-							if ($old_keywords != $x->keywords)
-							{
-								mysql_query("UPDATE aliases SET keywords = '" . mysql_real_escape_string($x->keywords) . "' WHERE alias_id = '{$row['alias_id']}'");
-							}
-						}
-						
-						//$x->save();
+						$x->save();
 						$a['num_updated']++;
 		}
 		
@@ -125,12 +113,10 @@ switch ($action) {
 		
 		while ($row = mysql_fetch_assoc($result)) 
 		{
-			/*
 						$x = new pikaContact($row['contact_id']);
 						$x->genMetaphone();
 						$x->save();
 						$a['num_updated']++;
-						*/
 		}
 		
 		$a['duration'] = time() - $start_time;
