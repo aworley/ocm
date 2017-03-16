@@ -1472,7 +1472,7 @@ function pl_mysql_column_exists($table, $column)
 	$clean_table = mysql_real_escape_string($table);
 	$clean_column = mysql_real_escape_string($column);
 	
-	$result = mysql_fetch_assoc("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
 	
 	if (mysql_num_rows($result) == 1)
 	{
