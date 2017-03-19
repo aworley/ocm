@@ -478,7 +478,83 @@ class pikaMisc
 	/*	Search contacts and aliases for phonetic matches (using metaphone).
 	Ignore exact matches, these are handled by getContacts().
 	*/
-	public static function getContactsPhonetically($last_name, $first_name = null, 
+	public static function getContactsPhonetically($last_name, $first_name = '')
+	{
+		/*
+		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS contact_cases
+				(INDEX contact_id (contact_id))
+				SELECT	MAX(conflict_id), 
+						conflict.contact_id, 
+						relation_code, 
+						conflict.case_id, 
+						number, 
+						open_date 
+				FROM conflict 
+				LEFT JOIN cases ON conflict.case_id = cases.case_id 
+				WHERE 0
+				GROUP BY conflict.contact_id";
+		mysql_query($sql) or trigger_error('');
+		*/
+
+		$mp_last = metaphone($last_name);
+		$mp_first = metaphone(pikaMisc::firstNameOnly($first_name));
+
+		if (strlen($mp_last) > 1)
+		{
+			// metaphone fields are only 8 chars in size
+			$mp_first = substr($mp_first, 0, 8);
+			$mp_last = substr($mp_last, 0, 8);
+
+			$match_first = 'mp_first';
+			$match_last = 'mp_last';
+		}
+
+		else
+		{
+			// just use the entire name if $mp_last is extremely small
+			$mp_last = $last_name;
+			$mp_first = $first_name;
+
+			$match_first = 'first_name';
+			$match_last = 'last_name';
+		}
+
+		$clean_mp_first = mysql_real_escape_string($mp_first);
+		$clean_mp_last = mysql_real_escape_string($mp_last);
+
+		/*	Organizations will only have a $last_name, which makes them a
+		special case.
+		*/
+
+		// If $mp_last has a trailing wild card, it will generate too many false hits
+		if (!$mp_first && $mp_last)
+		{
+			$sql = "SELECT contacts.*
+				    FROM aliases LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id
+				    WHERE aliases.{$match_last} LIKE '{$clean_mp_last}' 
+				    ORDER BY aliases.last_name, aliases.first_name, aliases.extra_name, aliases.middle_name";
+		}
+
+		else if ($mp_last)
+		{
+			$sql = "SELECT contacts.*
+				    FROM aliases LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id
+				    WHERE (aliases.{$match_last} LIKE '{$clean_mp_last}' 
+				    AND aliases.{$match_first} LIKE '{$clean_mp_first}')
+				    ORDER BY aliases.last_name, aliases.first_name, aliases.extra_name, aliases.middle_name";
+		}
+
+		else
+		{
+			trigger_error('Missing last name - cannot search');
+		}
+		
+		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		return $result;
+	}
+
+
+	public static function getContactsWeighted($last_name, $first_name = null, 
 			$middle_name = null, $extra_name = null, $birth_date = null, $ssn = null)
 	{
 		if (strlen($last_name) == 0)
@@ -1098,10 +1174,19 @@ class pikaMisc
 			// PHONETIC MATCHES TABLE
 			$phonetic_table = new plFlexList();
 			$phonetic_table->template_file = $template_file;
-
-			$result = pikaMisc::getContactsPhonetically($filter['last_name'], 
-					$filter['first_name'], $filter['middle_name'], $filter['extra_name'],
-					$filter['birth_date'], $filter['ssn']);
+			
+			if (pl_mysql_column_exists('aliases', 'keywords'))
+			{
+				$result = pikaMisc::getContactsWeighted($filter['last_name'], 
+						$filter['first_name'], $filter['middle_name'], $filter['extra_name'],
+						$filter['birth_date'], $filter['ssn']);
+			}
+			
+			else 
+			{
+				$result = pikaMisc::getContactsPhonetically($filter['last_name'], 
+						$filter['first_name']);
+			}
 
 			$i = 1;
 			$matches_found = 0;
@@ -1110,41 +1195,44 @@ class pikaMisc
 			
 			while ($row = mysql_fetch_assoc($result))
 			{
-				if (null === $high_score)
+				if (pl_mysql_column_exists('aliases', 'keywords'))
 				{
-					$high_score = $row['score'];
-					$cutoff_score = $high_score / 2;
-				}
-				
-				else 
-				{
-					if ($row['score'] < $cutoff_score)
+					if (null === $high_score)
 					{
-						if ($matches_found < 10)
+						$high_score = $row['score'];
+						$cutoff_score = $high_score / 2;
+					}
+					
+					else 
+					{
+						if ($row['score'] < $cutoff_score)
 						{
-							$cutoff_score = $row['score'] - 1;
-						}
-						
-						else
-						{
-							break;
+							if ($matches_found < 10)
+							{
+								$cutoff_score = $row['score'] - 1;
+							}
+							
+							else
+							{
+								break;
+							}
 						}
 					}
-				}
-				
-				if (($row['score'] / $high_score) > 0.9)
-				{
-					$row['search_rank'] = 'search_rank_likely';
-				}
-				
-				else if (($row['score'] / $high_score) > 0.8 || $row['score'] > 30)
-				{
-					$row['search_rank'] = 'search_rank_extra';
-				}
-				
-				else
-				{
-					$row['search_rank'] = '';
+					
+					if (($row['score'] / $high_score) > 0.9)
+					{
+						$row['search_rank'] = 'search_rank_likely';
+					}
+					
+					else if (($row['score'] / $high_score) > 0.8 || $row['score'] > 30)
+					{
+						$row['search_rank'] = 'search_rank_extra';
+					}
+					
+					else
+					{
+						$row['search_rank'] = '';
+					}
 				}
 				
 				$row['row_class'] = $i;
@@ -1167,12 +1255,15 @@ class pikaMisc
 				$row['relation_code'] = $relation_code;
 				$row['screen'] = $screen;
 				
-				if ($row['first_name'] != $row['a_first_name'] ||
-						$row['middle_name'] != $row['a_middle_name'] ||
-						$row['last_name'] != $row['a_last_name'] ||
-						$row['extra_name'] != $row['a_extra_name'])
+				if (pl_mysql_column_exists('aliases', 'keywords'))
 				{
-					$row['client_name'] .= "(or {$row['a_first_name']} {$row['a_middle_name']} {$row['a_last_name']} {$row['a_extra_name']})";
+					if ($row['first_name'] != $row['a_first_name'] ||
+							$row['middle_name'] != $row['a_middle_name'] ||
+							$row['last_name'] != $row['a_last_name'] ||
+							$row['extra_name'] != $row['a_extra_name'])
+					{
+						$row['client_name'] .= "(or {$row['a_first_name']} {$row['a_middle_name']} {$row['a_last_name']} {$row['a_extra_name']})";
+					}
 				}
 				
 				$phonetic_table->addRow($row);
