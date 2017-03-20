@@ -9,6 +9,10 @@ require_once ('pika-danio.php');
 pika_init();
 require_once('pikaTempLib.php');
 require_once('pikaUser.php');
+if (PHP_VERSION_ID >= 50303)
+{
+	require_once('password_hash_compat.php');
+}
 
 $main_html = $html = array();
 
@@ -55,7 +59,7 @@ if($action == 'update')
 		$html['flags'] .= pikaTempLib::plugin('red_flag','red_flag',"Error: New password cannot be blank");
 		$is_authorized = false;
 	}
-	elseif (md5($oldpass) != $user->password)
+	elseif ((md5($oldpass) != $user->password) && !(password_verify($oldpass, $user->password)))
 	{
 		$html['flags'] .= pikaTempLib::plugin('red_flag','red_flag',"Error: Old Password incorrect");
 		$is_authorized = false;
