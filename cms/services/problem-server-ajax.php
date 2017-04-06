@@ -30,9 +30,9 @@ if (strlen($problem) == 2)
 	while ($row = mysql_fetch_assoc($result)) {
 		$problem_node = $doc->createElement('problem');
 		$problem_node = $problem_xml->appendChild($problem_node);
-			$node = $doc->createElement('value',$row['value']);
+			$node = $doc->createElement('value', pl_clean_html($row['value']));
 			$node = $problem_node->appendChild($node);
-			$node = $doc->createElement('label',$row['label']);
+			$node = $doc->createElement('label', pl_clean_html($row['label']));
 			$node = $problem_node->appendChild($node);
 			
 	}
