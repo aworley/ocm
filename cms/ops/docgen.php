@@ -10,9 +10,6 @@ other information into a specified template file.  Template files are usually in
 or any plain text format.
 */
 
-/* Support for XFDF was underwritten by the Michigan State Bar.
-*/
-
 define('PIKA_NO_COMPRESSION', 1);
 
 /* unlike some scripts, date input variables aren't converted with pl_mog
