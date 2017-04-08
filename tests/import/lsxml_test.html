@@ -1,0 +1,100 @@
+<html>
+	<body>
+		<form action="/cms/services/transfer_case_lsxml.php" method="POST">
+			<textarea name="lsxml" rows="50" cols="80">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;ClientIntake&gt;
+    &lt;CaseInformation&gt;
+        &lt;LSCProblemCode&gt;01&lt;/LSCProblemCode&gt;
+        &lt;LSCSubProblemCode&gt;011&lt;/LSCSubProblemCode&gt;
+        &lt;IntakeDate&gt;2015-01-01&lt;/IntakeDate&gt;
+        &lt;OpenDate&gt;2015-01-02&lt;/OpenDate&gt;
+        &lt;IntakeMethod&gt;Telephone&lt;/IntakeMethod&gt;
+		&lt;CloseDate&gt;2015-01-03&lt;/CloseDate&gt;
+		&lt;LSCClosingCode&gt;A&lt;/LSCClosingCode&gt;
+		&lt;Outcome&gt;Settled Favorably&lt;/Outcome&gt;
+		&lt;Custom&gt;
+			&lt;Field0&gt;A&lt;/Field0&gt;
+			&lt;Field1&gt;B&lt;/Field1&gt;
+			&lt;Field2&gt;C&lt;/Field2&gt;
+		&lt;/Custom&gt;
+    &lt;/CaseInformation&gt;
+    &lt;Eligibility&gt;
+        &lt;Adults&gt;3&lt;/Adults&gt;
+        &lt;Children&gt;2&lt;/Children&gt;
+        &lt;EligibilityNotes&gt;The employment income is seasonal.&lt;/EligibilityNotes&gt;
+            &lt;Assets&gt;
+                &lt;Asset AssetType=&quot;Personal Property&quot;&gt;500.00&lt;/Asset&gt;               
+                &lt;Asset AssetType=&quot;Real Property&quot;&gt;48000.00&lt;/Asset&gt;
+                &lt;Asset AssetType=&quot;Checking&quot;&gt;300.00&lt;/Asset&gt;
+                &lt;Asset AssetType=&quot;Savings&quot;&gt;900.00&lt;/Asset&gt;
+                &lt;Asset AssetType=&quot;Other&quot;&gt;20.00&lt;/Asset&gt;
+            &lt;/Assets&gt;
+            &lt;Incomes&gt;                
+                &lt;Income IncomeType=&quot;Employment&quot; IncomeFrequencyType=&quot;Monthly&quot;&gt;3000.00&lt;/Income&gt;
+                &lt;Income IncomeType=&quot;Child Support&quot; IncomeFrequencyType=&quot;Annual&quot;&gt;1000.00&lt;/Income&gt;
+            &lt;/Incomes&gt;
+            &lt;Expenses&gt;                
+                &lt;Expense ExpenseType=&quot;Other&quot; ExpenseFrequencyType=&quot;Weekly&quot;&gt;100.00&lt;/Expense&gt;
+                &lt;Expense ExpenseType=&quot;Other&quot; ExpenseFrequencyType=&quot;Annual&quot;&gt;2000.00&lt;/Expense&gt;
+            &lt;/Expenses&gt;
+		&lt;Custom&gt;
+			&lt;Field3&gt;D&lt;/Field3&gt;
+			&lt;Field4&gt;E&lt;/Field4&gt;
+			&lt;Field5&gt;F&lt;/Field5&gt;
+		&lt;/Custom&gt;
+    &lt;/Eligibility&gt;
+	&lt;Notes&gt;
+        &lt;Note&gt;
+            &lt;NoteSummary&gt;Talked to client&lt;/NoteSummary&gt;
+            &lt;NoteText&gt;Lorem ipsum.&lt;/NoteText&gt;
+            &lt;NoteDate&gt;2015-01-02&lt;/NoteDate&gt;    
+        &lt;/Note&gt;
+        &lt;Note&gt;
+            &lt;NoteSummary&gt;Transcript of meeting&lt;/NoteSummary&gt;
+            &lt;NoteText&gt;Lorem ipsum.&lt;/NoteText&gt;
+            &lt;NoteDate&gt;2015-01-02&lt;/NoteDate&gt;    
+        &lt;/Note&gt;
+	&lt;/Notes&gt;
+	&lt;Contacts&gt;
+		&lt;Contact&gt;
+			&lt;Role&gt;Client&lt;/Role&gt;
+			&lt;First_Name&gt;Jane&lt;/First_Name&gt;
+			&lt;Middle_Name&gt;X&lt;/Middle_Name&gt;
+			&lt;Last_Name&gt;Smith&lt;/Last_Name&gt;
+			&lt;SSN&gt;292-99-9999&lt;/SSN&gt;
+			&lt;DOB&gt;1961-08-05&lt;/DOB&gt;
+			&lt;Gender&gt;Female&lt;/Gender&gt;
+			&lt;Ethnicity&gt;Native American&lt;/Ethnicity&gt;
+			&lt;Marital&gt;Widowed&lt;/Marital&gt;			
+			&lt;Citizenship&gt;Citizen&lt;/Citizenship&gt;
+			&lt;Email&gt;&lt;/Email&gt;
+			&lt;Address&gt;
+			    &lt;AddressLine1&gt;192 Harrisburg Ln.&lt;/AddressLine1&gt;
+			    &lt;AddressLine2&gt;Suite 213&lt;/AddressLine2&gt;
+			    &lt;City&gt;Cleveland&lt;/City&gt;
+			    &lt;County&gt;Cuyahoga&lt;/County&gt;
+			    &lt;State&gt;OH&lt;/State&gt;
+			    &lt;ZipCode&gt;44139&lt;/ZipCode&gt;
+			&lt;/Address&gt;
+			&lt;Telephone&gt;
+			    &lt;AreaCode&gt;216&lt;/AreaCode&gt;
+			    &lt;PhoneNumber&gt;229-9999&lt;/PhoneNumber&gt;
+			    &lt;Extension&gt;9&lt;/Extension&gt;
+			    &lt;TelephoneType&gt;Cell&lt;/TelephoneType&gt;
+			&lt;/Telephone&gt;
+		&lt;/Contact&gt;
+		&lt;Contact&gt;
+			&lt;Role&gt;Opposing Party&lt;/Role&gt;
+            &lt;First_Name&gt;Mark&lt;/First_Name&gt;
+            &lt;Middle_Name&gt;Edward&lt;/Middle_Name&gt;
+            &lt;Last_Name&gt;Wahlburg&lt;/Last_Name&gt;
+		&lt;/Contact&gt;
+	&lt;/Contacts&gt;
+&lt;/ClientIntake&gt;
+  
+			</textarea>
+			<input type="submit">
+		</form>
+	</body>
+</html>
