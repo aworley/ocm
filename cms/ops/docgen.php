@@ -268,6 +268,40 @@ if($extension == 'docx')
 		trigger_error('There was an error opening the document template.  Please verify that the selected document assembly form is a valid Open Office XML document.');
 	}
 }
+
+/*
+This is commented out because 1) pdftk does not install on CentOS 7 and 2) the
+code base is moving away from calling system processes as a security precaution.
+The code took a fair amount of time to develop so I'm going to hold onto it here,
+however.  AMW
+*/
+/*
+else if ($extension == 'xfdf')
+{
+        $pdf_path = "/tmp/cc375.pdf";
+        $pdf_filename = "cc375.pdf";
+        $pipes = array();
+        $z = array(array("pipe", "r"), array("pipe", "w"));
+
+        $process = proc_open("pdftk {$pdf_path} fill_form - output -", $z, $pipes);
+
+        if (is_resource($process))
+        {
+            fwrite($pipes[0], file_get_contents($pdf_path));
+            fclose($pipes[0]);
+            $pdf_output = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $return_value = proc_close($process);
+
+            header("Content-type: application/pdf");
+            header("Content-Disposition: attachment; filename=\"{$pdf_filename}\"");
+            echo $pdf_output;
+        }
+
+        exit();
+}
+*/
+
 else
 {
 	$template = new pikaTempLib($doc_data,$a);
