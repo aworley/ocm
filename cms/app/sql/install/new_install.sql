@@ -51,7 +51,7 @@ CREATE TABLE `aliases` (
   `extra_name` char(20) default NULL,
   `mp_first` char(8) default NULL,
   `mp_last` char(8) default NULL,
-  `ssn` char(11) default NULL
+  `ssn` char(11) default NULL,
   PRIMARY KEY  (`alias_id`),
   KEY `first_name` (`first_name`),
   KEY `middle_name` (`middle_name`),
