@@ -213,31 +213,24 @@ class pikaDocument extends plBase
 			$this->user_id = $auth_row['user_id'];
 			$this->created = date('Y-m-d');
 			
-			$exe_path = $contents_text = '';
-			if(!isset($_ENV["PATH"]))
-			{
-				$exe_path = "c:/Pika/Cygwin/";
-				
-			}
-			
 			$extension = strrchr($this->doc_name, '.');
 			$safe_full_path = escapeshellarg($file_array['tmp_name']);
 			switch ($extension)
 			{
 				case '.pdf':
-					exec("{$exe_path}ps2ascii {$safe_full_path}", $string_array);
-					//exec("{$exe_path}pdftotext {$safe_full_path} -", $string_array);
+					exec("ps2ascii {$safe_full_path}", $string_array);
+					//exec("pdftotext {$safe_full_path} -", $string_array);
 					$contents_text = implode($string_array, "\n"); 
 					
 				break;
 						
 				case '.txt':
-					exec("{$exe_path}cat {$safe_full_path}", $string_array);
+					exec("cat {$safe_full_path}", $string_array);
 					$contents_text = implode($string_array, "\n");
 				break;
 			
 				default:
-					exec("{$exe_path}strings {$safe_full_path}", $string_array);
+					exec("strings {$safe_full_path}", $string_array);
 					$contents_text = implode($string_array, "\n");
 			
 				break;
@@ -272,8 +265,6 @@ class pikaDocument extends plBase
 				$this->created = date('Y-m-d');
 			}
 			
-			$exe_path = $contents_text = $mime_type = '';
-			if(!isset($_ENV["PATH"])) { $exe_path = "c:/Pika/Cygwin/"; }
 			$extension = strrchr($file_name, '.');
 			
 			// Determine mime type from list
@@ -325,19 +316,19 @@ class pikaDocument extends plBase
 				switch ($extension)
 				{
 					case '.pdf':
-						exec("{$exe_path}ps2ascii {$safe_full_path}", $string_array);
+						exec("ps2ascii {$safe_full_path}", $string_array);
 						$contents_text = implode($string_array, "\n");
 						/*
-						exec("{$exe_path}pdftotext {$safe_full_path}", $string_array);
+						exec("pdftotext {$safe_full_path}", $string_array);
 						$contents_text = implode($string_array, "\n"); 
 						*/
 					break;		
 					case '.txt':
-						exec("{$exe_path}cat {$safe_full_path}", $string_array);
+						exec("cat {$safe_full_path}", $string_array);
 						$contents_text = implode($string_array, "\n");
 					break;
 					default:
-						exec("{$exe_path}strings {$safe_full_path}", $string_array);
+						exec("strings {$safe_full_path}", $string_array);
 						$contents_text = implode($string_array, "\n");
 					break;
 				}
