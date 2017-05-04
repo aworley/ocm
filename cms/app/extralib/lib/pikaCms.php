@@ -2027,6 +2027,11 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 	{
 		global $plSettings;
 		
+		if (!isset($a['hours']))
+		{
+			$a['hours'] = null;
+		}
+		
 		$act_interval = (int) $plSettings['act_interval'];
 		$a['hours'] = pika_round_decimal_hours($a['hours'], $act_interval);
 
