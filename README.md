@@ -34,6 +34,8 @@ mysql, SimpleXML, SOAP, and zip.  This command will install the additional
 required PHP modules on CentOS 7:
 	yum install php-mysqlnd php-cli php-xml php-mcrypt php-mbstring php-soap
 
+* Install ghostscript, it's needed for indexing PDF uploads.
+
 * Create a new MySQL database named 'cms'.
 
 * Download the OCM software from https://github.com/aworley/ocm
