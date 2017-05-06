@@ -1,0 +1,22 @@
+<div style="padding:5px;" id="form_container">
+	<div style="" id="form_header">
+		<form action="%%[base_url]%%/reports/%%[report_name]%%/report.php" method="POST" name=form1 target="_blank">
+	</div>
+	<div style="float:left;padding:2px" id="form_col1" class="de">
+		Closed On Or After:<br/>
+		%%[close_date_begin,input_date_selector]%%<br/>
+		Closed On Or Before:<br/>
+		%%[close_date_end,input_date_selector]%%<br/>
+		%%[redact_client,checkbox,label=Redact Client Names]%%<br/>
+		%%[report_format,checkbox,default_value=csv,label=Send to a spreadsheet]%%<br/>
+		%%[show_sql,checkbox,label=Show SQL]%%<br/>
+	</div>
+	<div style="clear:both" id="form_footer">
+		<br/>
+		<input type=submit name="gen" value="Generate Report" class="save" tabindex="1">
+		</form>
+	</div>
+</div>
+
+%%[ajax_init.js,javascript]%%
+%%[date_selector.js,javascript,parse]%%
