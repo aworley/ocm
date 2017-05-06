@@ -1,0 +1,76 @@
+<!--
+<tr>
+	<td>Valuation Year</td>
+	<td>%%[valuation_year,input_text,disabled]%%</td>
+	<td>Use PPA plan years only (2008+)</td>
+</tr><tr>
+	<td>First Segment Rate</td>
+	<td>%%[segment_rate_1,input_text,default=2.47,disabled]%%</td>
+	<td>For Years 0-5</td>
+</tr><tr>
+	<td>Second Segment Rate</td>
+	<td>%%[segment_rate_2,input_text,default=5.07,disabled]%%</td>
+	<td>For Years 6-20</td>
+</tr><tr>
+	<td>Third Segment Rate</td>
+	<td>%%[segment_rate_3,input_text,default=6.10,disabled]%%</td>
+	<td>For Years 20+</td>
+</tr><tr class="de">
+	<td>Mortality Table</td>
+	<td>
+	%%[mortality_table,mortality_table,default=4]%%
+	</td>
+	<td>&nbsp;</td>
+</tr>
+-->
+
+<!--
+<h2>Pension Recoveries</h2>
+<table>
+<tr class="de">
+	<td align="right">
+	&nbsp;
+	</td><td>
+	Present Value
+	</td>
+	<td>Monthly Benefit</td>
+</tr>
+<tr class="de">
+	<td align="right">
+	Annuity
+	</td><td>
+	<span class=maskt>$%%[recovery_annuity,input_text,class=maskf,onblur=total_recoveries();]%%</span>
+	</td>
+	<td><span class=maskt>$%%[recovery_monthly_benefit,input_text,class=maskf]%%</span></td>
+</tr>
+
+<tr class="de">
+	<td align="right">
+	Distribution
+	</td><td>
+	<span class=maskt>$%%[recovery_distribution,input_text,class=maskf,onblur=total_recoveries();]%%</span>
+	</td>
+	<td>&nbsp;</td>
+</tr><tr class="de">
+	<td colspan="3"></td>
+</tr><tr class="de">
+	<td align="right">
+	<strong>Total:</strong>
+	</td><td>
+	<span class=maskt>$%%[recovery_total,input_text,class=maskf]%%</span>
+	</td>
+	<td>&nbsp;</td>
+</tr>
+<tr class="de">
+	<td>&nbsp;</td>
+	<td valign="top">
+	%%[recovery_achieved_by_referral,checkbox,label=Achieved By Referral]%%<br/>
+	</td>
+	<td>&nbsp;</td>
+</tr>
+</table>
+-->
+
+%%[segment_rate_1,input_hidden,default=2.47,disabled]%%
+%%[segment_rate_2,input_hidden,default=5.07,disabled]%%
+%%[segment_rate_3,input_hidden,default=6.10,disabled]%%

@@ -1,0 +1,261 @@
+%%[begin:view]%%
+<form>
+%%[new_plan_link]%%
+<table>
+<tr>
+	<td>
+	Plan Name:<br/>
+	%%[plan_name,input_text]%%
+	</td> 	
+	<td>
+	Sponsor Name:<br/>
+	%%[sponsor_name,input_text]%%
+	</td>
+</tr><tr>
+	<td>
+	<input type="submit" name="Search" value="search">
+	%%[case_id,input_hidden]%%
+	</td>
+</tr>
+</table>
+</form>
+%%[plan_list]%%
+<center><p><b>%%[total_plans]%%</b></p></center>
+%%[end:view]%%
+
+
+%%[begin:flex_header]%%
+<table cellspacing="0" cellpadding="3">
+<tr>
+	<th><a href="%%[plan_name_url]%%">Name</a>%%[plan_name_img]%%</th>
+	<th><a href="%%[sponsor_name_url]%%">Sponsor</a>%%[sponsor_name_img]%%</th>
+</tr>
+%%[end:flex_header]%%
+%%[begin:flex_row]%%
+<tr class="%%[css_class]%%">
+	<td>%%[plan_name]%%</td>
+	<td>%%[sponsor_name]%%</td>
+</tr>
+%%[end:flex_row]%%
+%%[begin:flex_footer]%%
+</table>
+%%[end:flex_footer]%%
+
+
+%%[begin:edit]%%
+<div style="width:800px" id="form_container"">
+	<div style="" id="form_header">
+		<h2>Edit Pension Plan</h2>
+		<form name="fc">
+	</div>
+	<div style="float:left;padding:2px" id="form_col1" class="de">
+		Governing Law:<br/>
+		%%[sponsor_gov_law,sponsor_gov_law]%%<br/>
+		Plan Name:<br/>
+		%%[plan_name,input_textarea,cols=10]%%<br/>
+		Plan Number:<br/>
+		%%[plan_number,input_text]%%<br/>
+		Plan Type:<br/>
+		%%[plan_type_1,plan_type_1]%%<br/>
+		Plan Type 2:<br/>
+		%%[plan_type_2,plan_type_2]%%<br/>
+		Plan Type 3:<br/>
+		%%[plan_type_3,plan_type_3]%%<br/>
+		Effective Start Date:<br/>
+		%%[eff_start_date,input_date_selector]%%<br/>
+		Effective End Date:<br/>
+		%%[eff_end_date,input_date_selector]%%<br/>
+	</div>
+	<div style="float:left;padding:2px;" id="form_col2" class="de">
+		Sponsor Type:<br/>
+		%%[sponsor_type_1,sponsor_type_1]%%<br/>
+		Sponsor Type 2:<br/>
+		%%[sponsor_type_2,sponsor_type_2]%%<br/>
+		Plan Sponsor Name:<br/>
+		%%[sponsor_name,input_textarea]%%<br/>
+		Address:<br/>
+		%%[sponsor_address,input_text]%%<br/>
+		%%[sponsor_address2,input_text]%%<br/>
+		City, State:<br/>
+		%%[sponsor_city,input_text,class=city]%%%%[sponsor_state,input_text,size=3,class=state]%%<br/>
+		Zip:<br/> 
+		%%[sponsor_zip,input_text,onblur=zipcode_sponsor(this.value)]%%<br/>
+		County:<br/>
+		%%[sponsor_county,input_text]%%<br/>
+		Contact Name:<br/>
+		%%[sponsor_contact_name,input_text]%%<br/>
+		Phone:<br/>
+		<span class="maskt">
+		(<input type=text name="sponsor_area_code" value="%%[sponsor_area_code]%%" onkeyup="pika_area_code(this, 3, 'sponsor_phone');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="sponsor_phone" value="%%[sponsor_phone]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Defined Phone:<br/>
+		%%[sponsor_phone_notes_alt,input_text]%%<br/>
+		<span class="maskt">
+		(<input type=text name="sponsor_area_code_alt" value="%%[sponsor_area_code_alt]%%" onkeyup="pika_area_code(this, 3, 'sponsor_phone_alt');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="sponsor_phone_alt" value="%%[sponsor_phone_alt]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Fax:<br/>
+		<span class="maskt">
+		(<input type=text name="sponsor_area_code_fax" value="%%[sponsor_area_code_fax]%%" onkeyup="pika_area_code(this, 3, 'sponsor_fax');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="sponsor_fax" value="%%[sponsor_fax]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Email:<br/>
+		%%[sponsor_email,input_text]%%<br/>
+		URL:<br/>
+		%%[sponsor_url,input_text]%%<br/>
+		Sponsor EIN:<br/>
+		%%[sponsor_ein,input_text]%%<br/>
+		%%[sponsor_out_bus,yes_no,checkbox,label=Sponsor Out of Business]%%<br/>
+	</div>
+	<div style="float:left;padding:2px;" id="form_col3" class="de">
+		%%[reported_lost,yes_no,checkbox,label=Reported Lost]%%<br/>
+		%%[reported_found,yes_no,checkbox,label=Found]%%<br/>
+		%%[avail_pensioncounseling_net,yes_no,checkbox,label=This plan is available on PensionCounseling.net]%%<br/>
+		Plan Administrator Name:<br/>
+		%%[admin_name,input_textarea,width=8]%%<br/>
+		Address:<br/>
+		%%[admin_address,input_text]%%<br/>
+		%%[admin_address2,input_text]%%<br/>
+		City, State:<br/>
+		%%[admin_city,input_text,class=city]%%%%[admin_state,input_text,size=3,class=state]%%<br/>
+		Zip:<br/>
+		%%[admin_zip,input_text,onblur=zipcode_admin(this.value)]%%<br/>
+		County:<br/>
+		%%[admin_county,input_text]%%<br/>
+		Contact Name:<br/>
+		%%[admin_contact_name,input_text]%%<br/>
+		Phone:<br/>
+		<span class="maskt">
+		(<input type=text name="admin_area_code" value="%%[admin_area_code]%%" onkeyup="pika_area_code(this, 3, 'admin_phone');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="admin_phone" value="%%[admin_phone]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Defined Phone:<br/>
+		%%[admin_phone_notes_alt,input_text]%%<br/>
+		Alt. Phone:<br/>
+		<span class="maskt">
+		(<input type=text name="admin_area_code_alt" value="%%[admin_area_code_alt]%%" onkeyup="pika_area_code(this, 3, 'admin_phone_alt');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="admin_phone_alt" value="%%[admin_phone_alt]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Fax:<br/>
+		<span class="maskt">
+		(<input type=text name="admin_area_code_fax" value="%%[admin_area_code_fax]%%" onkeyup="pika_area_code(this, 3, 'admin_fax');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="admin_fax" value="%%[admin_fax]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Email:<br/>
+		%%[admin_email,input_text]%%<br/>
+		URL:<br/>
+		%%[admin_url,input_text]%%<br/>
+	</div>
+	<div style="float:left;padding:2px;" id="form_col4" class="de">
+		<br/><br/>
+		TPA Name:<br/>
+		%%[tpa_name,input_textarea]%%<br/>
+		Address:<br/>
+		%%[tpa_address,input_text]%%<br/>
+		%%[tpa_address2,input_text]%%<br/>
+		City, State:<br/>
+		%%[tpa_city,input_text,class=city]%%%%[tpa_state,input_text,size=3,class=state]%%<br/>
+		Zip:<br/>
+		%%[tpa_zip,input_text,onblur=zipcode_tpa(this.value)]%%<br/>
+		County:<br/>
+		%%[tpa_county,input_text]%%<br/>
+		Contact Name:<br/>
+		%%[tpa_contact_name,input_text]%%<br/>
+		Phone:<br/>
+		<span class="maskt">
+		(<input type=text name="tpa_area_code" value="%%[tpa_area_code]%%" onkeyup="pika_area_code(this, 3, 'tpa_phone');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="tpa_phone" value="%%[tpa_phone]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Defined Phone:<br/>
+		%%[tpa_phone_notes_alt,input_text]%%<br/>
+		Alt. Phone:<br/>
+		<span class="maskt">
+		(<input type=text name="tpa_area_code_alt" value="%%[tpa_area_code_alt]%%" onkeyup="pika_area_code(this, 3, 'tpa_phone_alt');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="tpa_phone_alt" value="%%[tpa_phone_alt]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Fax:<br/>
+		<span class="maskt">
+		(<input type=text name="tpa_area_code_fax" value="%%[tpa_area_code_fax]%%" onkeyup="pika_area_code(this, 3, 'tpa_phone_fax');" style="width: 2em;" maxlength="3" tabindex=1 class=maskf>) 
+		<input type=text name="tpa_phone_fax" value="%%[tpa_phone_fax]%%" onkeyup="pika_phone(this);" style="width: 10.5em;" maxlength="8" tabindex="1" class="maskf">
+		</span><br/>
+		Email:<br/>
+		%%[tpa_email,input_text]%%<br/>
+		URL:<br/>
+		%%[tpa_url,input_text]%%<br/>
+	</div>
+	<div style="clear:both;float:left;padding:2px;">
+		Plan Notes:<br/>
+		%%[plan_notes,input_textarea]%%<br/>
+		<!--Questionable Practices:<br/>
+		%%[questionable_practices,questionable_practices,checkbox_list]%%<br/>-->
+	</div>
+	<div style="float:left;padding:2px;">
+		Sponsor Notes:<br/>		
+		%%[sponsor_notes,input_textarea]%%<br/>
+		Admin Notes:<br/>
+		%%[admin_notes,input_textarea]%%<br/>
+		TPA Notes:<br/>
+		%%[tpa_notes,input_textarea]%%<br/>
+	</div>
+	<div style="clear:both;float:left;padding:2px;">
+		<h2>Case List</h2>
+		%%[case_list]%%
+	</div>
+	<div style="clear:both;" id="form_footer">
+		<br/>
+		%%[pension_plan_id,input_hidden]%%
+		%%[action,input_hidden,default=update]%%
+		<input type="submit" name="gen" value="Save" class="save" tabindex="1" />
+		</form>
+	</div>
+</div>
+
+%%[pension_plans.js,javascript,parse]%%
+%%[checkbox_list.js,javascript,parse]%%
+
+
+%%[end:edit]%%
+
+%%[begin:case_list_header]%%
+<table cellpadding="3" cellspacing="0" border="0" summary="" width="95%">
+<tbody>
+  <tr>
+    <th nowrap="nowrap"><a href="%%[number_url]%%">Case Number</a>%%[number_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[client_name_url]%%">Client Name</a>%%[client_name_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[status_url]%%">Status</a>%%[status_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[user_id_url]%%">Staff</a>%%[user_id_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[office_url]%%">Office</a>%%[office_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[problem_url]%%">Code</a>%%[problem_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[open_date_url]%%">Opened</a>%%[open_date_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[close_date_url]%%">Closed</a>%%[close_date_img]%%</th>
+    <th nowrap="nowrap"><a href="%%[funding_url]%%">Funding</a>%%[funding_img]%%</th>
+    <th nowrap="nowrap">Time</th>
+  </tr>
+%%[end:case_list_header]%%
+%%[begin:case_list_row]%%
+  <tr valign="top" class="row%%[row_class]%%">
+    <td>
+    	<a href="%%[base_url]%%/case.php?case_id=%%[case_id]%%&screen=pension"%%[link_target]%%>%%[number]%%</a><br/>
+    	<span style="color: %%[open_closed_color]%%;">%%[open_closed]%%</span>
+    </td>
+    <td><strong>%%[client_name]%%</strong></td>
+    <td>%%[status text source=case_status]%%</td>
+    <td>%%[user_id text]%%</td>
+    <td>%%[office text]%%</td>
+    <td>%%[problem]%%</td>
+    <td>%%[open_date]%%</td>
+    <td>%%[close_date]%%</td>
+    <td>%%[funding]%%</td>
+    <td>
+    	<a href="%%[base_url]%%/activity.php?screen=compose&case_id=%%[case_id]%%&funding=%%[funding]%%&number=%%[number]%%&act_type=T">
+    	<!--<img style="border: #CCCCCC 2px outset; background-color: #CCCCCC;" src="%%[base_url]%%/images/stopwatch.gif" alt="Record Time"/> -->
+    	<img src="%%[base_url]%%/images/time_add.png" height=20px width=20px alt="Record Time"/>
+    	</a>
+    </td>
+  </tr>
+%%[end:case_list_row]%%
+%%[begin:case_list_footer]%%
+</tbody>
+</table>
+%%[end:case_list_footer]%%
