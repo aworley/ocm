@@ -23,6 +23,7 @@ $act_url = pl_grab_post('act_url');
 $act_type = pl_grab_post('act_type', 'C');
 $funding = pl_grab_post('funding');
 $case_id = pl_grab_post('case_id');
+$screen = pl_grab_post('screen', 'act');
 $user_id = pl_grab_post('user_id');
 $pba_id = pl_grab_post('pba_id');
 
@@ -193,7 +194,7 @@ else if ($close_act)
 		
 		else 
 		{
-			header("Location: {$base_url}/case.php?case_id={$case_id}");
+			header("Location: {$base_url}/case.php?case_id={$case_id}&screen={$screen}");
 		}
 	}
 	
@@ -212,7 +213,7 @@ else
 {
 	if ($case_id && is_numeric($case_id)) 
 	{
-		header("Location: {$base_url}/case.php?case_id={$case_id}");
+		header("Location: {$base_url}/case.php?case_id={$case_id}&screen={$screen}");
 	}
 	
 	else 
