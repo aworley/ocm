@@ -14,11 +14,17 @@ pika_init();
 // LIBRARIES
 require_once('pikaCase.php');
 
+$next_tab = pl_settings_get('default_case_tab');
+
+if (is_null($next_tab))
+{
+	$next_tab = 'elig';
+}
 
 // VARIABLES
 $case1 = new pikaCase();
 $base_url = pl_settings_get('base_url');
-$screen = pl_grab_get('screen', 'elig');
+$screen = pl_grab_get('screen', $next_tab);
 
 
 // BEGIN MAIN CODE
