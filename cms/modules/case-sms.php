@@ -53,6 +53,17 @@ if ($send_sms == 'Send SMS')
 	if (is_valid_number($cell, $AccountSid, $AuthToken)) 
 	{
 		$sms = $client->account->messages->create($cell, array('from' => $from, 'body' => $message));
+		
+		require_once('pikaActivity.php');
+		$a = new pikaActivity();
+		$a->act_type = 'S';
+		$a->act_date = date('Y-m-d');
+		$a->act_time = date('H:i:s');
+		$a->notes = $message;
+		$a->summary = "[SMS message to {$cell} from {$from}]";
+		$a->case_id = $case_id;
+		$a->save();
+		
 		$C .= "<div class='well'>Sent message to $cell</div>";
 	} 
 	
@@ -98,6 +109,6 @@ $C .= "
 Cell Number:<br>
 <select name='cell'>{$mobile_options}</select><br>
 Message:<br>
-<textarea name='message'>Test message from the SMS case tab screen.</textarea><br>
+<textarea name=\"message\" rows=\"8\" maxlength=\"1600\" placeholder=\"Please enter your message here.\"></textarea><br>
 <input type='submit' name='send_sms' value='Send SMS'>
 </form>";
