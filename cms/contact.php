@@ -159,7 +159,7 @@ $contact_template = new pikaTempLib('subtemplates/contact_full.html', $clean_con
 $main_html['page_title'] = $clean_contact_screen['full_name'];
 $main_html['content'] = $contact_template->draw();
 
-if (pl_mysql_column_exists('cases', 'benefit_form')
+if (pl_mysql_column_exists('cases', 'benefit_form'))
 {
 	$main_html['content'] .= file_get_contents('js/form_save_contact.js');
 }
