@@ -44,6 +44,15 @@ if ($case_id != '')
 
 else
 {
+	require_once('pikaActivity.php');
+	$a = new pikaActivity();
+	$a->act_type = 'S';
+	$a->act_date = date('Y-m-d');
+	$a->act_time = date('H:i:s');
+	$a->notes = $body;
+	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
+	$a->save();
+
 	$case_id = 'undefined';
 }
 
