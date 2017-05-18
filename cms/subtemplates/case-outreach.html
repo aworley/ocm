@@ -1,0 +1,18 @@
+
+<h2>Outreach Effort Information</h2>
+<form action="%%[base_url]%%/ops/update_case.php" method="POST">
+Outreach Name:<br/>
+%%[number,input_text]%%<br/>
+Outreach Type:<br/>
+%%[outreach_type,outreach_type]%%<br/>
+Impact:<br/>
+%%[outreach_impact,outreach_impact]%%<br/>
+Targeted Population:<br/>
+%%[outreach_target_pop,outreach_target_pop]%%<br/>
+Outreach Cost:<br/>
+<span class=maskt>$%%[outreach_cost,input_text,class=maskf]%%</span>
+<br/><br/>
+<input type="submit" name="save" value="Save" class="save" tabindex="1" />
+%%[case_id,input_hidden]%%
+%%[screen,input_hidden,default=outreach]%%
+</form>

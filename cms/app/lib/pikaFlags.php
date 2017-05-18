@@ -164,6 +164,13 @@ class pikaFlags extends plBase
 								}
 							}
 							break;
+						case 10: // contains
+							$comparison = false;
+							if(strpos($values[$current_rule['field_name']],$current_rule['value']) !== false)
+							{
+								$comparison = true;
+							}
+							break;
 						default:  // Missing or Unknown comparison
 							$comparison = false;
 							break;

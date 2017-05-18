@@ -1,0 +1,176 @@
+<form action="%%[base_url]%%/ops/update_case.php" name="ws">
+<h2>Pension Plan</h2>
+%%[pension_plan_name]%%<br/>
+<br/>
+(<a href="%%[base_url]%%/assign_plan.php?case_id=%%[case_id]%%">Assign Plan</a>)%%[pension_plan_remove_link]%%
+<br/>
+
+<h2>Legal Issues and Notes</h2>
+<table>
+<tr>
+	<td class="de">
+	Issue #1: %%[issue1,pension_issue,onchange=issue_code_lookup(this);]%%<br/>
+	Issue #2: %%[issue2,pension_issue,onchange=issue_code_lookup(this);]%%<br/>
+	Issue #3: %%[issue3,pension_issue,onchange=issue_code_lookup(this);]%%<br/>
+	</td><td class="de">
+	Sub Issue #1:&nbsp;%%[sub_issue1,pension_sub_issue]%%<br/>
+	Sub Issue #2:&nbsp;%%[sub_issue2,pension_sub_issue]%%<br/>
+	Sub Issue #3:&nbsp;%%[sub_issue3,pension_sub_issue]%%<br/>
+	</td>
+</tr><tr>
+	<td  colspan="2">
+	%%[instructive_matter,checkbox,label=Instructive Matter]%%</br>
+	Notes:<br/>
+	%%[issue_notes,input_textarea]%%<br/>
+	Inequity:<br/>
+	%%[issue_inequity,inequity]%%<br/>
+	Technical Assistance:<br/>
+	%%[benefit_technical_assistance,benefit_technical_assistance]%%<br/>
+	</td>
+</tr>
+</table>
+
+<br/>
+
+
+<h2>Pension Benefits</h2>
+<table>
+<tr>
+	<td class="de">
+	Type of Distribution:<br/>
+	%%[benefit_form,benefit_form]%%<br/>
+	Timing of Distribution:<br/>
+	%%[timing_distribution,timing_distribution]%%<br/>
+	Benefit Features:<br/>
+	%%[benefit_qualifier,benefit_qualifier]%%
+	
+	</td><td class="de" valign="top">
+	Claim #:<br/>
+	%%[benefit_claim_number,input_text]%%<br/>
+	Claimant:<br/>
+	%%[benefit_claimant,benefit_claimant]%%<br/>
+	<!--Inquiry:<br/>
+	%%[benefit_inquiry,benefit_inquiry]%%<br/>
+	Interest in Benefit:<br/>
+	%%[benefit_interest,benefit_interest,checkbox_list,height=100]%%<br/>
+	-->
+	</td>
+</tr>
+</table>
+
+<br/>
+
+<h2>Pension Annuities</h2>
+
+<table>
+<tr>
+	<td>
+	Interest:<br/>
+	<span class=maskt>$%%[annuity_interest,input_text,class=maskf,onblur=total_annuities();]%%</span><br/>
+	Not Recovered:<br/>
+	<span class=maskt>$%%[annuity_not_recovered,input_text,class=maskf,onblur=total_annuities();]%%</span><br/>	
+	Retroactive Payment:<br/>
+	<span class=maskt>$%%[annuity_retro_payment,input_text,class=maskf,onblur=total_annuities();]%%</span><br/>
+	Lump Sum:<br/>
+	<span class=maskt>$%%[annuity_lump_sum,input_text,class=maskf,onblur=total_annuities();]%%</span><br/>
+	Annuity Cash Accumulated:<br/>
+	<span class=maskt>$%%[annuity_cash_accumulated,input_text,class=maskf,onchange=total_annuities();]%%</span><br/>
+	Annuity Present Value:<br/>
+	<span class=maskt>$%%[annuity_present_value,input_text,class=maskf,onchange=total_annuities();]%%</span><br/>
+	Total Cash Accumulated:<br/>
+	<span class=maskt>$%%[annuity_total_cash_accumulated,input_text,class=maskf]%%</span><br/>
+	Total Present Value:<br/>
+	<span class=maskt>$%%[annuity_total_present_value,input_text,class=maskf]%%</span><br/>
+	</td>
+</tr>
+</table>
+
+<h2>Recovery calculator</h2>
+
+<table>
+<tr>
+	<td>
+	Calculation Type <!--<a href="%%[base_url]%%" onclick="display_all(document.getElementById('calc_type').value);return false;">[Unhide]</a>--><br/>
+	%%[calc_type,calc_type,onchange=display_recovery_calulator(this.value)]%%<br/>
+	<div style="display:none;" id="input_pv_factor">
+	<strong>%%[pv_factor,input_text,disabled]%%<label for="pv_factor">Present Value Factor</label></strong>
+	</div>
+	</td>
+</tr>
+
+<tr>
+	<td>
+		<div id="input_employee_age" style="display:none;">
+			%%[employee_age,input_text,default=]%%<label for="employee_age">Employee Age (1-120)</label>
+		</div>
+		<div id="input_ara" style="display:none;">
+			%%[ara,input_text,default=]%%<label for="ara">ARA (1-120)</label>
+		</div>
+		<div id="input_employee_sex" style="display:none;">
+			%%[employee_sex,employee_sex,noblank,default=M]%%<label for="employee_sex">Employee Sex</label>
+		</div>
+		<div id="input_payment_form" style="display:none;">
+			%%[payment_form,payment_form,default=LS]%%<label for="payment_form">Payment Form</label>
+		</div>
+		<div id="input_certain_period" style="display:none;">
+			%%[certain_period,input_text]%%<label for="certain_period">Certain Period</label>
+		</div>
+		<div id="input_temp_period" style="display:none;">
+			%%[temp_period,input_text]%%<label for="temp_period">Temporary Period</label>
+		</div>
+		<div id="input_js_percentage" style="display:none;">
+			%%[js_percentage,input_text,default=]%%<label for="js_percentage">Joint and Survivor Percentage</label>
+		</div>
+		<div id="input_spouse_age" style="display:none;">
+			%%[spouse_age,input_text,default=]%%<label for="spouse_age">Spouse Age (1-120)</label>
+		</div>
+		<div id="input_montly_benefit_nra" style="display:none;">
+			<span class=maskt>$%%[montly_benefit_nra,input_text,class=maskf,default=]%%</span><label for="montly_benefit_nra">Monthly Benefit at NRA</label>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div id="input_level_income" style="display:none;">
+			<br/>
+			%%[employee_age2,input_text,default=]%%<label for="employee_age">Employee Age at Social Security Eligibility</label><br/>
+			%%[ara2,input_text,default=]%%<label for="ara">Age at Social Security Eligibility</label><br/>
+			<span class=maskt>$%%[montly_benefit_nra2,input_text,class=maskf,default=]%%</span><label for="montly_benefit_nra">Monthly Benefit at Social Security Eligibility</label><br/>
+			%%[js_percentage2,input_text,default=]%%<label for="js_percentage">Joint and Survivor Percentage</label><br/>
+			%%[spouse_age2,input_text,default=]%%<label for="spouse_age">Spouse Age</label><br/>
+			<br/>
+			<input type="button" value="Calculate" class="save" onclick="runPPALevel();total_annuities();">
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+	<div id="input_calc_button" style="display:block;">
+	%%[valuation_year,input_hidden]%%
+	%%[segment_rate_1,input_hidden,default=0.93]%%
+	%%[segment_rate_2,input_hidden,default=3.61]%%
+	%%[segment_rate_3,input_hidden,default=4.88]%%
+	%%[mortality_table,input_hidden,default=4]%%
+	%%[payment_form,input_hidden,default=LS]%%
+	<input type="button" value="Calculate" class="save" onclick="runPPA();total_annuities();">
+	</div>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+<br/>
+
+
+%%[case_id,input_hidden]%%
+%%[screen,input_hidden,default=pension]%%
+<br/>
+<input type="submit" value="Save" name="save" class="save">
+</form>
+
+%%[case-pension.js,javascript,parse]%%
+%%[pvppa.js,javascript,parse]%%

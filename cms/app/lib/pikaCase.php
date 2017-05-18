@@ -167,7 +167,7 @@ class pikaCase extends plBase
 		// If this is the first client for this case, make them the primary client and set age, county, ZIP code fields
 		if (1 == $role)
 		{
-			$sql = "SELECT birth_date, open_date, county, zip 
+			$sql = "SELECT birth_date, open_date, city, state, county, zip 
 								FROM conflict 
 								LEFT JOIN cases ON conflict.case_id=cases.case_id
 								LEFT JOIN contacts ON conflict.contact_id=contacts.contact_id 
@@ -192,6 +192,16 @@ class pikaCase extends plBase
 				if ($row['county'])
 				{
 				//	$this->setValue('case_county', $row['county']);
+				}
+				
+				if ($row['city'])
+				{
+					$this->setValue('case_city', $row['city']);
+				}
+								
+				if ($row['state'])
+				{
+					$this->setValue('case_state', $row['state']);
 				}
 			}
 		}

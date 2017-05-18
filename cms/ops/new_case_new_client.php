@@ -14,11 +14,17 @@ pika_init();
 require_once('pikaCase.php');
 require_once('pikaContact.php');
 
+$next_tab = pl_settings_get('default_case_tab');
+
+if (is_null($next_tab))
+{
+	$next_tab = 'elig';
+}
 
 // VARIABLES
 $thiscon = pl_grab_get('thiscon');
 $base_url = pl_settings_get('base_url');
-$screen = pl_grab_get('screen', 'elig');
+$screen = pl_grab_get('screen', $next_tab);
 $safe_screen = pl_clean_html($screen);
 
 

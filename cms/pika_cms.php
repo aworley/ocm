@@ -693,7 +693,7 @@ function pika_contact_record($contact)
 	$C = '';
 	
 	// contact name
-	$C .= "<b><a href='contact.php?contact_id={$contact["contact_id"]}>
+	$C .= "<b><a href='contact.php?contact_id={$contact["contact_id"]}'>
 		{$contact["first_name"]} {$contact["middle_name"]} 
 	    {$contact["last_name"]} {$contact["extra_name"]}</a></b>\n";
 	
