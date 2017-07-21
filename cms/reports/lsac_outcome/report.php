@@ -30,6 +30,10 @@ $close_date_end = pl_grab_post('close_date_end');
 // $open_on_date = pl_grab_post('open_on_date');
 $status = pl_grab_post('status');
 
+$show_sql = pl_grab_post('show_sql');
+$problem = pl_grab_post('problem');
+$case_county = pl_grab_post('case_county');
+
 if ('csv' == $report_format)
 {
 	require_once ('app/lib/plCsvReportTable.php');
@@ -176,6 +180,18 @@ if ($x != false)
 {
 	$t->add_parameter('Case Status Code(s)',$status);
 	$sql .= " AND status IN $x";
+}
+
+$x = pl_process_comma_vals($problem);
+if($x != false){
+	$t->add_parameter('Problem Code(s)',$problem);
+	$sql .= " AND problem IN $x";	
+}
+
+$x = pl_process_comma_vals($case_county);
+if($x != false){
+	$t->add_parameter('Case County(ies)',$case_county);
+	$sql .= " AND case_county IN $x";	
 }
 
 // combine results sql & other filters
