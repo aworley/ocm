@@ -385,6 +385,24 @@ class pikaContact extends plBase
 		}
 		parent::delete();
 	}
+	
+	public function setValue($value_name, $value)
+	{
+		if ('ssn' == $value_name)
+		{
+			if (pika_ssn_mode() == 0)
+			{
+				$value = null;
+			}
+			
+			else if (pika_ssn_mode() == 4)
+			{
+				$value = substr($value, -4);
+			}
+		}
+		
+		parent::setValue($value_name, $value);
+	}
 }
 
 ?>
