@@ -154,24 +154,13 @@ switch ($action) {
 		break;
 		
 	default:
-		$size_of_ssn = '';
-		$result = mysql_query("DESCRIBE contacts") or trigger_error(mysql_error());
-		
-		while ($row = mysql_fetch_assoc($result))
-		{
-			if ($row['Field'] == 'ssn')
-			{
-				$size_of_ssn = $row['Type'];
-			}
-		}
-		
 		$template = new pikaTempLib('subtemplates/system-maint.html',array());
 		$main_html['content'] .= $template->draw();
 		
 		$disabled = '';
 		$not_available = '';
 		
-		if ($size_of_ssn != 'varchar(11)')
+		if (pika_ssn_mode() != 9)
 		{
 			$disabled = ' disabled';
 			$not_available = '<p>The SSN Truncate function is not available because this database does not have a full length, 11-character SSN field.</p>';
@@ -194,7 +183,7 @@ switch ($action) {
 		$disabled = '';
 		$not_available = '';
 		
-		if ($size_of_ssn == 'char(0)')
+		if (pika_ssn_mode() == 0)
 		{
 			$disabled = ' disabled';
 			$not_available = '<p>The SSN Delete function is not available because the SSNs in this database have already been deleted.</p>';

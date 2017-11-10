@@ -378,6 +378,45 @@ function pika_exit($buffer)
 
 
 /**
+ * Returns 9 if the database stores all 9 digits and two hyphens in SSN columns.
+ * Returns 4 if only truncated SSNs are stored.
+ * Returns 0 if SSNs are not stored.
+ *
+ * @return boolean
+*/
+function pika_ssn_mode()
+{
+	$result = mysql_query("DESCRIBE contacts") or trigger_error(mysql_error());
+	
+	while ($row = mysql_fetch_assoc($result))
+	{
+		if ($row['Field'] == 'ssn')
+		{
+			if ($row['Type'] == 'varchar(11)')
+			{
+				return 9;
+			}
+			
+			else if ($row['Type'] == 'char(4)')
+			{
+				return 4;
+			}
+			
+			else if ($row['Type'] == 'char(0)')
+			{
+				return 0;
+			}
+			
+			else 
+			{
+				return null;
+			}
+		}
+	}
+}
+
+
+/**
  * Initializes the Pika CMS "danio" framework.
  * This function should be called at the beginning of every "danio"-based 
  * script.  If the user is not authenticated, it will display the login
