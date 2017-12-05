@@ -18,6 +18,17 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		
 		// Send email via SparkPost.
 		$to = $row['email'];
+		
+		if (strlen($to) < 6)
+		{
+			return false;
+		}
+		
+		if (strlen($case_number) < 1)
+		{
+			$case_number = "case record {$case_id}";
+		}
+		
 		$subject = "New SMS for {$case_number}";
 		$message = "{$sender_name} has sent a new SMS message, you can view it at:  "
 			. "https://{$_SERVER['SERVER_NAME']}/{$base_url}/case.php?case_id={$safe_case_id}&screen=sms";
@@ -44,6 +55,8 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		
 		return $exit_array->total_accepted_recipients;
 	}
+	
+	return false;
 }
 
 $number = $_POST['From'];
