@@ -36,9 +36,11 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
                                             'Authorization: ' . pl_settings_get('smartpost_api_key')
                                             ));
 		//$status_code = curl_getinfo($c, CURLINFO_HTTP_CODE);
-		$result=curl_exec($c);
+		$exit_code = curl_exec($c);
 		curl_close ($c);
-		$result = json_decode($result);
+		$exit_array = json_decode($exit_code);
+		
+		return $exit_array['total_accepted_recipients'];
 	}
 }
 
