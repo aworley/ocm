@@ -29,9 +29,10 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 			$case_number = "case record {$case_id}";
 		}
 		
+		$base_url = pl_settings_get('base_url');
 		$subject = "New SMS for {$case_number}";
 		$message = "{$sender_name} has sent a new SMS message, you can view it at:  "
-			. "https://{$_SERVER['SERVER_NAME']}/{$base_url}/case.php?case_id={$safe_case_id}&screen=sms";
+			. "https://{$_SERVER['SERVER_NAME']}{$base_url}/case.php?case_id={$case_id}&screen=sms";
 		
 		$data_string = '{"options": {"sandbox": false, "open_tracking": false, "click_tracking": false}, "content": {"from": "' 
 			. pl_settings_get('smartpost_from_address') 
