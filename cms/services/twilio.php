@@ -27,11 +27,11 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, 'https://api.sparkpost.com/api/v1/transmissions');
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+		curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($c, CURLOPT_TIMEOUT, 30);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		curl_setopt($c, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($c, CURLOPT_HTTPHEADER, array(
                                             'Content-Type: application/json',
                                             'Authorization: ' . pl_settings_get('smartpost_api_key')
                                             ));
@@ -83,9 +83,9 @@ if ($case_id != '')
 	// Send mail notification to the case handlers.
 	require_once('pikaCase.php');
 	$c = new pikaCase($case_id);
-	send_mail_notification($c->user_id);
-	send_mail_notification($c->cocounsel1);
-	send_mail_notification($c->cocounsel2);
+	send_mail_notification($c->user_id, $c->case_id, $c->number, $sender_name);
+	send_mail_notification($c->cocounsel1, $c->case_id, $c->number, $sender_name);
+	send_mail_notification($c->cocounsel2, $c->case_id, $c->number, $sender_name);
 }
 
 else
