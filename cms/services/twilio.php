@@ -53,6 +53,8 @@ $clean_number = mysql_real_escape_string($number);
 $phone = substr($clean_number, 5, 3) . '-' . substr($clean_number, 8);
 $area_code = substr($clean_number, 2, 3);
 
+$response_message = "If you are getting this message, an error has occurred.";
+
 $result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_name, extra_name 
 	FROM contacts 
 	LEFT JOIN conflict ON contacts.contact_id = conflict.contact_id
@@ -86,6 +88,8 @@ if ($case_id != '')
 	send_mail_notification($c->user_id, $c->case_id, $c->number, $sender_name);
 	send_mail_notification($c->cocounsel1, $c->case_id, $c->number, $sender_name);
 	send_mail_notification($c->cocounsel2, $c->case_id, $c->number, $sender_name);
+	
+	$response_message = "Thanks!  Your message has been sent to your case handlers. The confirmation ID for your message is {$a->act_id}.";
 }
 
 else
@@ -98,16 +102,17 @@ else
 	$a->notes = $body;
 	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
 	$a->save();
-
-	$case_id = 'undefined';
+	
+	$response_message = "Thanks!  We couldn't find your phone number in our records, but your message will be sent to our case handlers. The confirmation ID for your message is {$a->act_id}.";
 }
 
+$response_message = htmlspecialchars($response_message);
 
 header('Content-Type: text/xml');
 ?>
  
 <Response>
     <Message>
-        Thanks!  Your message has been sent to case ID <?php echo $case_id ?>.
+        <?php echo $response_message ?>
     </Message>
 </Response>
