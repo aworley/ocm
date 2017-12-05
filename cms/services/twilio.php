@@ -19,11 +19,13 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		// Send email via SparkPost.
 		$to = $row['email'];
 		$subject = "New SMS for {$case_number}";
-		$message = "New SMS from {$sender_name}:  https://{$_SERVER['SERVER_NAME']}/{$base_url}/case.php?case_id={$safe_case_id}&screen=sms";
+		$message = "{$sender_name} has sent a new SMS message, you can view it at:  "
+			. "https://{$_SERVER['SERVER_NAME']}/{$base_url}/case.php?case_id={$safe_case_id}&screen=sms";
 		
 		$data_string = '{"options": {"sandbox": false}, "content": {"from": "' 
 			. pl_settings_get('smartpost_from_address') 
-			. '", "subject": "Curl API test", "text":"Testing SparkPost."}, "recipients": [{"address": "' . $to . '"}]}';
+			. '", "subject": "' . $subject . '", "text":"' . $message 
+			. '"}, "recipients": [{"address": "' . $to . '"}]}';
 		
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, 'https://api.sparkpost.com/api/v1/transmissions');
