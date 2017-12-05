@@ -70,18 +70,18 @@ while ($row = mysql_fetch_assoc($result))
 	$sender_name = pl_text_name($row);
 }
 
+require_once('pikaActivity.php');
+$a = new pikaActivity();
+$a->act_type = 'S';
+$a->act_date = date('Y-m-d');
+$a->act_time = date('H:i:s');
+$a->notes = $body;
+$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
+$a->case_id = $case_id;
+$a->save();
+
 if ($case_id != '')
 {
-	require_once('pikaActivity.php');
-	$a = new pikaActivity();
-	$a->act_type = 'S';
-	$a->act_date = date('Y-m-d');
-	$a->act_time = date('H:i:s');
-	$a->notes = $body;
-	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
-	$a->case_id = $case_id;
-	$a->save();
-	
 	// Send mail notification to the case handlers.
 	require_once('pikaCase.php');
 	$c = new pikaCase($case_id);
@@ -94,15 +94,6 @@ if ($case_id != '')
 
 else
 {
-	require_once('pikaActivity.php');
-	$a = new pikaActivity();
-	$a->act_type = 'S';
-	$a->act_date = date('Y-m-d');
-	$a->act_time = date('H:i:s');
-	$a->notes = $body;
-	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
-	$a->save();
-	
 	$response_message = "Thanks!  We couldn't find your phone number in our records, but your message will be sent to our case handlers. The confirmation ID for your message is {$a->act_id}.";
 }
 
