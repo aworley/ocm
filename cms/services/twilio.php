@@ -33,7 +33,7 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		$message = "{$sender_name} has sent a new SMS message, you can view it at:  "
 			. "https://{$_SERVER['SERVER_NAME']}/{$base_url}/case.php?case_id={$safe_case_id}&screen=sms";
 		
-		$data_string = '{"options": {"sandbox": false}, "content": {"from": "' 
+		$data_string = '{"options": {"sandbox": false, "open_tracking": false, "click_tracking": false}, "content": {"from": "' 
 			. pl_settings_get('smartpost_from_address') 
 			. '", "subject": "' . $subject . '", "text":"' . $message 
 			. '"}, "recipients": [{"address": "' . $to . '"}]}';
