@@ -40,7 +40,7 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		curl_close ($c);
 		$exit_array = json_decode($exit_code);
 		
-		return $exit_array['total_accepted_recipients'];
+		return $exit_array->total_accepted_recipients;
 	}
 }
 
