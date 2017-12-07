@@ -91,11 +91,11 @@ while ($row = mysql_fetch_assoc($result))
 {
 	$from_text = substr(htmlentities($row['summary']), 13);
 	$from_text = substr($from_text, 0, -1);
-	$sms_listing_rows .= "<tr><td colspan=\"2\">" 
-		. $from_text . "</td><td rowspan=\"2\"><strong>" . htmlentities($row['notes']) 
-		. "</strong></td></tr><tr><td>" 
-		. pl_date_unmogrify($row['act_date'])
-		. "</td><td>" . pl_time_unmogrify($row['act_time']) . "</td></tr>";
+	$sms_listing_rows .= "<tr><td><p>{$from_text}</p><p>" 
+		. pl_date_unmogrify($row['act_date']) . " "
+		. pl_time_unmogrify($row['act_time']) . "</p></td><td><strong>" 
+		. htmlentities($row['notes']) 
+		. "</strong></td></tr>";
 }
 
 if (strlen($sms_listing_rows) == 0)
@@ -105,7 +105,7 @@ if (strlen($sms_listing_rows) == 0)
 
 else 
 {
-	$C .= "<table class=\"table table-bordered\">{$sms_listing_rows}</table>";
+	$C .= "<table class=\"table table-striped\">{$sms_listing_rows}</table>";
 }
 // End SMS listing
 
