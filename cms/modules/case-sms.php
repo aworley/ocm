@@ -14,6 +14,11 @@ function format_us_mobile($area_code, $phone)
 	return "1" . $area_code . substr($phone, 0, 3) . substr($phone, 4);
 }
 
+function pretty_format_us_mobile($area_code, $phone)
+{
+	return "(" . $area_code . ") " . $phone;
+}
+
 // Based on sample code from Twilio.
 // Get the PHP helper library from twilio.com/docs/php/install 
 // Loads the library require "vendor/autoload.php"; 
@@ -91,7 +96,7 @@ while ($row = mysql_fetch_assoc($result))
 		$mobile_options .= "<option value=\"" 
 			. format_us_mobile($row['area_code'], $row['phone']) . "\">"
 			. pl_text_name($row) . ' '
-			. format_us_mobile($row['area_code'], $row['phone'])
+			. pretty_format_us_mobile($row['area_code'], $row['phone'])
 			. "</option>\n";
 	}
 	
@@ -100,7 +105,7 @@ while ($row = mysql_fetch_assoc($result))
 		$mobile_options .= "<option value=\"" 
 			. format_us_mobile($row['area_code_alt'], $row['phone_alt']) . "\">"
 			. pl_text_name($row) . ' '
-			. format_us_mobile($row['area_code_alt'], $row['phone_alt'])
+			. pretty_format_us_mobile($row['area_code_alt'], $row['phone_alt'])
 			. "</option>\n";
 	}
 }
