@@ -1,0 +1,36 @@
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method="POST">
+		<h3>SMS Record</h3>
+		Summary (public):<br/>
+		<textarea rows=1 cols=44 class=notes readonly>%%[summary]%%</textarea><br/>
+		Notes (private):<br/>
+		<textarea rows=11 cols=44 class=notes readonly>%%[notes]%%</textarea><br/>
+		Date:<br/>
+    <input type="text" value="%%[act_date]%%" readonly><br/>
+		Time:<br/>
+		<input type="text" value="%%[act_time]%%" readonly><br/>
+		Case: %%[number]%%<br/>
+		%%[new_case_menu]%%<br/>
+		<input type="hidden" name="screen" value="act"/>
+		<input type="hidden" name="act_url" value="%%[act_url]%%"/>
+		<input type="hidden" name="close_act" value="1"/>
+		%%[act_id,input_hidden]%%
+		<p>
+			<input type="submit" value="Save" tabindex="1" class="save" accesskey="s"/>
+		</p>
+				%%[deleteActivity]%%
+</form>
+
+%%[notes_header]%%
+%%[notes_order]%%
+%%[notes_list]%%
+%%[notes_footer]%%
+
+<script language="JavaScript" type="text/javascript">
+<!--
+document.ws.summary.focus();
+//-->
+</script>
+
+%%[textFormat.js,javascript]%%
+%%[ajax_init.js,javascript]%%
+%%[date_selector.js,javascript,parse]%%
