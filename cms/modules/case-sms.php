@@ -80,6 +80,35 @@ if ($send_sms == 'Send SMS')
 
 $safe_case_id = $case_id;
 
+// Start SMS listing
+$sql = "SELECT act_date, act_time, summary, notes FROM activities WHERE act_type = 'S'"
+	. " AND case_id = {$safe_case_id} ORDER BY act_date ASC, act_time ASC";
+$result = mysql_query($sql);
+
+$sms_listing_rows = '';
+
+while ($row = mysql_fetch_assoc($result))
+{
+	$from_text = substr(htmlentities($row['summary']), 13);
+	$from_text = substr($from_text, 0, -1);
+	$sms_listing_rows .= "<tr><td colspan=\"2\">" 
+		. $from_text . "</td><td rowspan=\"2\"><strong>" . htmlentities($row['notes']) 
+		. "</strong></td></tr><tr><td>" 
+		. pl_date_unmogrify($row['act_date'])
+		. "</td><td>" . pl_time_unmogrify($row['act_time']) . "</td></tr>";
+}
+
+if (strlen($sms_listing_rows) == 0)
+{
+	$C .= "<p>No SMS messages exist for this case.</p>";
+}
+
+else 
+{
+	$C .= "<table class=\"table table-bordered\">{$sms_listing_rows}</table>";
+}
+// End SMS listing
+
 $mobile_options = '';
 $sql = "SELECT first_name, middle_name, last_name, extra_name,
 	area_code, phone, area_code_alt, phone_alt 
@@ -112,6 +141,8 @@ while ($row = mysql_fetch_assoc($result))
 
 $form_url = $base_url . "/case.php?case_id={$case_id}&screen=sms";
 $C .= "
+<br>
+<h4>Send a SMS message to a case contact</h4>
 <form method='POST' action='".$form_url."'>
 Cell Number:<br>
 <select name='cell'>{$mobile_options}</select><br>
