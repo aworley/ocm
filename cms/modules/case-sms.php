@@ -4,7 +4,6 @@ use Twilio\Rest\Client;
 
 $AccountSid = pl_settings_get('twilio_account_sid');
 $AuthToken = pl_settings_get('twilio_auth_token');
-$client = new Client($AccountSid, $AuthToken);
 $from = pl_settings_get('twilio_number');
 $cell = pl_grab_post('cell');
 $message = pl_grab_post('message');
@@ -52,6 +51,7 @@ if ($send_sms == 'Send SMS')
 {
 	if (is_valid_number($cell, $AccountSid, $AuthToken)) 
 	{
+		$client = new Client($AccountSid, $AuthToken);
 		$sms = $client->account->messages->create($cell, array('from' => $from, 'body' => $message));
 		
 		require_once('pikaActivity.php');
