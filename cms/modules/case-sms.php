@@ -73,11 +73,13 @@ if ($send_sms == 'Send SMS')
 	}
 }
 
+$safe_case_id = $case_id;
+
 $mobile_options = '';
 $sql = "SELECT first_name, middle_name, last_name, extra_name,
 	area_code, phone, area_code_alt, phone_alt 
 	FROM conflict LEFT JOIN contacts USING(contact_id)
-	WHERE conflict.case_id = {$case_id}
+	WHERE conflict.case_id = {$safe_case_id}
 	AND conflict.relation_code = 1
 	ORDER BY last_name ASC, first_name ASC, extra_name ASC";
 $result = mysql_query($sql);
