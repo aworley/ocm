@@ -1,5 +1,5 @@
 <?php
-require('twilio-php-master/Twilio/autoload.php');
+require('twilio-php/Twilio/autoload.php');
 use Twilio\Rest\Client;
 
 $AccountSid = pl_settings_get('twilio_account_sid');
