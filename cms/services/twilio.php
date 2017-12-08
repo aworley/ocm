@@ -10,8 +10,8 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 	$safe_user_id = mysql_real_escape_string($user_id);
 	
 	if (is_numeric($safe_user_id) 
-			&& strlen(pl_settings_get('smartpost_from_address')) > 0 
-			&& strlen(pl_settings_get('smartpost_api_key')) > 0)
+			&& strlen(pl_settings_get('sparkpost_from_address')) > 0 
+			&& strlen(pl_settings_get('sparkpost_api_key')) > 0)
 	{
 		$result = mysql_query("SELECT email FROM users WHERE user_id = {$safe_user_id}");
 		$row = mysql_fetch_assoc($result);
@@ -35,7 +35,7 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 			. "https://{$_SERVER['SERVER_NAME']}{$base_url}/case.php?case_id={$case_id}&screen=sms";
 		
 		$data_string = '{"options": {"sandbox": false, "open_tracking": false, "click_tracking": false}, "content": {"from": "' 
-			. pl_settings_get('smartpost_from_address') 
+			. pl_settings_get('sparkpost_from_address') 
 			. '", "subject": "' . $subject . '", "text":"' . $message 
 			. '"}, "recipients": [{"address": "' . $to . '"}]}';
 		
@@ -47,7 +47,7 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		curl_setopt($c, CURLOPT_POSTFIELDS, $data_string);
 		curl_setopt($c, CURLOPT_HTTPHEADER, array(
                                             'Content-Type: application/json',
-                                            'Authorization: ' . pl_settings_get('smartpost_api_key')
+                                            'Authorization: ' . pl_settings_get('sparkpost_api_key')
                                             ));
 		//$status_code = curl_getinfo($c, CURLINFO_HTTP_CODE);
 		$exit_code = curl_exec($c);
