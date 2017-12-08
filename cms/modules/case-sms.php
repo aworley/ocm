@@ -123,7 +123,7 @@ Message:<br>
 
 // Start SMS listing
 $sql = "SELECT act_date, act_time, summary, notes FROM activities WHERE act_type = 'S'"
-	. " AND case_id = {$safe_case_id} ORDER BY act_date ASC, act_time ASC";
+	. " AND case_id = {$safe_case_id} ORDER BY act_date DESC, act_time DESC";
 $result = mysql_query($sql);
 
 $sms_listing_rows = '';
