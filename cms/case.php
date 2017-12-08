@@ -232,6 +232,13 @@ while ($row = mysql_fetch_assoc($result))
 $case_row['client'] = $primary_html;
 $case_row['contacts'] = $contacts_html;
 
+if ($case1->unread_sms > 0)
+{
+	$case_row['client'] = "<p><a href=\"{$base_url}\case.php?"
+		. "case_id={$case1->case_id}&screen=sms\"><span class=\"badge badge-info\">"
+		. "{$case1->unread_sms}</span> new SMS messages</a></p>" . $case_row['client'];
+}
+
 // OLD WAY
 /*
 $case_row['contacts'] = '';

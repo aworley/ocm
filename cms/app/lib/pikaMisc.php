@@ -369,7 +369,7 @@ class pikaMisc
 				area_code, phone, users.first_name as \'users.first_name\', 
 				users.middle_name as \'users.middle_name\',	users.last_name as \'users.last_name\',
 				users.extra_name as \'users.extra_name\', contacts.last_name AS client_last_name,
-				contacts.first_name AS client_first_name ' . $sql . " AND cases.user_id = '{$filter["user_id"]}')";
+				contacts.first_name AS client_first_name, unread_sms ' . $sql . " AND cases.user_id = '{$filter["user_id"]}')";
 			$full_sql .= ' UNION (SELECT case_id, number, problem, status, cases.user_id,' . $sup . ' cocounsel1,
 				cocounsel2, office, open_date, close_date, funding, client_id, sp_problem,
 				contacts.first_name as \'contacts.first_name\', contacts.middle_name AS \'contacts.middle_name\',
@@ -377,7 +377,7 @@ class pikaMisc
 				area_code, phone, users.first_name as \'users.first_name\', 
 				users.middle_name as \'users.middle_name\',	users.last_name as \'users.last_name\',
 				users.extra_name as \'users.extra_name\', contacts.last_name AS client_last_name,
-				contacts.first_name AS client_first_name ' . $sql . " AND cases.cocounsel1 = '{$filter["user_id"]}')";
+				contacts.first_name AS client_first_name, unread_sms ' . $sql . " AND cases.cocounsel1 = '{$filter["user_id"]}')";
 			$full_sql .= ' UNION (SELECT case_id, number, problem, status, cases.user_id,' . $sup . ' cocounsel1,
 				cocounsel2, office, open_date, close_date, funding, client_id, sp_problem,
 				contacts.first_name as \'contacts.first_name\', contacts.middle_name AS \'contacts.middle_name\',
@@ -385,7 +385,7 @@ class pikaMisc
 				area_code, phone, users.first_name as \'users.first_name\', 
 				users.middle_name as \'users.middle_name\',	users.last_name as \'users.last_name\',
 				users.extra_name as \'users.extra_name\', contacts.last_name AS client_last_name,
-				contacts.first_name AS client_first_name ' . $sql . " AND cases.cocounsel2 = '{$filter["user_id"]}')";
+				contacts.first_name AS client_first_name, unread_sms ' . $sql . " AND cases.cocounsel2 = '{$filter["user_id"]}')";
 		}
 		
 		else 
@@ -397,7 +397,7 @@ class pikaMisc
 				area_code, phone, users.first_name as \'users.first_name\', 
 				users.middle_name as \'users.middle_name\',	users.last_name as \'users.last_name\',
 				users.extra_name as \'users.extra_name\' , contacts.last_name AS client_last_name,
-				contacts.first_name AS client_first_name ' . $sql;
+				contacts.first_name AS client_first_name, unread_sms ' . $sql;
 		}
 		
 		if ($order_field && $order)

@@ -214,6 +214,16 @@ while ($row = mysql_fetch_assoc($result))
 		$row['link_target'] = " target=\"_blank\"";
 	}
 	
+	if ($row['unread_sms'] > 0)
+	{
+		$row['unread_sms'] = "<a href=\"{$base_url}/case.php?case_id={$row['case_id']}&screen=sms\"><span class=\"badge badge-info\">{$row['unread_sms']}</span></a>&nbsp;";
+	}
+	
+	else 
+	{
+		$row['unread_sms'] = '';
+	}
+	
 	$cases_table->addHtmlRow($row);
 }
 

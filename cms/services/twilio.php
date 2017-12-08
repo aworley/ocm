@@ -106,6 +106,10 @@ if ($case_id != '')
 	send_mail_notification($c->cocounsel2, $c->case_id, $c->number, $sender_name);
 	
 	$response_message = "Thanks!  Your message has been sent to your case handlers. The confirmation ID for your message is {$a->act_id}.";
+	
+	// Then increment the unread_sms counter for this case.
+	$c->unread_sms++;
+	$c->save();
 }
 
 else
