@@ -76,6 +76,7 @@ $result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_na
 	LEFT JOIN conflict ON contacts.contact_id = conflict.contact_id
 	LEFT JOIN cases ON conflict.case_id = cases.case_id
 	WHERE conflict.relation_code = 1
+	AND cases.close_date IS NULL
 	AND ((area_code = '{$area_code}' AND phone = '{$phone}') 
 	OR (area_code_alt = '{$area_code}' AND phone_alt = '{$phone}'))
 	ORDER BY open_date DESC LIMIT 1");
