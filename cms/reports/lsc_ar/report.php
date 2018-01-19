@@ -153,7 +153,7 @@ $x = pl_process_comma_vals($county);
 if ($x != false) 
 {
 	$t->add_parameter('Counties',$county);
-	$sql .= " AND county IN $x";
+	$sql .= " AND case_county IN $x";
 }
 
 if ($gender) 
