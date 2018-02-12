@@ -57,7 +57,7 @@ $clb = pl_date_mogrify($close_date_begin);
 $cle = pl_date_mogrify($close_date_end);
 $ood = pl_date_mogrify($open_on_date);
 
-$labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assault)",
+/*$labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assault)",
 "Adult Sexual Assault",
 "Adults Sexually Abused/Assaulted as Children",
 "Arson",
@@ -132,12 +132,41 @@ foreach($labels as $j => $k){
 	if($k==1){
 		echo "$j :"."$k<br/>";
 	}
-}
+}*/
 
-//$sql = "SELECT 
-$columns = array('Victimization Type', 'Number of Individuals who<br/> received services based on<br/> the presenting victimization<br/> during the reporting period:');
-$total = array('A'=>'0','B'=>'0','C'=>'0','D'=>'0','E'=>'0','F'=>'0','G'=>'0',
-				'H'=>'0','I'=>'0','J'=>'0','K'=>'0','Z'=>'0','total'=>'0');
+$sql = "SELECT 
+	SUM(voca2017_01) AS 'total01',
+	SUM(voca2017_02) AS 'total02',
+	SUM(voca2017_03) AS 'total03',
+	SUM(voca2017_04) AS 'total04',
+	SUM(voca2017_05) AS 'total05',
+	SUM(voca2017_06) AS 'total06',
+	SUM(voca2017_07) AS 'total07',
+	SUM(voca2017_08) AS 'total08',
+	SUM(voca2017_09) AS 'total09',
+	SUM(voca2017_10) AS 'total10',
+	SUM(voca2017_11) AS 'total11',
+	SUM(voca2017_12) AS 'total12',
+	SUM(voca2017_13) AS 'total13',
+	SUM(voca2017_14) AS 'total14',
+	SUM(voca2017_15) AS 'total15',
+	SUM(voca2017_16) AS 'total16',
+	SUM(voca2017_17) AS 'total17',
+	SUM(voca2017_18) AS 'total18',
+	SUM(voca2017_19) AS 'total19',
+	SUM(voca2017_20) AS 'total20',
+	SUM(voca2017_21) AS 'total21',
+	SUM(voca2017_22) AS 'total22',
+	SUM(voca2017_23) AS 'total23',
+	SUM(voca2017_24) AS 'total24',
+	SUM(voca2017_25) AS 'total25',
+	SUM(voca2017_26) AS 'total26'
+	FROM `cases`";
+$columns = array();
+$total = array('total01'=>'0','total02'=>'0','total03'=>'0','total04'=>'0','total05'=>'0','total06'=>'0','total07'=>'0',
+				'total08'=>'0','total09'=>'0','total10'=>'0','total11'=>'0','total12'=>'0','total13'=>'0', 'total14'=>'0',
+				'total15'=>'0','total16'=>'0','total17'=>'0','total18'=>'0','total19'=>'0','total20'=>'0','total21'=>'0',
+				'total22'=>'0','total23'=>'0','total24'=>'0','total25'=>'0','total26'=>'0');
 
 /*$sql2008 = "SELECT label as 'problem_label', problem,
 	SUM(IF(close_code = 'A', 1, 0)) AS 'A',
@@ -166,7 +195,7 @@ if(strtotime($cle) >= strtotime('1/1/2008')) {
 }*/
 					
 // handle the crazy date range selection
-$range1 = $range2 = "";
+/*$range1 = $range2 = "";
 $safe_clb = mysql_real_escape_string($clb);
 $safe_cle = mysql_real_escape_string($cle);
 $safe_ood = mysql_real_escape_string($ood);
@@ -233,7 +262,7 @@ if ($undup == 1 || ($undup == 0 && $undup != ''))
 }
 
 $sql .= " GROUP BY problem ORDER BY problem ASC";
-
+*/
 
 $t->title = $report_title;
 $t->display_row_count(false);
@@ -242,14 +271,16 @@ $t->set_header($columns);
 
 
 $result = mysql_query($sql) or trigger_error();
+
 while ($row = mysql_fetch_assoc($result))
 {
 	$t->add_row($row);
-	unset($row['problem_label']);
-	unset($row['problem']);
+	//unset($row['problem_label']);
+	//unset($row['problem']);
 	foreach ($row as $key => $val) {
 		$total[$key] += $val;
 	}
+
 }
 
 $r = array_merge(array('','Totals'), array_values($total));
