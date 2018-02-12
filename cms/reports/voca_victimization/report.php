@@ -5,8 +5,8 @@ chdir('../../');
 require_once ('pika-danio.php'); 
 pika_init();
 
-$report_title = "VOCA Victimization Report";
-$report_name = "voca_victimization";
+$report_title = 'LSC CSR Report';
+$report_name = "lsc_csr";
 
 $base_url = pl_settings_get('base_url');
 if(!pika_report_authorize($report_name)) {
@@ -57,89 +57,29 @@ $clb = pl_date_mogrify($close_date_begin);
 $cle = pl_date_mogrify($close_date_end);
 $ood = pl_date_mogrify($open_on_date);
 
-$labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assault)",
-"Adult Sexual Assault",
-"Adults Sexually Abused/Assaulted as Children",
-"Arson",
-"Bullying (Verbal, Cyber, or Physical)",
-"Burglary",
-"Child Physical Abuse or Neglect",
-"Child Pornography",
-"Child Sexual Abuse/Assault",
-"Domestic and/or Family Violence",
-"DUI/DWI Incidents",
-"Elder Abuse or Neglect",
-"Hate Crime: Racial/Religious/Gender/Sexual Orientation/Other",
-"Human Trafficking: Labor",
-"Human Trafficking: Sex",
-"Identity Theft/Fraud/Financial Crime",
-"Kidnapping (noncustodial)",
-"Kidnapping (custodial)",
-"Mass Violence (Domestic/International)",
-"Other Vehicular Victimization (e.g. Hit and Run)",
-"Robbery",
-"Stalking/Harassment",
-"Survivors of Homicide Victims",
-"Teen Dating Victimization",
-"Terrorism (Domestic/International)",
-"Other",
-"A1. Information about the criminal justice process",
-"A2. Information about victim rights, how to obtain notifications, etc.",
-"A3. Referral to other victim service programs",
-"A4. Referral to other services, supports, and resources (includes legal, medical, faith-based organizations, address-confidentiality programs, etc.)",
-"B1. Victim advocacy/accompaniment to emergency medical care",
-"B2. Victim advocacy/accompaniment to medical forensic exam",
-"B3. Law enforcement interview advocacy/accompaniment",
-"B4. Individual advocacy (e.g. assistance in applying for public benefits, return of personal property or effects)",
-"B5. Performance of medical or nonmedical forensic exam or interview, or medical evidence collection",
-"B6. Immigration assistance (e.g. special visas, continued presence application, and other immigration relief)",
-"B7. Intervention with employer, creditor, landlord, or academic institution",
-"B8. Child or dependent care assistance (includes coordination of services)",
-"B9. Transportation assistance (includes coordination of services)",
-"B10. Interpreter services",
-"C1. Crisis intervention (in-person, includes safety planning, etc.)",
-"C2. Hotline/crisis line counseling",
-"C3. On-scene crisis response (e.g. community crisis response)",
-"C4. Individual counseling",
-"C5. Support groups (facilitated or peer)",
-"C6. Other therapy (traditional, cultural, or alternative healing; art, writing, or play therapy, etc.)",
-"C7. Emergency financial assistance (includes emergency loans and petty cash, payment for items such as food and/or clothing, changing windows and/or locks, taxis, prophylactic and nonprophylactic medications, durable medical equipment, etc.)",
-"D1. Emergency shelter or safe house",
-"D2. Transitional housing",
-"D3. Relocation assistance (includes assistance with obtaining housing)",
-"E1. Notification of criminal justice events (e.g. case status, arrest, court proceedings, case disposition, release, etc.)",
-"E2. Victim impact statement assistance",
-"E3. Assistance with restitution (includes assistance in requesting and when collection efforts are not successful)",
-"E4. Civil legal assistance in obtaining protection or restraining order",
-"E5. Civil legal assistance with family law issues (e.g. custody, visitation, or support)",
-"E6. Other emergency justice‐related assistance",
-"E7. Immigration assistance (e.g. special visas, continued presence application, and other immigration relief)",
-"E8. Prosecution interview advocacy/accompaniment (includes accompaniment with prosecuting attorney and with victim/witness)",
-"E9. Law enforcement interview advocacy/accompaniment",
-"E10. Criminal advocacy/accompaniment",
-"E11. Other legal advice and/or counsel",);
-
-$c=0;
-foreach($_POST as $value){
-	$labels[$labelnames[$c]] = $value;
-	//echo "$c, "."$labelnames[$c]: "."$value<br/>";
-	$c++;
-	if($c>=61){
-		break;
-	}
-}
-foreach($labels as $j => $k){
-	if($k==1){
-		echo "$j :"."$k<br/>";
-	}
-}
-
-//$sql = "SELECT 
-$columns = array('Victimization Type', 'Number of Individuals who<br/> received services based on<br/> the presenting victimization<br/> during the reporting period:');
+$sql = "SELECT label as 'problem_label', problem,
+	SUM(IF(close_code = 'A', 1, 0)) AS 'A',
+	SUM(IF(close_code = 'B', 1, 0)) AS 'B',
+	SUM(IF(close_code = 'C', 1, 0)) AS 'C',
+	SUM(IF(close_code = 'D', 1, 0)) AS 'D',
+	SUM(IF(close_code = 'E', 1, 0)) AS 'E',
+	SUM(IF(close_code = 'F', 1, 0)) AS 'F',
+	SUM(IF(close_code = 'G', 1, 0)) AS 'G',
+	SUM(IF(close_code = 'H', 1, 0)) AS 'H',
+	SUM(IF(close_code = 'I', 1, 0)) AS 'I',
+	SUM(IF(close_code = 'J', 1, 0)) AS 'J',
+	SUM(IF(close_code = 'K', 1, 0)) AS 'K',
+	SUM(IF(close_code IS NULL OR close_code NOT IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'), 1, 0)) AS 'Z',
+	SUM(1) AS total
+	FROM cases
+	LEFT JOIN menu_problem_2007 ON cases.problem=menu_problem_2007.value
+	WHERE 1";
+$columns = array('Problem Code', 'Code #', 'A', 'B', 'C', 'D', 'E', 'F', 
+				'G', 'H', 'I', 'J', 'K', 'No Code', 'Total');
 $total = array('A'=>'0','B'=>'0','C'=>'0','D'=>'0','E'=>'0','F'=>'0','G'=>'0',
 				'H'=>'0','I'=>'0','J'=>'0','K'=>'0','Z'=>'0','total'=>'0');
 
-/*$sql2008 = "SELECT label as 'problem_label', problem,
+$sql2008 = "SELECT label as 'problem_label', problem,
 	SUM(IF(close_code = 'A', 1, 0)) AS 'A',
 	SUM(IF(close_code = 'B', 1, 0)) AS 'B',
 	SUM(IF(close_code = 'F', 1, 0)) AS 'F',
@@ -163,7 +103,7 @@ if(strtotime($cle) >= strtotime('1/1/2008')) {
 	$sql = $sql2008;
 	$columns = $columns2008;
 	$total = $total2008;
-}*/
+}
 					
 // handle the crazy date range selection
 $range1 = $range2 = "";

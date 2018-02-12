@@ -6,8 +6,8 @@ require_once ('pika-danio.php');
 pika_init();
 require_once('pikaTempLib.php');
 
-$report_title = "VOCA Victimization Report";
-$report_name = "voca_victimization";
+$report_title = "LSC CSR Report";
+$report_name = "lsc_csr";
 
 $base_url = pl_settings_get('base_url');
 if(!pika_report_authorize($report_name)) {
