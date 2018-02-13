@@ -285,7 +285,6 @@ while ($row = mysql_fetch_assoc($result))
 
 $r = array_merge(array('','Totals'), array_values($total));
 
-
 $t->add_row($r);
 
 if($show_sql) {
