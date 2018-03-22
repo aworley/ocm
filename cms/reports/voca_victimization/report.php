@@ -57,7 +57,7 @@ $clb = pl_date_mogrify($close_date_begin);
 $cle = pl_date_mogrify($close_date_end);
 $ood = pl_date_mogrify($open_on_date);
 
-/*$labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assault)",
+$labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assault)",
 "Adult Sexual Assault",
 "Adults Sexually Abused/Assaulted as Children",
 "Arson",
@@ -82,8 +82,8 @@ $ood = pl_date_mogrify($open_on_date);
 "Survivors of Homicide Victims",
 "Teen Dating Victimization",
 "Terrorism (Domestic/International)",
-"Other",
-"A1. Information about the criminal justice process",
+"Other");
+/*"A1. Information about the criminal justice process",
 "A2. Information about victim rights, how to obtain notifications, etc.",
 "A3. Referral to other victim service programs",
 "A4. Referral to other services, supports, and resources (includes legal, medical, faith-based organizations, address-confidentiality programs, etc.)",
@@ -117,8 +117,8 @@ $ood = pl_date_mogrify($open_on_date);
 "E8. Prosecution interview advocacy/accompaniment (includes accompaniment with prosecuting attorney and with victim/witness)",
 "E9. Law enforcement interview advocacy/accompaniment",
 "E10. Criminal advocacy/accompaniment",
-"E11. Other legal advice and/or counsel",);
-
+"E11. Other legal advice and/or counsel",);*/
+/*
 $c=0;
 foreach($_POST as $value){
 	$labels[$labelnames[$c]] = $value;
@@ -135,38 +135,35 @@ foreach($labels as $j => $k){
 }*/
 
 $sql = "SELECT 
-	SUM(voca2017_01) AS 'total01',
-	SUM(voca2017_02) AS 'total02',
-	SUM(voca2017_03) AS 'total03',
-	SUM(voca2017_04) AS 'total04',
-	SUM(voca2017_05) AS 'total05',
-	SUM(voca2017_06) AS 'total06',
-	SUM(voca2017_07) AS 'total07',
-	SUM(voca2017_08) AS 'total08',
-	SUM(voca2017_09) AS 'total09',
-	SUM(voca2017_10) AS 'total10',
-	SUM(voca2017_11) AS 'total11',
-	SUM(voca2017_12) AS 'total12',
-	SUM(voca2017_13) AS 'total13',
-	SUM(voca2017_14) AS 'total14',
-	SUM(voca2017_15) AS 'total15',
-	SUM(voca2017_16) AS 'total16',
-	SUM(voca2017_17) AS 'total17',
-	SUM(voca2017_18) AS 'total18',
-	SUM(voca2017_19) AS 'total19',
-	SUM(voca2017_20) AS 'total20',
-	SUM(voca2017_21) AS 'total21',
-	SUM(voca2017_22) AS 'total22',
-	SUM(voca2017_23) AS 'total23',
-	SUM(voca2017_24) AS 'total24',
-	SUM(voca2017_25) AS 'total25',
-	SUM(voca2017_26) AS 'total26'
+	SUM(voca2017_01),
+	SUM(voca2017_02),
+	SUM(voca2017_03),
+	SUM(voca2017_04),
+	SUM(voca2017_05),
+	SUM(voca2017_06),
+	SUM(voca2017_07),
+	SUM(voca2017_08),
+	SUM(voca2017_09),
+	SUM(voca2017_10),
+	SUM(voca2017_11),
+	SUM(voca2017_12),
+	SUM(voca2017_13),
+	SUM(voca2017_14),
+	SUM(voca2017_15),
+	SUM(voca2017_16),
+	SUM(voca2017_17),
+	SUM(voca2017_18),
+	SUM(voca2017_19),
+	SUM(voca2017_20),
+	SUM(voca2017_21),
+	SUM(voca2017_22),
+	SUM(voca2017_23),
+	SUM(voca2017_24),
+	SUM(voca2017_25),
+	SUM(voca2017_26)
 	FROM `cases`";
-$columns = array();
-$total = array('total01'=>'0','total02'=>'0','total03'=>'0','total04'=>'0','total05'=>'0','total06'=>'0','total07'=>'0',
-				'total08'=>'0','total09'=>'0','total10'=>'0','total11'=>'0','total12'=>'0','total13'=>'0', 'total14'=>'0',
-				'total15'=>'0','total16'=>'0','total17'=>'0','total18'=>'0','total19'=>'0','total20'=>'0','total21'=>'0',
-				'total22'=>'0','total23'=>'0','total24'=>'0','total25'=>'0','total26'=>'0');
+$columns = array("Category", "Total Cases");
+$total = array();
 
 /*$sql2008 = "SELECT label as 'problem_label', problem,
 	SUM(IF(close_code = 'A', 1, 0)) AS 'A',
@@ -272,20 +269,29 @@ $t->set_header($columns);
 
 $result = mysql_query($sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
-{
-	$t->add_row($row);
-	//unset($row['problem_label']);
-	//unset($row['problem']);
-	foreach ($row as $key => $val) {
-		$total[$key] += $val;
-	}
+$row = mysql_fetch_row($result);
 
+$total=array_combine($labelnames, $row);
+
+
+foreach ($total as $key=>$val) {
+	$val+=0;
+	$current = array(0=>$key, 1=>$val);
+	$t->add_row($current);
 }
 
-$r = array_merge(array('','Totals'), array_values($total));
+/*while ($row = mysql_fetch_row($result))
+{
+	$r=array_merge($labelnames[$c], $row[$c]);
+	$t->add_row($r);
+	//unset($row['problem_label']);
+	//unset($row['problem']);
+	$c++;
+}*/
 
-$t->add_row($r);
+//$r = array_merge(array('','Totals'), array_values($total));
+
+//$t->add_row($r);
 
 if($show_sql) {
 	$t->set_sql($sql);
