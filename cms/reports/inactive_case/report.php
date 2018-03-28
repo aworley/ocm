@@ -141,7 +141,24 @@ $result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql
 while ($row = mysql_fetch_assoc($result))
 {
 	$rpt_row = array();
-	$rpt_row['number'] = "<a href=\"{$base_url}/case.php?case_id={$row['case_id']}\" target=\"_blank\">{$row['number']}</a>";
+		
+	if ($report_format != 'csv')
+	{
+		$case_number_label = 'No Case #';
+		
+		if ($row['number'])
+		{
+			$case_number_label = $row['number'];
+		}
+		
+		$rpt_row['number'] = "<a href=\"{$base_url}/case.php?case_id={$row['case_id']}&screen=info\" target=\"_blank\">{$case_number_label}</a>";
+	}
+	
+	else 
+	{
+		$rpt_row['number'] = $row['number'];
+	}
+	
 	$rpt_row['client_name'] = pikaTempLib::plugin('text_name','',$row);
 	$rpt_row['status'] = pl_array_lookup($row['status'],$menu_case_status);
 	$rpt_row['office'] = pl_array_lookup($row['office'],$menu_office);
