@@ -544,12 +544,12 @@ $a['cocounsel2'] = pl_array_lookup($a['cocounsel2'],$tmpstaff);
 
 if (pl_grab_var('info'))
 {
-	$a['sub_info'] = pl_template($a, 'subtemplates/sub_info.html');
+	$a['sub_info'] = pl_template($a, 'subtemplates/case_print_info.html');
 }
 
 if (pl_grab_var('notes'))
 {
-	$a['sub_notes'] = pl_template($a, 'subtemplates/sub_notes.html');
+	$a['sub_notes'] = pl_template($a, 'subtemplates/case_print_notes.html');
 }
 
 $buffer = pl_template($a, 'reports/case_print/case_print.html');
