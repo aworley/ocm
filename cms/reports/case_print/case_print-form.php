@@ -339,6 +339,64 @@ $a['additionals'] = "<ul>\n";
 $a['opposings'] = "<ul>\n";
 $a['other_contacts'] = "<ul>\n";
 
+// 02-16-2012 - caw - added a table of additional cases where current client was/is also a client
+$a['other_cases'] = "<table><tr><td><u>Case Num</u></td><td><u>Date</u></td><td><u>Date</u></td><td><u>Code</u></td></tr>";
+$other_cases_found = false;
+$dummy = null;
+if($a['client_id'])
+{
+	$result = $pk->fetchCaseList(array('client_id' => $a['client_id']), $dummy);
+	while($row = $result->fetchRow())
+	{
+		if($a['case_id']<>$row['case_id'])
+		{
+			$other_cases_found = true;
+			if($row['number'])
+			{
+				$number_temp = $row['number'];
+			}
+			else
+			{
+				$number_temp = "Case Number Missing";
+			}
+			if($row['open_date'])
+			{
+				$open_temp = pl_unmogrify_date($row['open_date']);
+			}
+			else
+			{
+				$open_temp = "Unknown";
+			}
+			if($row['close_date'])
+			{
+				$close_temp = pl_unmogrify_date($row['close_date']);
+			}
+			else
+			{
+				$close_temp = "Not Closed";
+			}
+			if($row['problem'])
+			{
+				$problem_temp = $row['problem'];
+			}
+			else
+			{
+				$problem_temp = "n/a";
+			}
+			$a['other_cases'] .= "<tr><td><h5>$number_temp &nbsp</h5></td><td><h5>$open_temp </h5></td><td><h5>$close_temp &nbsp</h5></td><td><h5>$problem_temp</h5></td></tr>";
+		}  // end of not current case
+	}  // end of while
+} // end of if client exists
+if(!$other_cases_found)
+{
+	$a['other_cases'] = "None Found";
+}
+else
+{
+	$a['other_cases'] .= "</table>";
+}
+// 02-16-2012 - caw - end of additional table of other cases
+
 // populate the additional client, opposing party tables
 /*$result = $pk->fetchCaseContacts($case_id);
 while ($row = $result->fetchRow())
