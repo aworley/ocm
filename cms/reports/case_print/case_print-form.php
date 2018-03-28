@@ -461,6 +461,7 @@ if (!$z)
 */
 
 $a['additional'] = '';
+$rc = pl_menu_get('relation_codes');
 
 $result = $pk->fetchCaseContacts($case_id);
 while ($row = $result->fetchRow())
@@ -482,7 +483,7 @@ while ($row = $result->fetchRow())
 		
 		default:
 		
-		$relatmp = $row["relation_code"];
+		$relatmp = pl_array_lookup($row["relation_code"], $rc);
 		break;
 	}
 	
