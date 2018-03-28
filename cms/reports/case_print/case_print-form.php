@@ -112,6 +112,7 @@ $plMenus['outcome'] = pl_table_array('outcome');
 $plMenus['main_benefit'] = pl_table_array('main_benefit');
 $plMenus['gender'] = pl_table_array('gender');
 $plMenus['yes_no'] = pl_table_array('yes_no');
+$plMenus['just_income'] = pl_table_array('just_income');
 
 $pba_array = $pk->fetchPbAttorneyArray();
 
@@ -262,6 +263,7 @@ $a['intake_user_id'] = pl_array_lookup($a['intake_user_id'],$tmpstaff);
 $a['marital'] = pl_array_lookup($a['marital'],$plMenus['marital']);
 $a['outcome'] = pl_array_lookup($a['outcome'],$plMenus['outcome']);
 $a['main_benefit'] = pl_array_lookup($a['main_benefit'],$plMenus['main_benefit']);
+$a['just_income'] = pl_array_lookup($a['just_income'],$plMenus['just_income']);
 
 $a['probono'] = pl_array_lookup($a['pba_id1'],$pba_array);
 if($a['pba_id2'])
