@@ -15,7 +15,7 @@ foreach ($pba_fields as $field) {
 		$a[$field."_time"] = "<a href=\"{$base_url}/activity.php?case_id={$case_id}&pba_id={$case_row[$field]}&act_type=T\">
 							<img height=\"20px\" width=\"20px\" src=\"{$base_url}/images/time_add.png\" alt=\"Record Time\"/>
 							</a>";
-		// 2013-06-27 AMW & CW
+		// 2013-06-27 AMW & CAW
 		$a[$field."_remove_link"] = "&nbsp;[<a href=\"{$base_url}/assign_pba.php?action=assign_pba&field={$field}&screen=pb&case_id={$case_id}\">Remove</a>]";
 	} 
 }
