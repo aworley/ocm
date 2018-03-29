@@ -26,11 +26,7 @@ $report_format = pl_grab_post('report_format');
 $close_date_begin = pl_grab_post('close_date_begin');
 $close_date_end = pl_grab_post('close_date_end');
 $open_on_date = pl_grab_post('open_on_date');
-$funding = pl_grab_post('funding');
-$office = pl_grab_post('office');
-$status = pl_grab_post('status');
-$county = pl_grab_post('county');
-$undup = pl_grab_post('undup');
+
 
 $menu_undup = pl_menu_get('undup');
 
@@ -118,21 +114,7 @@ $labelnames = array("Adult Physical Assault (includes Aggravated and Simple Assa
 "E9. Law enforcement interview advocacy/accompaniment",
 "E10. Criminal advocacy/accompaniment",
 "E11. Other legal advice and/or counsel",);*/
-/*
-$c=0;
-foreach($_POST as $value){
-	$labels[$labelnames[$c]] = $value;
-	//echo "$c, "."$labelnames[$c]: "."$value<br/>";
-	$c++;
-	if($c>=61){
-		break;
-	}
-}
-foreach($labels as $j => $k){
-	if($k==1){
-		echo "$j :"."$k<br/>";
-	}
-}*/
+
 
 $sql = "SELECT 
 	SUM(voca2017_01),
@@ -165,34 +147,9 @@ $sql = "SELECT
 $columns = array("Category", "Total Cases");
 $total = array();
 
-/*$sql2008 = "SELECT label as 'problem_label', problem,
-	SUM(IF(close_code = 'A', 1, 0)) AS 'A',
-	SUM(IF(close_code = 'B', 1, 0)) AS 'B',
-	SUM(IF(close_code = 'F', 1, 0)) AS 'F',
-	SUM(IF(close_code = 'G', 1, 0)) AS 'G',
-	SUM(IF(close_code = 'H', 1, 0)) AS 'H',
-	SUM(IF(close_code = 'IA', 1, 0)) AS 'IA',
-	SUM(IF(close_code = 'IB', 1, 0)) AS 'IB',
-	SUM(IF(close_code = 'IC', 1, 0)) AS 'IC',
-	SUM(IF(close_code = 'K', 1, 0)) AS 'K',
-	SUM(IF(close_code = 'L', 1, 0)) AS 'L',
-	SUM(IF(close_code IS NULL OR close_code NOT IN ('A','B','F','G','H','IA','IB','IC','K','L'), 1, 0)) AS 'Z',
-	SUM(1) AS total
-	FROM cases
-	LEFT JOIN menu_problem_2008 ON cases.problem=menu_problem_2008.value
-	WHERE 1";
-$columns2008 = array('Problem Code','Code #','A','B','F','G','H','IA','IB','IC','K','L','No Code','Total');
-$total2008 = array('A'=>'0','B'=>'0','F'=>'0','G'=>'0','H'=>'0','IA'=>'0','IB'=>'0',
-					'IC'=>'0','K'=>'0','L'=>'0','Z'=>'0','total'=>'0');
-
-if(strtotime($cle) >= strtotime('1/1/2008')) {
-	$sql = $sql2008;
-	$columns = $columns2008;
-	$total = $total2008;
-}*/
 					
 // handle the crazy date range selection
-/*$range1 = $range2 = "";
+$range1 = $range2 = "";
 $safe_clb = mysql_real_escape_string($clb);
 $safe_cle = mysql_real_escape_string($cle);
 $safe_ood = mysql_real_escape_string($ood);
@@ -215,55 +172,17 @@ if ($ood) {
 
 if ($ood) {
 	if ($clb || $cle) {
-		$sql .= " AND (($range1) OR $range2)";
-	} else { $sql .= " AND $range2"; }
+		$sql .= " WHERE (($range1) OR $range2)";
+	} else { $sql .= " WHERE $range2"; }
 } else {
 	if ($clb || $cle) {
-		$sql .= " AND $range1";
+		$sql .= " WHERE $range1";
 	}
 }
 
-$x = pl_process_comma_vals($funding);
-if ($x != false)
-{
-	$t->add_parameter('Funding Code(s)',$funding);
-	$sql .= " AND funding IN $x";
-}
-
-$x = pl_process_comma_vals($office);
-if ($x != false)
-{
-	$t->add_parameter('Office Code(s)',$office);
-	$sql .= " AND office IN $x";
-}
-
-$x = pl_process_comma_vals($status);
-if ($x != false)
-{
-	$t->add_parameter('Case Status Code(s)',$status);
-	$sql .= " AND status IN $x";
-}
-
-$x = pl_process_comma_vals($county);
-if ($x != false)
-{
-	$t->add_parameter('Counties',$county);
-	$sql .= " AND case_county IN $x";
-}
-
-$safe_undup = mysql_real_escape_string($undup);
-if ($undup == 1 || ($undup == 0 && $undup != ''))
-{
-	$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
-	$sql .= " AND undup = '{$safe_undup}'";
-}
-
-$sql .= " GROUP BY problem ORDER BY problem ASC";
-*/
-
 $t->title = $report_title;
 $t->display_row_count(false);
-//$t->set_table_title('Table 1: Ethnicity by Age Category');
+
 $t->set_header($columns);
 
 
@@ -280,18 +199,6 @@ foreach ($total as $key=>$val) {
 	$t->add_row($current);
 }
 
-/*while ($row = mysql_fetch_row($result))
-{
-	$r=array_merge($labelnames[$c], $row[$c]);
-	$t->add_row($r);
-	//unset($row['problem_label']);
-	//unset($row['problem']);
-	$c++;
-}*/
-
-//$r = array_merge(array('','Totals'), array_values($total));
-
-//$t->add_row($r);
 
 if($show_sql) {
 	$t->set_sql($sql);
