@@ -26,6 +26,7 @@ $report_format = pl_grab_post('report_format');
 $close_date_begin = pl_grab_post('close_date_begin');
 $close_date_end = pl_grab_post('close_date_end');
 $open_on_date = pl_grab_post('open_on_date');
+$show_sql = pl_grab_post('show_sql');
 
 
 $menu_undup = pl_menu_get('undup');
@@ -143,7 +144,7 @@ $sql = "SELECT
 	SUM(voca2017_24),
 	SUM(voca2017_25),
 	SUM(voca2017_26)
-	FROM `cases`";
+	FROM `cases` WHERE 1";
 $columns = array("Category", "Total Cases");
 $total = array();
 
@@ -172,11 +173,11 @@ if ($ood) {
 
 if ($ood) {
 	if ($clb || $cle) {
-		$sql .= " WHERE (($range1) OR $range2)";
-	} else { $sql .= " WHERE $range2"; }
+		$sql .= " AND (($range1) OR $range2)";
+	} else { $sql .= " AND $range2"; }
 } else {
 	if ($clb || $cle) {
-		$sql .= " WHERE $range1";
+		$sql .= " AND $range1";
 	}
 }
 
