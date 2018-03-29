@@ -32,34 +32,38 @@
     </span><br/> -->
 	</td>
 	<td valign="top">
-	<table cellspacing="0" cellpadding="1">
+	<table class="table table-striped">
 	<tr>
 		<th>Assigned Pro Bono Atty</th>
 		<th>Time</th>
+		%%[other_services_table_header]%%
 	</tr><tr>
 		<td>
-		#1: %%[pba_id1,pb_attorneys,text_menu]%% [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id1">%%[pba_id1_link]%%</a>] 	
+		#1: <a href="%%[base_url]%%/pb_attorneys.php?screen=edit_pb&pba_id=%%[pba_id1]%%">%%[pba_id1,pb_attorneys,text_menu]%%</a> [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id1">%%[pba_id1_link]%%</a>] 	
 		%%[pba_id1_remove_link]%%
 		</td>
 		<td nowrap>
 		%%[pba_id1_time]%%
 		</td>
+		%%[pba_id1_lsc]%%
 	</tr><tr>
 		<td>
-		#2: %%[pba_id2,pb_attorneys,text_menu]%% [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id2">%%[pba_id2_link]%%</a>]
+		#2: <a href="%%[base_url]%%/pb_attorneys.php?screen=edit_pb&pba_id=%%[pba_id2]%%">%%[pba_id2,pb_attorneys,text_menu]%%</a> [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id2">%%[pba_id2_link]%%</a>]
 		%%[pba_id2_remove_link]%%
 		</td>
 		<td nowrap>
 		%%[pba_id2_time]%%
 		</td>
+		%%[pba_id2_lsc]%%
 	</tr><tr>
 		<td>
-		#3: %%[pba_id3,pb_attorneys,text_menu]%% [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id3">%%[pba_id3_link]%%</a>]
+		#3: <a href="%%[base_url]%%/pb_attorneys.php?screen=edit_pb&pba_id=%%[pba_id1]%%">%%[pba_id3,pb_attorneys,text_menu]%%</a> [<a href="%%[base_url]%%/assign_pba.php?screen=pb&case_id=%%[case_id]%%&field=pba_id3">%%[pba_id3_link]%%</a>]
 		%%[pba_id3_remove_link]%%
 		</td>
 		<td nowrap>
 		%%[pba_id3_time]%%
 		</td>
+		%%[pba_id3_lsc]%%
 	</tr>
 	</table>
 	</td>

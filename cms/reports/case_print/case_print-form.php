@@ -112,6 +112,7 @@ $plMenus['outcome'] = pl_table_array('outcome');
 $plMenus['main_benefit'] = pl_table_array('main_benefit');
 $plMenus['gender'] = pl_table_array('gender');
 $plMenus['yes_no'] = pl_table_array('yes_no');
+$plMenus['just_income'] = pl_table_array('just_income');
 
 $pba_array = $pk->fetchPbAttorneyArray();
 
@@ -262,6 +263,7 @@ $a['intake_user_id'] = pl_array_lookup($a['intake_user_id'],$tmpstaff);
 $a['marital'] = pl_array_lookup($a['marital'],$plMenus['marital']);
 $a['outcome'] = pl_array_lookup($a['outcome'],$plMenus['outcome']);
 $a['main_benefit'] = pl_array_lookup($a['main_benefit'],$plMenus['main_benefit']);
+$a['just_income'] = pl_array_lookup($a['just_income'],$plMenus['just_income']);
 
 $a['probono'] = pl_array_lookup($a['pba_id1'],$pba_array);
 if($a['pba_id2'])
@@ -337,6 +339,64 @@ $a['additionals'] = "<ul>\n";
 $a['opposings'] = "<ul>\n";
 $a['other_contacts'] = "<ul>\n";
 
+// 02-16-2012 - caw - added a table of additional cases where current client was/is also a client
+$a['other_cases'] = "<table><tr><td><u>Case Num</u></td><td><u>Date</u></td><td><u>Date</u></td><td><u>Code</u></td></tr>";
+$other_cases_found = false;
+$dummy = null;
+if($a['client_id'])
+{
+	$result = $pk->fetchCaseList(array('client_id' => $a['client_id']), $dummy);
+	while($row = $result->fetchRow())
+	{
+		if($a['case_id']<>$row['case_id'])
+		{
+			$other_cases_found = true;
+			if($row['number'])
+			{
+				$number_temp = $row['number'];
+			}
+			else
+			{
+				$number_temp = "Case Number Missing";
+			}
+			if($row['open_date'])
+			{
+				$open_temp = pl_unmogrify_date($row['open_date']);
+			}
+			else
+			{
+				$open_temp = "Unknown";
+			}
+			if($row['close_date'])
+			{
+				$close_temp = pl_unmogrify_date($row['close_date']);
+			}
+			else
+			{
+				$close_temp = "Not Closed";
+			}
+			if($row['problem'])
+			{
+				$problem_temp = $row['problem'];
+			}
+			else
+			{
+				$problem_temp = "n/a";
+			}
+			$a['other_cases'] .= "<tr><td><h5>$number_temp &nbsp</h5></td><td><h5>$open_temp </h5></td><td><h5>$close_temp &nbsp</h5></td><td><h5>$problem_temp</h5></td></tr>";
+		}  // end of not current case
+	}  // end of while
+} // end of if client exists
+if(!$other_cases_found)
+{
+	$a['other_cases'] = "None Found";
+}
+else
+{
+	$a['other_cases'] .= "</table>";
+}
+// 02-16-2012 - caw - end of additional table of other cases
+
 // populate the additional client, opposing party tables
 /*$result = $pk->fetchCaseContacts($case_id);
 while ($row = $result->fetchRow())
@@ -401,6 +461,7 @@ if (!$z)
 */
 
 $a['additional'] = '';
+$rc = pl_menu_get('relation_codes');
 
 $result = $pk->fetchCaseContacts($case_id);
 while ($row = $result->fetchRow())
@@ -422,7 +483,7 @@ while ($row = $result->fetchRow())
 		
 		default:
 		
-		$relatmp = $row["relation_code"];
+		$relatmp = pl_array_lookup($row["relation_code"], $rc);
 		break;
 	}
 	
@@ -483,12 +544,12 @@ $a['cocounsel2'] = pl_array_lookup($a['cocounsel2'],$tmpstaff);
 
 if (pl_grab_var('info'))
 {
-	$a['sub_info'] = pl_template($a, 'reports/case_print/sub_info.html');
+	$a['sub_info'] = pl_template($a, 'subtemplates/case_print_info.html');
 }
 
 if (pl_grab_var('notes'))
 {
-	$a['sub_notes'] = pl_template($a, 'reports/case_print/sub_notes.html');
+	$a['sub_notes'] = pl_template($a, 'subtemplates/case_print_notes.html');
 }
 
 $buffer = pl_template($a, 'reports/case_print/case_print.html');
