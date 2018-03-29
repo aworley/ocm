@@ -110,7 +110,7 @@ switch ($screen)
 
 // AMW 2014-07-23 - Added for SMRLS and ILCM.
 $sresult = mysql_query("DESCRIBE cases supervisor");
-if (mysql_num_rows($squery) == 1)
+if (mysql_num_rows($sresult) == 1)
 {
 	$pba_case_list->column_names = array('number', 'client_name', 'status', 'user_id', 'supervisor', 'office', 'problem', 'funding', 'open_date', 'close_date');
 }
@@ -158,9 +158,10 @@ else
 		$row['user_id'] = pl_array_lookup($row['user_id'],$staff_array);
 		
 		// AMW 2014-07-23 - Added for SMRLS and ILCM.
-		$row['supervisor'] = pl_array_lookup($row['supervisor'],$staff_array);		
-		
-		
+		if (array_key_exists('supervisor', $row))
+		{
+			$row['supervisor'] = pl_array_lookup($row['supervisor'], $staff_array);		
+		}
 		
 		$row['open_date'] = pl_date_unmogrify($row['open_date']);
 		$row['close_date'] = pl_date_unmogrify($row['close_date']);
