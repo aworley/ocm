@@ -13,9 +13,8 @@ foreach ($pba_fields as $field) {
 	$a[$field."_link"] = "Assign Pro Bono Attorney";
 	if(isset($case_row[$field]) && $case_row[$field]) {
 		$a[$field."_link"] = "Change";
-		$a[$field."_time"] = "<a href=\"{$base_url}/activity.php?case_id={$case_id}&pba_id={$case_row[$field]}&act_type=T\">
-							<img height=\"20px\" width=\"20px\" src=\"{$base_url}/images/time_add.png\" alt=\"Record Time\"/>
-							</a>";
+		$a[$field."_time"] = "<a class=\"btn btn-small\"  href=\"{$base_url}/activity.php?case_id={$case_id}&pba_id={$case_row[$field]}&act_type=T\">
+							<i class=\"icon-time\"></i></a>";
 		// 2013-06-27 AMW & CAW
 		$a[$field."_remove_link"] = "&nbsp;[<a href=\"{$base_url}/assign_pba.php?action=assign_pba&field={$field}&screen=pb&case_id={$case_id}\">Remove</a>]";
 		
@@ -31,7 +30,7 @@ $a['lsc_close_code_menu'] = pikaTempLib::plugin('lsc_close_code','close_code',$c
 
 if ($os_enabled)
 {
-	$a['other_services_table_header'] = "<th>LSC Other Services</th>";
+	$a['other_services_table_header'] = "<th nowrap>LSC Other Services</th>";
 }
 
 $a = array_merge($a,$case_row);
