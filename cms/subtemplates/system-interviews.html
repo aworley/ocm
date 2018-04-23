@@ -1,0 +1,84 @@
+%%[begin:default_interviews]%%
+<h2>Pika Interview Manager</h2>
+<a href="%%[base_url]%%/system-interviews.php?action=edit">Add New Interview</a>
+<br/>
+%%[interview_listing]%%
+%%[end:default_interviews]%%
+
+
+
+
+%%[begin:flex_header]%%
+<table cellspacing="0" cellpadding="5" summary="" border="0">
+	<tr>
+		<th nowrap>Name</th>
+		<th nowrap>Enabled</th>
+		<th nowrap>&nbsp;</th>
+	</tr>
+%%[end:flex_header]%%
+%%[begin:flex_row]%%
+	<tr>
+		<td>%%[name]%%</td>
+		<td>%%[enabled,yes_no,text]%%</td>
+		<td>
+			<a href="%%[base_url]%%/system-interviews.php?interview_id=%%[interview_id]%%&action=enable">%%[enable_text]%%</a> |
+			<a href="%%[base_url]%%/system-interviews.php?interview_id=%%[interview_id]%%&action=edit">Edit</a> |
+			<a href="%%[base_url]%%/system-interviews.php?interview_id=%%[interview_id]%%&action=confirm_delete">Delete</a>
+		</td>
+	</tr>
+%%[end:flex_row]%%
+%%[begin:flex_footer]%%
+</table>
+%%[end:flex_footer]%%
+
+
+
+
+%%[begin:edit_interview]%%
+<table cellpadding="0" cellspacing="5" border="0">
+<tr>
+	<td valign="top">
+	<h2>Editing Interview: %%[name]%%</h2>
+	
+	<form action="%%[base_url]%%/system-interviews.php" method="GET">
+	<table>
+	<tr>
+		<td>
+		Name:<br/>
+		%%[name,input_text,size=60,maxlength=254]%%<br/>
+		Text:<br/>
+		%%[interview_text,input_textarea,cols=55,rows=17]%%
+		</td>
+		<td>&nbsp;&nbsp;</td>
+		<td valign="top">
+		Enabled:<br/>
+		%%[enabled,yes_no,radio,vertical]%%<br/>
+		Created: <br/><b>%%[created,text_date]%%</b><br/>
+		Last Modified: <br/><b>%%[last_modified,text_date]%%</b><br/>
+		
+		</td>
+	</tr>
+	</table>
+		%%[interview_id,input_hidden]%%
+		%%[action,input_hidden]%%
+		<br/>
+		<input type="submit" name="Save" class="save" value="Save"/>
+	</form>
+	</td>
+	
+	
+</tr>
+</table>
+%%[end:edit_interview]%%
+
+
+%%[begin:delete_interview]%%
+Are you sure you want to delete this interview?
+<form action="%%[base_url]%%/system-interviews.php" method="GET">
+%%[interview_id,input_hidden]%%
+%%[action,input_hidden]%%
+<input type="submit" name="Delete" value="Delete"/>
+&nbsp;
+<input type="submit" name="Cancel" value="Cancel"/>
+</form>
+%%[end:delete_interview]%%
