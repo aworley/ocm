@@ -25,7 +25,7 @@ CREATE TABLE `activities` (
   `ph_estimated` mediumint(9) default NULL,
   `estimate_notes` tinytext,
   `act_end_date` date default NULL,
-  `problem` char(3) default NULL,
+  `problem` char(2) default NULL,
   `location` varchar(5) default NULL,
   `media_items` smallint(6) default NULL,
   PRIMARY KEY  (`act_id`),
@@ -95,7 +95,7 @@ CREATE TABLE `cases` (
   `cocounsel1` int(11) default NULL,
   `cocounsel2` int(11) default NULL,
   `office` char(3) default NULL,
-  `problem` char(3) default NULL,
+  `problem` char(2) default NULL,
   `sp_problem` char(3) default NULL,
   `status` char(1) NOT NULL default '1',
   `open_date` date default NULL,
@@ -740,7 +740,7 @@ CREATE TABLE `menu_poverty` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu_problem` (
-  `value` char(3) NOT NULL DEFAULT '0',
+  `value` char(2) NOT NULL DEFAULT '0',
   `label` char(80) NOT NULL DEFAULT '',
   `menu_order` tinyint(4) NOT NULL DEFAULT '0',
   KEY `label` (`label`),
@@ -751,7 +751,7 @@ CREATE TABLE `menu_problem` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu_problem_2007` (
-  `value` char(3) NOT NULL DEFAULT '0',
+  `value` char(2) NOT NULL DEFAULT '0',
   `label` char(80) NOT NULL DEFAULT '',
   `menu_order` tinyint(4) NOT NULL DEFAULT '0',
   KEY `label` (`label`),
@@ -762,7 +762,7 @@ CREATE TABLE `menu_problem_2007` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu_problem_2008` (
-  `value` char(3) NOT NULL DEFAULT '0',
+  `value` char(2) NOT NULL DEFAULT '0',
   `label` char(80) NOT NULL DEFAULT '',
   `menu_order` tinyint(4) NOT NULL DEFAULT '0',
   KEY `label` (`label`),
