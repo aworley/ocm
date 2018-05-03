@@ -83,7 +83,8 @@ class plCsvReport
 		}
 
 		// AMW 2013-10-16 - Workaround for new Chrome/CSV behavior.
-		if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') !== false)
+		if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') !== false  || 
+				strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false)
 		{
 		    header("Content-Disposition: attachment; filename=\"{$this->title}.csv\"");
 		}
