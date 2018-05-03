@@ -148,9 +148,6 @@ else
 	{
 		$z = implode(', ', $fo);
 		$showfields = $z;
-		// Always select case_id_deleteme if no grouping, COUNTing or SUMing is taking place
-		// it's used to fill in the case_id in the case number link.
-		$showfields .= ", cases.case_id AS case_id_deleteme";
 	}
 }
 
@@ -474,10 +471,9 @@ while ($row = mysql_fetch_assoc($result))
 
 	if ($report_format != 'csv' && isset($row['number']))
 	{
-		$row['number'] = "<a href=\"{$base_url}/case.php?case_id={$row['case_id_deleteme']}\">{$row['number']}</a>";
+		$url_number = urlencode($row['number']);
+		$row['number'] = "<a href=\"{$base_url}/search.php?s={$url_number}\">{$row['number']}</a>";
 	}
-	
-	unset($row['case_id_deleteme']);
 
 	if ($report_format != 'csv' && isset($row['act_date']))
 	{
