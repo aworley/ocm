@@ -235,6 +235,32 @@ $template->addMenu('interviews',$menu_interviews);
 
 $a['content'] = $template->draw();
 
+/*	The activity lock setting prevents the date, funding, and hours from being
+		edited if 'x' number of days have passed since the record act_date.
+		Enforce this setting here.
+		
+		TODO:  also put to code in ops/update_activity.php to help enforce this.
+		*/
+
+$lock_max_days = pl_settings_get('activity_lock_max_days');
+
+if ($lock_max_days > 0 && $auth_row['group_id'] != 'system')
+{
+	$act_buffer = $a['content'];
+	
+	if ((time() - strtotime($act_row['act_date']))  / (60 * 60 * 24) > $lock_max_days)
+	{
+		$act_buffer = str_replace('onclick="openCalendar(', 'disabled onclick="openCalendar(', $act_buffer);
+		$act_buffer = str_replace('name="act_date"', 'disabled name="act_date"', $act_buffer);
+		$act_buffer = str_replace('name="funding"', 'disabled name="funding"', $act_buffer);
+		$act_buffer = str_replace('name="hours"', 'disabled name="hours"', $act_buffer);
+	}
+
+	$a['content'] = $act_buffer;
+}
+
+/*	End of the activity lock section. */
+
 // If this is a new record, 'created' won't be present, so check if it exists first.
 if (isset($act_row['created']) && $act_row['created'])
 {
