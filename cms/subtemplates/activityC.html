@@ -1,0 +1,96 @@
+<form action="%%[base_url]%%/ops/update_activity.php" name="ws" method=POST>
+<table>
+	<tr valign="top">
+		<td style="padding: 1em;">
+		Summary (public):<br/>
+		%%[summary,input_textarea,rows=1,cols=44,class=notes]%%<br/>
+		Notes (private):<br/>
+		%%[notes,input_textarea,rows=11,cols=44,class=notes]%%<br/>
+		<img src="%%[base_url]%%/images/point.gif">
+		<a href="javascript:toggleBox('demodiv',1);">Text Highlighting</a>
+		%%[textFormat]%%
+		&nbsp;&nbsp;
+		%%[deleteActivity]%%
+
+		</td>
+		<td class="de" style="padding: 1em;">
+
+		Date: <br/>
+		%%[act_date,input_date_selector]%%<br/>
+		Start Time:<br/>
+		%%[act_time,input_text]%%<br/>
+		End Time:<br/>
+		%%[act_end_time,input_text]%%<br/>
+		Type of Activity:<br/>
+		%%[category,category]%%<br/>
+		%%[owner_menu]%%
+		Case: %%[number]%%<br/>
+		%%[new_case_menu]%%<br/>
+		Funding Source:<br/>
+		%%[funding,funding]%%<br/>
+
+		</td>
+    <td style="padding: 1em;">
+      <div id="sms_reminders" style="display: none;">
+        <h3>SMS Reminders</h3>
+        <!--  <p>Primary Client: <strong>Jane Smith</strong></p> -->
+        <p>Send SMS reminder to the primary client on this case?<br>
+        <!-- <p>Select an open case to enable SMS reminders -->
+          %%[sms_mins_before,sms_mins_before]%%<br>
+					<!-- sms_send_time = %%[sms_send_time_unmog]%% %%[sms_send_time]%%<br> -->
+					Send the SMS reminder to:
+					%%[sms_mobile,which_phone,radio]%%<br>
+					<!--
+          <label>%%[sms_send_pri,yes_no,checkbox]%% Send to primary phone</label>
+          <label>%%[sms_send_alt,yes_no,checkbox]%% Send to alternate phone</label><br>
+					-->
+          <strong>Select a Message</strong><br>
+          %%[sms_message_id,sms_messages]%%
+        </p>
+      </div>
+			<p>%%[sms_status]%%</p>
+    </td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		%%[act_url,input_hidden]%%
+		%%[act_id,input_hidden]%%
+		%%[act_type,input_hidden]%%
+		<input type="submit" name="next_act" value="Save, Add Another" tabindex="1" class="save" />
+		&nbsp;
+		<input type="submit" name="close_act" value="Save and Close" tabindex="1" class="save" />
+		&nbsp;
+		<input type="submit" name="cancel" value="Cancel" tabindex="1" class="save" />
+		</td>
+	</tr>
+</table>
+
+</form>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+document.ws.summary.focus();
+//-->
+</script>
+
+<script>
+
+function setSmsVisibility() {
+  if (document.ws.case_id.value.length > 0) {
+    document.getElementById("sms_reminders").style.display = "block";
+  }
+  
+  else {
+    document.getElementById("sms_reminders").style.display = "none";
+  }
+}
+
+setSmsVisibility();
+
+</script>
+
+%%[textFormat.js,javascript]%%
+%%[ajax_init.js,javascript]%%
+%%[date_selector.js,javascript,parse]%%
+%%[setFunding.js,javascript,parse]%%
+

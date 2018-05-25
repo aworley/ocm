@@ -171,7 +171,7 @@ $case_menu_args = array();
 
 if (pl_settings_get('autofill_time_funding') == 1)
 {
-	$case_menu_args = array('onchange=setFunding(this.value);');
+	$case_menu_args = array('onchange=setFunding(this.value);setSmsVisibility();');
 }
 
 $act_row['new_case_menu'] = pikaTempLib::plugin('case_menu', 'case_id', 
@@ -222,6 +222,21 @@ if(isset($act_row['case_id']) && is_numeric($act_row['case_id'])) {
 	$a['nav'] .= "<a href=\"{$base_url}/case.php?case_id={$act_row['case_id']}\">{$act_row['number']}</a> &gt; ";
 }
 $a['nav'] .= "Edit {$type_desc}";
+
+$act_row['sms_send_time_unmog'] = date('M d Y h:i', $act_row['sms_send_time']);
+
+if(!is_null($act_row['sms_act_id']))
+{
+	$act_row['sms_status'] = '<div class="alert alert-success">Reminder sent<br>'
+		. $act_row['sms_send_time_unmog'] . '</div>';
+}
+
+else if(!is_null($act_row['sms_send_failures']))
+{
+	$act_row['sms_status'] = '<div class="alert alert-error">Reminder failed to send<br>'
+		. $act_row['sms_send_time_unmog'] . '</div>';
+}
+
 // Act lookup - check for legacy templates
 if (file_exists(pl_custom_directory() . "/subtemplates/activity{$act_type}.html")){ // -custom/subtemplates/activityX.html
 	$template = new pikaTempLib("{$custom_dir}/subtemplates/activity{$act_type}.html",$act_row);
@@ -232,6 +247,7 @@ if (file_exists(pl_custom_directory() . "/subtemplates/activity{$act_type}.html"
 }
 
 $template->addMenu('interviews',$menu_interviews);  
+$template->addMenu('which_phone', array('p' => 'Primary Phone', 'a' => 'Alternate Phone'));
 
 $a['content'] = $template->draw();
 

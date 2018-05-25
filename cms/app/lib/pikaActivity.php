@@ -16,6 +16,7 @@ require_once('plBase.php');
 */
 class pikaActivity extends plBase 
 {	
+	private $recalc_sms_send_time = false;
 	
 	public function __construct($id = null)
 	{
@@ -30,6 +31,19 @@ class pikaActivity extends plBase
 		}
 		
 		return true;
+	}
+	
+	public function setValue($name, $value) 
+	{
+		// If sms_mins_before is being set, set a flag so that sms_send_time
+		// is recalculated when we save this record.
+		if ($name == 'sms_mins_before' && is_null($this->sms_act_id)
+				&& $this->sms_send_failures != 1)
+		{
+			$this->recalc_sms_send_time = true;
+		}
+		
+		return parent::setValue($name, $value);
 	}
 	
 	public static function getActivitiesCaseClient($filter, &$row_count, $order_field='act_date', 
@@ -190,6 +204,23 @@ class pikaActivity extends plBase
 		$this->last_changed_user_id = $auth_row['user_id'];
 		// End AMW
 
+		// When sms_mins_before has changed, recalculate sms_send_time.  We recalc-
+		// ulate it here in case act_date and/or act_time have changed during this
+		// page view.
+		if ($this->recalc_sms_send_time)
+		{
+			if ($this->sms_mins_before == -1 || strlen($this->sms_mins_before) == 0)
+			{
+				$this->sms_send_time = null;
+			}
+			
+			else 
+			{
+				$this->sms_send_time = strtotime($this->act_date . ' ' . $this->act_time);
+				$this->sms_send_time -= ($this->sms_mins_before * 60);				
+			}
+		}
+		
 		parent::save();
 	}
 	
