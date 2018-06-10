@@ -25,9 +25,9 @@ if (!pika_authorize("system", array()))
 $buffer = '';
 $action = pl_grab_get('action');
 $interview_id = pl_grab_get('interview_id');
-$name = pl_grab_post('name');
-$interview_text = pl_grab_post('interview_text');
-$enabled = pl_grab_post('enabled');
+$name = pl_grab_get('name');
+$interview_text = pl_grab_get('interview_text');
+$enabled = pl_grab_get('enabled');
 
 
 switch($action) {
