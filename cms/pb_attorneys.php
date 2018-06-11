@@ -166,7 +166,16 @@ else
 		$row['open_date'] = pl_date_unmogrify($row['open_date']);
 		$row['close_date'] = pl_date_unmogrify($row['close_date']);
 		
+		if ($row['unread_sms'] > 0)
+		{
+			$row['unread_sms'] = "<a href=\"{$base_url}/case.php?case_id={$row['case_id']}&screen=sms\"><span class=\"badge badge-info\">{$row['unread_sms']}</span></a>&nbsp;";
+		}
 		
+		else 
+		{
+			$row['unread_sms'] = '';
+		}
+				
 		$pba_case_list->addHtmlRow($row);
 		
 		
