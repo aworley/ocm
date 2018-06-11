@@ -5,6 +5,9 @@ chdir('../');
 require_once('pika-danio.php');
 pika_init();
 
+require_once('pikaActivity.php');
+require_once('pikaCase.php');
+
 function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 {
 	$safe_user_id = mysql_real_escape_string($user_id);
@@ -78,39 +81,41 @@ $result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_na
 	WHERE conflict.relation_code = 1
 	AND cases.close_date IS NULL
 	AND ((area_code = '{$area_code}' AND phone = '{$phone}') 
-	OR (area_code_alt = '{$area_code}' AND phone_alt = '{$phone}'))
-	ORDER BY open_date DESC LIMIT 1");
+	OR (area_code_alt = '{$area_code}' AND phone_alt = '{$phone}'))");
+	
+$i = mysql_num_rows($result);
 
 while ($row = mysql_fetch_assoc($result))
 {
 	$case_id = $row['case_id'];
 	$sender_name = pl_text_name($row);
+	$a = new pikaActivity();
+	$a->act_type = 'S';
+	$a->act_date = date('Y-m-d');
+	$a->act_time = date('H:i:s');
+	$a->notes = $body;
+	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
+	$a->case_id = $case_id;
+	$a->save();
+
+	if ($case_id != '')
+	{
+		// Send mail notification to the case handlers.
+		$c = new pikaCase($case_id);
+		send_mail_notification($c->user_id, $c->case_id, $c->number, $sender_name);
+		send_mail_notification($c->cocounsel1, $c->case_id, $c->number, $sender_name);
+		send_mail_notification($c->cocounsel2, $c->case_id, $c->number, $sender_name);
+		
+		// Then increment the unread_sms counter for this case.
+		$c->unread_sms++;
+		$c->save();
+	}
 }
 
-require_once('pikaActivity.php');
-$a = new pikaActivity();
-$a->act_type = 'S';
-$a->act_date = date('Y-m-d');
-$a->act_time = date('H:i:s');
-$a->notes = $body;
-$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
-$a->case_id = $case_id;
-$a->save();
-
-if ($case_id != '')
+if ($i > 0)
 {
-	// Send mail notification to the case handlers.
-	require_once('pikaCase.php');
-	$c = new pikaCase($case_id);
-	send_mail_notification($c->user_id, $c->case_id, $c->number, $sender_name);
-	send_mail_notification($c->cocounsel1, $c->case_id, $c->number, $sender_name);
-	send_mail_notification($c->cocounsel2, $c->case_id, $c->number, $sender_name);
-	
+	// Use the act ID from the last activity record created.
 	$response_message = "Thanks!  Your message has been sent to your case handlers. The confirmation ID for your message is {$a->act_id}.";
-	
-	// Then increment the unread_sms counter for this case.
-	$c->unread_sms++;
-	$c->save();
 }
 
 else
