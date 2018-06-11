@@ -237,6 +237,12 @@ else if(!is_null($act_row['sms_send_failures']))
 		. $act_row['sms_send_time_unmog'] . '</div>';
 }
 
+else if(!is_null($act_row['sms_send_time']))
+{
+	$act_row['sms_status'] = '<div class="alert alert-info">Reminder scheduled<br>'
+		. $act_row['sms_send_time_unmog'] . '</div>';
+}
+
 // Act lookup - check for legacy templates
 if (file_exists(pl_custom_directory() . "/subtemplates/activity{$act_type}.html")){ // -custom/subtemplates/activityX.html
 	$template = new pikaTempLib("{$custom_dir}/subtemplates/activity{$act_type}.html",$act_row);
