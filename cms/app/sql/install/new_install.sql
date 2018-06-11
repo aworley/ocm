@@ -194,6 +194,7 @@ CREATE TABLE `cases` (
   `doc1` int(11) default NULL,
   `doc2` int(11) default NULL,
   `vawa_served` tinyint(4) default NULL,
+  `unread_sms` tinyint(4) NOT NULL default 0,
   PRIMARY KEY  (`case_id`),
   UNIQUE KEY `number` (`number`),
   KEY `client_id` (`client_id`),
