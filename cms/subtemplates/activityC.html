@@ -45,7 +45,9 @@
           <label>%%[sms_send_alt,yes_no,checkbox]%% Send to alternate phone</label><br>
 					-->
           <strong>Select a Message</strong><br>
-          %%[sms_message_id,sms_messages]%%
+          %%[sms_message_id,sms_messages]%%<br>
+					Extra message for the client (max. 255 characters):<br>
+					<textarea name="sms_extra_message" maxlength="255" rows="5">%%[sms_extra_message]%%</textarea>
         </p>
       </div>
 			<p>%%[sms_status]%%</p>

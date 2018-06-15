@@ -75,7 +75,7 @@ $ut_safe = mysql_real_escape_string(time() + 90);
     */
 
 $sql = "SELECT act_id, act_date, act_time, label AS message_text, area_code, ";
-$sql .= "phone, area_code_alt, phone_alt, sms_mobile ";
+$sql .= "phone, area_code_alt, phone_alt, sms_mobile, sms_extra_message ";
 $sql .= "FROM activities LEFT JOIN menu_sms_messages ON sms_message_id = value ";
 $sql .= "LEFT JOIN cases ON activities.case_id = cases.case_id ";
 $sql .= "LEFT JOIN contacts ON cases.client_id = contacts.contact_id ";
@@ -87,7 +87,9 @@ while ($row = mysql_fetch_assoc($result))
 {
   $sms_date = pl_date_unmogrify($row['act_date']);
   $sms_time = pl_time_unmogrify($row['act_time']);
-  $message = $row['message_text'] . "\n\nDATE: {$sms_date}\nTIME: {$sms_time}\n\nThank you!";
+  $message = $row['message_text'] 
+    . "\n\nDATE: {$sms_date}\nTIME: {$sms_time}\n\n"
+    . $row['sms_extra_message'] . "\n\nThank you!";
   
   $cal = new pikaActivity($row['act_id']);
   $sms_status = null;

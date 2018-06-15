@@ -7,6 +7,7 @@ ALTER TABLE activities
 	ADD COLUMN sms_send_time BIGINT, 
 	ADD COLUMN sms_mobile VARCHAR(11),
 	ADD COLUMN sms_message_id INT,
+	ADD COLUMN sms_extra_message VARCHAR(255),
 	ADD COLUMN sms_send_failures TINYINT, 
 	ADD COLUMN sms_act_id INT,
 	ADD COLUMN sms_count TINYINT;
