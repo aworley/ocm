@@ -95,7 +95,7 @@ switch ($action)
 		$a['value_input'] = pikaTempLib::plugin('input_text','value',$a['value'],array(),array("size={$db_table_array['value']['Length']}","maxlength={$db_table_array['value']['Length']}"));
 		$a['old_value'] = $a['value'];
 		$a['menu_name'] = $menu_name;
-		$a['label'] = pikaTempLib::plugin('input_text','label',$a['label'],'',array("size={$db_table_array['label']['Length']}","maxlength={$db_table_array['label']['Length']}"));	
+		$a['label'] = pikaTempLib::plugin('input_textarea','label',$a['label'],'',array("size={$db_table_array['label']['Length']}","maxlength={$db_table_array['label']['Length']}","rows=12"));	
 		$main_html['nav'] = "<a href=\"{$base_url}\">Pika Home</a> &gt;
 							 <a href=\"{$base_url}/site_map.php\">Site Map</a> &gt;
 							 <a href=\"{$base_url}/system-menus.php\">Menus</a> &gt;
