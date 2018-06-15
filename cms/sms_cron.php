@@ -145,6 +145,7 @@ while ($row = mysql_fetch_assoc($result))
     $a->notes = $message;
     $a->summary = "[SMS message to {$cell} from {$from}]";
     $a->case_id = $cal->case_id;
+    $a->sms_count = 1;
     $a->save();
     
     $cal->sms_act_id = $a->act_id;

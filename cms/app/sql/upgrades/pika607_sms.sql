@@ -8,7 +8,8 @@ ALTER TABLE activities
 	ADD COLUMN sms_mobile VARCHAR(11),
 	ADD COLUMN sms_message_id INT,
 	ADD COLUMN sms_send_failures TINYINT, 
-	ADD COLUMN sms_act_id INT;
+	ADD COLUMN sms_act_id INT,
+	ADD COLUMN sms_count TINYINT;
     
     
 CREATE TABLE menu_sms_messages (

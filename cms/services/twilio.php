@@ -84,6 +84,7 @@ $result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_na
 	OR (area_code_alt = '{$area_code}' AND phone_alt = '{$phone}'))");
 	
 $i = mysql_num_rows($result);
+$j = 0;  // Use this to keep track of whether this is the first row processed.
 
 while ($row = mysql_fetch_assoc($result))
 {
@@ -96,6 +97,12 @@ while ($row = mysql_fetch_assoc($result))
 	$a->notes = $body;
 	$a->summary = "[SMS message from {$sender_name} at ({$area_code}) {$phone}]";
 	$a->case_id = $case_id;
+	
+	if ($j == 0)
+	{
+		$a->sms_count = 2;
+	}
+	
 	$a->save();
 
 	if ($case_id != '')
@@ -110,6 +117,8 @@ while ($row = mysql_fetch_assoc($result))
 		$c->unread_sms++;
 		$c->save();
 	}
+	
+	$j++;
 }
 
 if ($i > 0)

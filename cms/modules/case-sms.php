@@ -67,6 +67,7 @@ if ($send_sms == 'Send SMS')
 		$a->notes = $message;
 		$a->summary = "[SMS message to {$cell} from {$from}]";
 		$a->case_id = $case_id;
+		$a->sms_count = 1;
 		$a->save();
 		
 		$C .= "<div class='well'>Sent message to $cell</div>";
