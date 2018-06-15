@@ -120,7 +120,19 @@ if ($i > 0)
 
 else
 {
-	$response_message = "Thanks!  We couldn't find your phone number in our records, but your message will be sent to our case handlers. The confirmation ID for your message is {$a->act_id}.";
+	$response_message = "Thank you for texting us! We couldn't find your phone"
+		. " number in any of our open cases. Please call our office";
+	$office_phone = pl_settings_get('office_phone');
+	
+	if (strlen($office_phone) > 6)
+	{
+		$response_message = " at {$office_phone}.";
+	}
+	
+	else 
+	{
+		$response_message = ".";
+	}
 }
 
 $response_message = htmlspecialchars($response_message);
