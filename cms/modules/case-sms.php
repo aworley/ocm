@@ -9,6 +9,7 @@ $cell = pl_grab_post('cell');
 $message = pl_grab_post('message');
 $send_sms = pl_grab_post('send_sms');
 
+
 function format_us_mobile($area_code, $phone)
 {
 	return "1" . $area_code . substr($phone, 0, 3) . substr($phone, 4);
@@ -52,6 +53,8 @@ function is_valid_number($number, $sid, $token)
 	return false;
 }
 
+
+// Main code
 if ($send_sms == 'Send SMS')
 {
 	if (is_valid_number($cell, $AccountSid, $AuthToken)) 
