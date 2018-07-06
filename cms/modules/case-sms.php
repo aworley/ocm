@@ -53,6 +53,24 @@ function is_valid_number($number, $sid, $token)
 	return false;
 }
 
+/*	This duplicates pl_mysql_column_exists because some older versions of 
+		v6 don't have it, and we can't guarantee it'll be available everywhere.
+*/
+function mysql_column_exists($table, $column)
+{
+	$clean_table = mysql_real_escape_string($table);
+	$clean_column = mysql_real_escape_string($column);
+	
+	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	
+	if (mysql_num_rows($result) == 1)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 
 // Main code
 if ($send_sms == 'Send SMS')
@@ -84,8 +102,15 @@ if ($send_sms == 'Send SMS')
 
 $safe_case_id = $case_id;
 $mobile_options = '';
+$ok_to_text_sql = '1 AS ok_to_text, 1 AS ok_to_text_alt';
+
+if (mysql_column_exists('contacts', 'ok_to_text'))
+{
+	$ok_to_text_sql = 'ok_to_text, ok_to_text_alt';
+}
+
 $sql = "SELECT first_name, middle_name, last_name, extra_name,
-	area_code, phone, area_code_alt, phone_alt 
+	area_code, phone, area_code_alt, phone_alt, {$ok_to_text_sql} 
 	FROM conflict LEFT JOIN contacts USING(contact_id)
 	WHERE conflict.case_id = {$safe_case_id}
 	AND conflict.relation_code = 1
@@ -94,7 +119,8 @@ $result = mysql_query($sql);
 
 while ($row = mysql_fetch_assoc($result))
 {
-	if (strlen($row['area_code']) == 3 && strlen($row['phone']) == 8)
+	if (strlen($row['area_code']) == 3 && strlen($row['phone']) == 8 &&
+			$row['ok_to_text'] == 1)
 	{
 		$mobile_options .= "<option value=\"" 
 			. format_us_mobile($row['area_code'], $row['phone']) . "\">"
@@ -103,7 +129,8 @@ while ($row = mysql_fetch_assoc($result))
 			. "</option>\n";
 	}
 	
-	if (strlen($row['area_code_alt']) == 3 && strlen($row['phone_alt']) == 8)
+	if (strlen($row['area_code_alt']) == 3 && strlen($row['phone_alt']) == 8 &&
+			$row['ok_to_text_alt'] == 1)
 	{
 		$mobile_options .= "<option value=\"" 
 			. format_us_mobile($row['area_code_alt'], $row['phone_alt']) . "\">"
