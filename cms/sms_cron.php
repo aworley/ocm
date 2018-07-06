@@ -107,8 +107,12 @@ while ($row = mysql_fetch_assoc($result))
   {
     $cell = format_us_mobile($row['area_code_alt'], $row['phone_alt']);
   }
-   
-  if (strlen(trim($row['message_text'])) == 0)
+  
+  /*  The message should not be sent if both the canned message and the custom
+      extra message are both blank.
+  */
+  if (strlen(trim($row['message_text'])) == 0 && 
+      strlen(trim($row['sms_extra_message'])) == 0)
   {
     $sms_status = 'failed';
     $sms_error .= 'no message selected';
