@@ -135,12 +135,12 @@ else
 	
 	if (strlen($office_phone) > 6)
 	{
-		$response_message = " at {$office_phone}.";
+		$response_message .= " at {$office_phone}.";
 	}
 	
 	else 
 	{
-		$response_message = ".";
+		$response_message .= ".";
 	}
 }
 
