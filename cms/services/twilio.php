@@ -8,6 +8,7 @@ pika_init();
 require_once('pikaActivity.php');
 require_once('pikaCase.php');
 
+
 function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 {
 	$safe_user_id = mysql_real_escape_string($user_id);
@@ -63,6 +64,8 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 	return false;
 }
 
+
+// Main code
 $number = $_POST['From'];
 $body = $_POST['Body'];
 
