@@ -48,6 +48,7 @@ function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 		curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($c, CURLOPT_TIMEOUT, 30);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($c, CURLOPT_SSLVERSION, 6);
 		curl_setopt($c, CURLOPT_POSTFIELDS, $data_string);
 		curl_setopt($c, CURLOPT_HTTPHEADER, array(
                                             'Content-Type: application/json',
