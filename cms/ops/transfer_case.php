@@ -69,6 +69,9 @@ function pika_transfer($data,$transfer_option_id)
 	$auth_header = 	"Content-type: application/x-www-form-urlencoded\r\n" .
 					"Authorization: Basic {$auth}\r\n";
 	
+	// Pika CMS v5 needs a valid MD5 checksum otherwise the transfer op will fail.
+	$data['checksum'] = md5(var_export(unserialize($data['payload']), true));
+	
 	$data = http_build_query($data);
 	
 	try {
