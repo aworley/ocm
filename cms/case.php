@@ -45,6 +45,15 @@ $case_row = $case1->getValues();
 
 if (is_numeric($case1->getValue('client_id')))
 {
+	/* AMW 2017-02-10 - A missing contact record is rare but happens often enough
+	that we	should check for it	and handle it gracefully if it occurs. */
+	
+	$clean_client_id = mysql_real_escape_string($case1->getValue('client_id'));
+	$resultc = mysql_query("SELECT contact_id FROM contacts WHERE contact_id = 
+	{$clean_client_id}");
+	
+	if (mysql_num_rows($resultc) == 1)
+	{
 	require_once('pikaContact.php');
 	
 	$primary_client = new pikaContact($case1->getValue('client_id'));
@@ -64,6 +73,7 @@ if (is_numeric($case1->getValue('client_id')))
 	$case_row['client_name'] = pl_text_name($case_row);
 	$case_row['client_phone'] = pl_text_phone($case_row);
 	$case_row['birth_date'] = pl_date_unmogrify($case_row['birth_date']);
+}	
 }	
 
 // Prevent JS insertion attacks.
