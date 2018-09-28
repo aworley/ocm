@@ -192,6 +192,7 @@ while ($row = mysql_fetch_assoc($result))
 	$clean_contact_name = addslashes($row['last_name']) . ', ' . addslashes($row['first_name']);
 	$row['full_name'] = pl_text_name($row);
 	$row['full_phone'] = pl_text_phone($row);
+	$row['full_address_js'] = json_encode($row['full_name'] . "\n" . pl_text_address($row));
 	
 	// NEW WAY
 	if ($row['contact_id'] == $case_row['client_id'] && '1' == $row['relation_code'])
