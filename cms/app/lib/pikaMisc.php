@@ -938,10 +938,10 @@ class pikaMisc
 				// Build the link.
 				if($links) {
 					if (file_exists("reports/{$file}/{$file}-form.php")) {
-						$reports[$file] = "<a href=\"{$base_url}/legacy_report.php?report={$file}\">{$title}</a>\n";
+						$reports[$file] = "<!-- {$title} --><a href=\"{$base_url}/legacy_report.php?report={$file}\">{$title}</a>\n";
 					}else
 					{
-						$reports[$file] = "<a href=\"{$base_url}/reports/{$file}/\">{$title}</a>\n";
+						$reports[$file] = "<!-- {$title} --><a href=\"{$base_url}/reports/{$file}/\">{$title}</a>\n";
 					}
 				} else {
 					$reports[$file] = $title;
@@ -978,7 +978,7 @@ class pikaMisc
 		}
 		// End AMW
 		
-		ksort($reports);
+		sort($reports);
 		
 		return $reports;
 	}
