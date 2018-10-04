@@ -98,11 +98,11 @@ if($show_sql) {
 }
 
 $t->add_table();
-$t->set_header(array("City", "Callers"));
+$t->set_header(array("City", "State", "Callers"));
 $t->display_row_count(false);
 
-$sql = "SELECT city, COUNT(*) as callers FROM cases";
-$sql .= " LEFT JOIN contacts ON client_id = contact_id WHERE 1{$where_sql} GROUP BY city";
+$sql = "SELECT city, state, COUNT(*) as callers FROM cases";
+$sql .= " LEFT JOIN contacts ON client_id = contact_id WHERE 1{$where_sql} GROUP BY state, city";
 $result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
 
 while ($row = mysql_fetch_assoc($result))
