@@ -193,6 +193,7 @@ while ($row = mysql_fetch_assoc($result))
 	$row['full_name'] = pl_text_name($row);
 	$row['full_phone'] = pl_text_phone($row);
 	
+	// Begin custom template variable for client.
 	$row['cnp_info_js'] = $row['full_name'] . "\n";
 
 	if (strlen(trim(pl_text_address($row))) > 0)
@@ -219,6 +220,7 @@ while ($row = mysql_fetch_assoc($result))
 	}
 		
 	$row['cnp_info_js'] = json_encode($row['cnp_info_js']);
+	// End custom template variable for client.
 	
 	// NEW WAY
 	if ($row['contact_id'] == $case_row['client_id'] && '1' == $row['relation_code'])
