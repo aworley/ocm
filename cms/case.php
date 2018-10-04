@@ -193,14 +193,32 @@ while ($row = mysql_fetch_assoc($result))
 	$row['full_name'] = pl_text_name($row);
 	$row['full_phone'] = pl_text_phone($row);
 	
-	$row['full_address_js'] = $row['full_name'] . "\n";
+	$row['cnp_info_js'] = $row['full_name'] . "\n";
 
 	if (strlen(trim(pl_text_address($row))) > 0)
 	{
-	  $row['full_address_js'] .= trim(pl_text_address($row)) . "\n";
+	  $row['cnp_info_js'] .= trim(pl_text_address($row)) . "\n";
 	}
 
-	$row['full_address_js'] = json_encode($row['full_address_js']);
+	if (strlen(trim($row['phone'] . $row['phone_notes'])) > 0)
+	{
+		$ztmp = pl_text_phone($row) . ' ' . $row['phone_notes'];
+	  $row['cnp_info_js'] .= trim($ztmp) . "\n";
+	}
+	
+	if (strlen(trim($row['phone_alt'] . $row['phone_notes_alt'])) > 0)
+	{
+		$ytmp = array('phone' => $row['phone_alt'], 'area_code' => $row['area_code_alt']);
+		$ztmp = pl_text_phone($ytmp) . ' ' . $row['phone_notes_alt'];
+	  $row['cnp_info_js'] .= trim($ztmp) . "\n";
+	}
+
+	if (strlen(trim($row['email'])) > 0)
+	{
+	  $row['cnp_info_js'] .= trim($row['email']) . "\n";
+	}
+		
+	$row['cnp_info_js'] = json_encode($row['cnp_info_js']);
 	
 	// NEW WAY
 	if ($row['contact_id'] == $case_row['client_id'] && '1' == $row['relation_code'])
