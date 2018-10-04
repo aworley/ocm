@@ -88,8 +88,10 @@ $sql = "SELECT zip, COUNT(*) as callers FROM cases";
 $sql .= " LEFT JOIN contacts ON client_id = contact_id WHERE 1{$where_sql} group BY zip";
 $result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
 
-$row = mysql_fetch_assoc($result);
-$t->add_row($row);
+while ($row = mysql_fetch_assoc($result))
+{
+	$t->add_row($row);
+}
 
 if($show_sql) {
 	$t->set_sql($sql);
@@ -103,8 +105,10 @@ $sql = "SELECT city, COUNT(*) as callers FROM cases";
 $sql .= " LEFT JOIN contacts ON client_id = contact_id WHERE 1{$where_sql} GROUP BY city";
 $result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
 
-$row = mysql_fetch_assoc($result);
-$t->add_row($row);
+while ($row = mysql_fetch_assoc($result))
+{
+	$t->add_row($row);
+}
 
 if($show_sql) {
 	$t->set_sql($sql);
