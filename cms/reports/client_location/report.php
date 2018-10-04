@@ -98,6 +98,7 @@ if($show_sql) {
 }
 
 $t->add_table();
+$t->set_table_title('Callers by State, City');
 $t->set_header(array("City", "State", "Callers"));
 $t->display_row_count(false);
 
