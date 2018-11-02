@@ -1,3 +1,4 @@
+SET sql_mode = ''; # Need to disable STRICT_TRANS_TABLES to allow 0000-00-00 00:00:00 default timestamp used several places in this install file
 --
 -- Table structure for table `activities`
 --
