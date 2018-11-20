@@ -241,7 +241,7 @@ class pikaMisc
 
 		if (isset($filter["status"]) && $filter["status"])
 		{
-			$sql .= " AND status={$filter["status"]}";
+			$sql .= " AND status='{$filter["status"]}'";
 		}
 
 
