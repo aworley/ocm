@@ -8,7 +8,12 @@ require_once ('pika-danio.php');
 // For clients w/o HTTP authorization built-in
 if(isset($_GET['token']) && $_GET['token']) {
 	$auth = base64_decode($_GET['token']);
-	$auth_array = unserialize($auth);
+	
+	$auth_array = array();
+	$x = explode("\"", $auth);
+	$auth_array[] = $x[1];
+	$auth_array[] = $x[3];
+	
 	$_SERVER['PHP_AUTH_USER'] = $auth_array[0];
 	$_SERVER['PHP_AUTH_PW'] = $auth_array[1];
 	define('PL_DISABLE_SECURITY',true);
