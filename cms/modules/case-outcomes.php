@@ -40,7 +40,7 @@ else
 		$x[$row['outcome_goal_id']] = $row;
 	}
 	
-	$C .= "<form action=\"{$base_url}/ops/update_case.php\" method=\"POST\">";
+	$C .= "<form action=\"{$base_url}/ops/update_case.php\" method=\"POST\" name=\"ws\">";
 	$C .= "<table class=\"table table-striped\">\n";
 	$i = 0;
 	
