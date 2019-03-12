@@ -72,6 +72,20 @@ function justice_gap_radio($field_name = null, $field_value = null, $menu_array 
 
 	}
 
+	if (is_null($field_value) || strlen($field_value) < 1)
+	{
+		$checked = ' checked';
+	}
+
+	else
+	{
+		$checked = '';
+	}
+
+	$radio_output .= '<label><input type="radio" name="lsc_intake_survey" id="lsc_intake_survey" value="" class="plradio" tabindex="1"';
+	$radio_output .= $checked;
+	$radio_output .= '>&nbsp;(Blank)</label>&nbsp;';
+
 	return $radio_output;
 
 
