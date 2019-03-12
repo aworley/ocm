@@ -1,0 +1,152 @@
+<?php
+
+chdir('../../');
+
+require_once ('pika-danio.php');
+pika_init(); 
+
+// VARIABLES
+
+$report_title = 'LSC Justice Gap report 2017';
+$report_name = "lsc_gap_2017";
+
+$base_url = pl_settings_get('base_url');
+if(!pika_report_authorize($report_name)) {
+	$main_html = array();
+	$main_html['base_url'] = $base_url;
+	$main_html['page_title'] = $report_title;
+	$main_html['nav'] = "<a href=\"{$base_url}/\">Pika Home</a>
+    				  &gt; <a href=\"{$base_url}/reports/\">Reports</a> 
+    				  &gt; $report_title";
+	$main_html['content'] = "You are not authorized to run this report";
+	
+	$default_template = new pikaTempLib('templates/default.html', $main_html);
+	$buffer = $default_template->draw();
+	pika_exit($buffer);
+}
+
+$output_format = pl_grab_post('output_format');
+
+$open_date_begin = pl_grab_post('open_date_begin');
+$open_date_end = pl_grab_post('open_date_end');
+$funding = pl_grab_post('funding');
+$office = pl_grab_post('office');
+$status = pl_grab_post('status');
+$undup = pl_grab_post('undup');
+
+$office_menu = pl_menu_get('office');
+$menu_undup = pl_menu_get('undup');
+
+// OBJECTS
+if ('csv' == $report_format)
+{
+	require_once ('plCsvReportTable.php');
+	require_once ('plCsvReport.php');
+	$t = new plCsvReport();
+}
+
+else
+{
+	require_once ('plHtmlReportTable.php');
+	require_once ('plHtmlReport.php');
+	$t = new plHtmlReport();
+}
+
+
+$sql = "select 
+if(length(problem) < 1 || ISNULL(problem), 'blank', concat(substring(lpad(problem, 2, '0'), 1, 1), '0s')) as category, 
+sum(IF(justice_gap_2017 = 1, 1, 0)) AS a,
+sum(IF(justice_gap_2017 = 2, 1, 0)) AS b,
+sum(IF(justice_gap_2017 = 3, 1, 0)) AS c,
+sum(IF(justice_gap_2017 = 4, 1, 0)) AS d,
+sum(IF(justice_gap_2017 = 5, 1, 0)) AS e,
+sum(IF(justice_gap_2017 = 6, 1, 0)) AS f,
+sum(IF(justice_gap_2017 = 7, 1, 0)) AS g,
+sum(IF(justice_gap_2017 = 8, 1, 0)) AS h,
+sum(IF(justice_gap_2017 = 9, 1, 0)) AS i,
+sum(IF(justice_gap_2017 = 10, 1, 0)) AS j,
+sum(IF(justice_gap_2017 = 11, 1, 0)) AS k,
+sum(IF(ISNULL(justice_gap_2017) || justice_gap_2017 < 1 || justice_gap_2017 > 11, 1, 0)) as l
+from cases where 1";
+
+
+// Filters
+$odb = pl_date_mogrify($open_date_begin);
+$ode = pl_date_mogrify($open_date_end);
+$safe_odb = mysql_real_escape_string($odb);
+$safe_ode = mysql_real_escape_string($ode);
+
+if ($odb && $ode) 
+{
+	$t->add_parameter('Opened Between',$open_date_begin . " - " . $open_date_end);
+	$sql .= " AND open_date >= '{$safe_odb}' AND open_date <= '{$safe_ode}'";
+}
+
+else
+{
+	trigger_error('Both a start date and an end date are needed.'); exit();
+}
+
+if ($undup == 1 || ($undup == 0 && $undup != '')) {
+	$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
+	$safe_undup = mysql_real_escape_string($undup);
+	$sql .= " AND undup = '{$safe_undup}'";
+}
+
+// Other filters
+$x = pl_process_comma_vals($funding);
+if ($x != false) {
+	$t->add_parameter('Funding Code(s)',$funding);
+	$sql .= " AND funding IN $x";
+}
+
+$x = pl_process_comma_vals($office);
+if ($x != false) {
+	$t->add_parameter('Office Code(s)',$office);
+	$sql .= " AND office IN $x";
+}
+
+$x = pl_process_comma_vals($status);
+if ($x != false) {
+	$t->add_parameter('Case Status Code(s)',$status);
+	$sql .= " AND status IN $x";
+}
+
+$sql .= " GROUP BY category ASC WITH ROLLUP";
+
+$t->set_title($report_title);
+$t->display_row_count(false);
+$t->set_header(array('Category',
+	'Unable to Serve - Ineligible',
+	'Unable to Serve - Conflict of Interest',
+	'Unable to Serve - Outside of Program Priorities or Case Acceptance Guidelines',
+	'Unable to Serve - Insufficient Resources',
+	'Unable to Serve - Other Reasons',
+	'Unable to Serve Fully - Insufficient Resources - Provision of Legal Information or Pro Se Resources',
+	'Unable to Serve Fully - Insufficient Resources - Provided Limited Service or Closing Code L',
+	'Fully Served - Provision of Legal Information or Pro Se Resources',
+	'Fully Served - Provision of Limited Services or Closing Code L',
+	'Fully Served - Extended Service Case Accepted',
+	'Pending',
+	'blank'));
+
+// RUN Report
+
+$result = mysql_query($sql) or trigger_error('');
+
+while($row = mysql_fetch_assoc($result)) 
+{
+	if (strlen($row['category']) < 1)
+	{
+		$row['category'] = 'Totals';
+	}
+
+	$t->add_row($row);
+}
+
+if($show_sql) {
+        $t->set_sql($sql);
+}
+
+$t->display();
+exit();
