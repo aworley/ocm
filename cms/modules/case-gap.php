@@ -68,8 +68,7 @@ function justice_gap_radio($field_name = null, $field_value = null, $menu_array 
 		$radio_output .= "{$checked} />&nbsp;{$label}</label> ";
 		if ($temp_args['vertical']) {
 			$radio_output .= "<br/>\n";
-		} else { $radio_output .= "&nbsp; "; }
-
+		}
 	}
 
 	if (is_null($field_value) || strlen($field_value) < 1)
