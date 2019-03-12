@@ -62,11 +62,12 @@ sum(IF(lsc_justice_gap = 4, 1, 0)) AS d,
 sum(IF(lsc_justice_gap = 5, 1, 0)) AS e,
 sum(IF(lsc_justice_gap = 6, 1, 0)) AS f,
 sum(IF(lsc_justice_gap = 7, 1, 0)) AS g,
+sum(IF(lsc_intake_survey = 12, 1, 0)) AS m,
 sum(IF(lsc_justice_gap = 8, 1, 0)) AS h,
 sum(IF(lsc_justice_gap = 9, 1, 0)) AS i,
 sum(IF(lsc_justice_gap = 10, 1, 0)) AS j,
 sum(IF(lsc_justice_gap = 11, 1, 0)) AS k,
-sum(IF(ISNULL(lsc_justice_gap) || lsc_justice_gap < 1 || lsc_justice_gap > 11, 1, 0)) as l
+sum(IF(ISNULL(lsc_justice_gap) || lsc_justice_gap < 1 || lsc_justice_gap > 12, 1, 0)) as l
 from cases where 1";
 
 
@@ -124,6 +125,7 @@ $t->set_header(array('Category',
 	'Unable to Serve - Other Reasons',
 	'Unable to Serve Fully - Insufficient Resources - Provision of Legal Information or Pro Se Resources',
 	'Unable to Serve Fully - Insufficient Resources - Provided Limited Service',
+	'Unable to Serve Fully - Insufficient Resources - Provided Some Extended Service',
 	'Fully Served - Provision of Legal Information or Pro Se Resources',
 	'Fully Served - Provision of Limited Services',
 	'Fully Served - Extended Service Case Accepted',
