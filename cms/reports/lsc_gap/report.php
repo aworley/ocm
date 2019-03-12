@@ -8,7 +8,7 @@ pika_init();
 // VARIABLES
 
 $report_title = 'LSC Justice Gap report 2017';
-$report_name = "lsc_gap_2017";
+$report_name = "lsc_gap";
 
 $base_url = pl_settings_get('base_url');
 if(!pika_report_authorize($report_name)) {

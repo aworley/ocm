@@ -7,7 +7,7 @@ pika_init();
 require_once('pikaTempLib.php');
 
 $report_title = 'LSC Unable To Serve Report';
-$report_name = "lsc_gap_2017";
+$report_name = "lsc_gap";
 
 $base_url = pl_settings_get('base_url');
 if(!pika_report_authorize($report_name)) {
