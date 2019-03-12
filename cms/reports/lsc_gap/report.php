@@ -55,18 +55,18 @@ else
 
 $sql = "select 
 if(length(problem) < 1 || ISNULL(problem), 'blank', concat(substring(lpad(problem, 2, '0'), 1, 1), '0s')) as category, 
-sum(IF(justice_gap_2017 = 1, 1, 0)) AS a,
-sum(IF(justice_gap_2017 = 2, 1, 0)) AS b,
-sum(IF(justice_gap_2017 = 3, 1, 0)) AS c,
-sum(IF(justice_gap_2017 = 4, 1, 0)) AS d,
-sum(IF(justice_gap_2017 = 5, 1, 0)) AS e,
-sum(IF(justice_gap_2017 = 6, 1, 0)) AS f,
-sum(IF(justice_gap_2017 = 7, 1, 0)) AS g,
-sum(IF(justice_gap_2017 = 8, 1, 0)) AS h,
-sum(IF(justice_gap_2017 = 9, 1, 0)) AS i,
-sum(IF(justice_gap_2017 = 10, 1, 0)) AS j,
-sum(IF(justice_gap_2017 = 11, 1, 0)) AS k,
-sum(IF(ISNULL(justice_gap_2017) || justice_gap_2017 < 1 || justice_gap_2017 > 11, 1, 0)) as l
+sum(IF(lsc_justice_gap = 1, 1, 0)) AS a,
+sum(IF(lsc_justice_gap = 2, 1, 0)) AS b,
+sum(IF(lsc_justice_gap = 3, 1, 0)) AS c,
+sum(IF(lsc_justice_gap = 4, 1, 0)) AS d,
+sum(IF(lsc_justice_gap = 5, 1, 0)) AS e,
+sum(IF(lsc_justice_gap = 6, 1, 0)) AS f,
+sum(IF(lsc_justice_gap = 7, 1, 0)) AS g,
+sum(IF(lsc_justice_gap = 8, 1, 0)) AS h,
+sum(IF(lsc_justice_gap = 9, 1, 0)) AS i,
+sum(IF(lsc_justice_gap = 10, 1, 0)) AS j,
+sum(IF(lsc_justice_gap = 11, 1, 0)) AS k,
+sum(IF(ISNULL(lsc_justice_gap) || lsc_justice_gap < 1 || lsc_justice_gap > 11, 1, 0)) as l
 from cases where 1";
 
 
