@@ -127,7 +127,7 @@ $t->set_header(array('Category',
 	'Unable to Serve Fully - <br>Insufficient Resources - <br>Provided Limited <br>Service',
 	'Unable to Serve Fully - <br>Insufficient Resources - <br>Provided Some Extended <br>Service',
 	'Fully Served - <br>Provision of Legal <br>Information or <br>Pro Se Resources',
-	'Fully Served - <br>Provision of Limited <br>Services or <br>Closing Code L',
+	'Fully Served - <br>Provision of Limited <br>Services',
 	'Fully Served - <br>Extended Service <br>Case Accepted',
 	'Pending',
 	'blank'));
