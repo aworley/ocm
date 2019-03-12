@@ -26,8 +26,8 @@ if(!pika_report_authorize($report_name)) {
 
 $a = array();
 $a['report_name'] = $report_name;
-$a['open_date_begin'] = '3/6/2017';
-$a['open_date_end'] = $a['open_on_date']= '4/14/2017';
+$a['open_date_begin'] = '3/25/2019';
+$a['open_date_end'] = $a['open_on_date']= '4/19/2019';
 $a['undup'] = '';
 
 $main_html = array();
