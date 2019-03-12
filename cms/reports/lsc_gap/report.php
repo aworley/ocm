@@ -118,17 +118,17 @@ $sql .= " GROUP BY category ASC WITH ROLLUP";
 $t->set_title($report_title);
 $t->display_row_count(false);
 $t->set_header(array('Category',
-	'Unable to Serve - Ineligible',
-	'Unable to Serve - Conflict of Interest',
-	'Unable to Serve - Outside of Program Priorities or Case Acceptance Guidelines',
-	'Unable to Serve - Insufficient Resources',
-	'Unable to Serve - Other Reasons',
-	'Unable to Serve Fully - Insufficient Resources - Provision of Legal Information or Pro Se Resources',
-	'Unable to Serve Fully - Insufficient Resources - Provided Limited Service',
-	'Unable to Serve Fully - Insufficient Resources - Provided Some Extended Service',
-	'Fully Served - Provision of Legal Information or Pro Se Resources',
-	'Fully Served - Provision of Limited Services',
-	'Fully Served - Extended Service Case Accepted',
+	'Unable to Serve - <br>Ineligible',
+	'Unable to Serve - <br>Conflict of Interest',
+	'Unable to Serve - <br>Outside of <br>Program Priorities or <br>Case Acceptance <br>Guidelines',
+	'Unable to Serve - <br>Insufficient <br>Resources',
+	'Unable to Serve - <br>Other Reasons',
+	'Unable to Serve Fully - <br>Insufficient Resources - <br>Provision of Legal <br>Information or Pro Se <br>Resources',
+	'Unable to Serve Fully - <br>Insufficient Resources - <br>Provided Limited <br>Service',
+	'Unable to Serve Fully - <br>Insufficient Resources - <br>Provided Some Extended <br>Service',
+	'Fully Served - <br>Provision of Legal <br>Information or <br>Pro Se Resources',
+	'Fully Served - <br>Provision of Limited <br>Services or <br>Closing Code L',
+	'Fully Served - <br>Extended Service <br>Case Accepted',
 	'Pending',
 	'blank'));
 
