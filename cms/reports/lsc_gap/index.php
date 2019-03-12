@@ -6,7 +6,7 @@ require_once('pika-danio.php');
 pika_init();
 require_once('pikaTempLib.php');
 
-$report_title = 'LSC Unable To Serve Report';
+$report_title = 'LSC Justice Gap Report';
 $report_name = "lsc_gap";
 
 $base_url = pl_settings_get('base_url');
