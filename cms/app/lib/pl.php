@@ -1542,24 +1542,14 @@ function pl_mysql_next_id($sequence)
 }
 
 
-function pl_mysql_timestamp_to_unix($timestamp, $version = null)
+function pl_mysql_timestamp_to_unix($timestamp)
 {
 	$unix = 0;
-	
-	if (is_null($version)) 
-	{
-		$version = mysql_get_server_info() or trigger_error("");
-	}
-	
-	$major_version = $version[0];
-	$minor_version = $version[2];
 
-	// On my MacBook, the version shows 4.1 but the timestamp is the
-	// old 14 character format.  So I added the strlen check here
-	// as a workaround.
-	if (strlen($timestamp) == 14 || $major_version < 4 || ($major_version == 4 && $minor_version < 1))
+	if (strlen($timestamp) != 19)
 	{
 		// Mysql 4.0 or lower.
+		// AMW 2019-01-17 - People aren't still using this, are they?
 		$year = substr($timestamp, 0, 4);
 		$month = substr($timestamp, 4, 2);
 		$day = substr($timestamp, 6, 2);
@@ -1569,23 +1559,15 @@ function pl_mysql_timestamp_to_unix($timestamp, $version = null)
 		$unix = mktime($hour, $minute, $second, $month, $day, $year);
 	}
 
-	else if ($major_version > 4 || ($major_version == 4 && $minor_version >= 1))
+	else
 	{
 		// Mysql 4.1 or higher.
-		if (strtotime($timestamp) === -1)
+		$unix = strtotime($timestamp);
+
+		if ($unix === -1)
 		{
 			trigger_error("MySQL version {$version} {$major_version} {$minor_version} " . $timestamp);
 		}
-		
-		else 
-		{
-			$unix = strtotime($timestamp);
-		}
-	}
-
-	else
-	{
-		trigger_error("");
 	}
 
 	return $unix;
