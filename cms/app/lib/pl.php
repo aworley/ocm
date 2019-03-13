@@ -1566,7 +1566,8 @@ function pl_mysql_timestamp_to_unix($timestamp)
 
 		if ($unix === -1)
 		{
-			trigger_error("MySQL version {$version} {$major_version} {$minor_version} " . $timestamp);
+			trigger_error("MySQL timestamp '" . $timestamp .
+				"' is not formatted correctly.");
 		}
 	}
 
