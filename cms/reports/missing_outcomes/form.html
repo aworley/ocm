@@ -1,0 +1,30 @@
+<form action="%%[base_url]%%/reports/%%[report_name]%%/report.php" method="POST" name=form1 target="_blank">
+<table>
+	<tr>
+		<td valign="top">
+		Cases Closed On or After:<br/>
+		%%[close_date_begin,input_date_selector]%%<br/>
+		Cases Closed On or Before:<br/>
+		%%[close_date_end,input_date_selector]%%<br/>
+		</td><td valign="top">
+		Office:<br/>
+		<input type="text" name="office" value="" tabindex="1"/><br/>
+		Status:<br/>
+		<input type="text" name="status" value=""tabindex="1"/><br/>
+		
+		</td><td valign="top">
+		Unduplicated:<br/>
+		%%[undup,yes_no]%%<br/>
+		<input type="checkbox" name="report_format" value="csv">
+		<label for="report_format">Send to a spreadsheet</label><br/>
+		<input type="checkbox" name="show_sql" value="1">
+		<label for="show_sql">Show SQL</label>
+		</td>
+	</tr>
+</table>
+<br/>
+<input type="submit" name="gen" value="Generate Report" class="save" tabindex="1"/>
+</form>
+
+%%[ajax_init.js,javascript]%%
+%%[date_selector.js,javascript,parse]%%
