@@ -178,8 +178,6 @@ else if (!$transfer_id)
 	{
 		$j = json_decode($row['json_data'], true);
 		
-		$safe_transfer_id = mysql_real_escape_string($row['transfer_id']);
-		$safe_date = mysql_real_escape_string($row['created']);
 		/*
 		foreach ($j as $key => $val)
 		{
