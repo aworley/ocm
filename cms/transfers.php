@@ -186,7 +186,15 @@ else if (!$transfer_id)
 		*/
 		
 		$safe_transfer_id = pl_clean_html($row['transfer_id']);
-		$safe_date = pl_clean_html($row['created']);
+
+		$safe_date = '';
+
+		if (strlen($row['created']) == 19)
+		{
+			$unix_ts = pl_mysql_timestamp_to_unix($row['created']);
+			$safe_date = pl_clean_html(date('F j, Y - g:ia', $unix_ts));
+		}
+
 		$z .= "<tr><td><a href=\"{$base_url}/transfers.php?transfer_id={$safe_transfer_id}\" class=\"btn\">";
 		$z .= "Review</a></td><td>{$safe_transfer_id}</td>";
 		$z .= "<td>{$j['client']['last_name']}</td>";
