@@ -184,7 +184,7 @@ while ($row = mysql_fetch_assoc($result))
 	$sms_listing_rows .= "<tr><td><p>{$from_text}</p><p>" 
 		. pl_date_unmogrify($row['act_date']) . " "
 		. pl_time_unmogrify($row['act_time']) . "</p></td><td><strong>" 
-		. htmlentities($row['notes']) 
+		. nl2br(htmlentities($row['notes']), false)
 		. "</strong></td></tr>";
 }
 
