@@ -138,53 +138,6 @@ function pl_query($sql)
 }
 }
 
-
-function pl_query_cached_array_flush($sql)
-{
-	return pl_db_cache_rm($sql);
-	
-	$cache_path = '/tmp';
-	$cache_filename = "$cache_path/pl_cache_a-" . md5($sql) . ".php";
-	
-	return unlink($cache_filename);
-}
-
-
-function pl_query_cached_array($sql)
-{
-	return pl_db_cache_get($sql);
-	
-	static $db;
-	global $plSettings;
-	
-	$data = array();
-	$cache_path = '/tmp';
-	
-	$cache_filename = "$cache_path/pl_cache_a-" . md5($sql) . ".php";
-	
-	if (file_exists($cache_filename))
-	{
-		include($cache_filename);
-	}
-	
-	else
-	{		
-		$result = pl_query($sql);
-		
-		while ($row = $result->fetchRow())
-		{
-			$data[] = $row;
-		}
-		
-		$cache_data = "<?php\n" . pl_array_to_php("data", $data) . "\n ?>\n";
-		$fp = fopen($cache_filename, "w");
-		fputs($fp, $cache_data);
-		fclose($fp);
-	}
-	
-	return $data;
-}
-
 function pl_new_id($sequence)
 {
 	return pl_db_new_id($sequence);
