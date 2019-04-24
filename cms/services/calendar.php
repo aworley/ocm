@@ -91,12 +91,12 @@ $sql = "SELECT activities.*, cases.number
 		ORDER BY act_date ASC, act_time ASC 
 		LIMIT 2000;";
 
-$result = mysql_query($sql) or trigger_error(mysql_error());
+$result = DB::query($sql) or trigger_error(DB::error());
 //echo $sql;
 $ical_list = new plFlexList();
 $ical_list->template_file = "subtemplates/ical/{$time_zone}/ical.txt";
 $counter = 0;
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$temp_description = "";
 	$row['notes'] = ical_text_mogrify($row['notes']);  //str_replace("\r", "=0D=0A=", stripslashes($row['notes']))

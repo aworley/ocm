@@ -62,7 +62,7 @@ $sql = "SELECT	case_id,
 if ($office)
 {
 	$t->add_parameter('Office Code',$office);
-	$safe_office = mysql_real_escape_string($office);
+	$safe_office = DB::escapeString($office);
 	$sql .= " AND office='{$safe_office}'";
 }
 
@@ -70,7 +70,7 @@ if ($date)
 {
 
 	$t->add_parameter('Date',$date);
-	$safe_date = mysql_real_escape_string(pl_date_mogrify($date));
+	$safe_date = DB::escapeString(pl_date_mogrify($date));
 	$sql .= " AND open_date='{$safe_date}'";
 }
 
@@ -80,17 +80,17 @@ $sql .= " ORDER BY last_name ASC, first_name ASC";
 $t->title = $report_title;
 $t->set_header(array('Open Date', 'Name', 'Status', 'Case Number', 'Counsel',
 					'Co-counsel', 'Co-counsel', 'Office', 'Case Notes'));
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$notes = '';
 	$sql2 = "SELECT act_date, notes FROM activities 
 				WHERE case_id = '{$row['case_id']}'
 				ORDER BY act_date DESC, act_time DESC, act_id DESC";
-	$resultb = mysql_query($sql2) or trigger_error();
+	$resultb = DB::query($sql2) or trigger_error();
 	
-	while ($rb = mysql_fetch_assoc($resultb))
+	while ($rb = DBResult::fetchRow($resultb))
 	{
 		if ($rb['notes'])
 		{

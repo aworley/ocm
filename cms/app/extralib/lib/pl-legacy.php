@@ -92,6 +92,7 @@ function pl_menu_init($menu_name)
 	return true;
 }
 
+/*
 if(!function_exists('pl_query'))
 {
 function pl_query($sql)
@@ -137,6 +138,7 @@ function pl_query($sql)
 	return $result;
 }
 }
+*/
 
 function pl_new_id($sequence)
 {
@@ -431,9 +433,9 @@ if(!function_exists('pl_db_cache_get'))
 	function pl_db_cache_get($sql, $key_deprecated= null)
 	{
 		$a = array();
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -480,12 +482,12 @@ function pl_grab_vars($table, $append='')
 
 function pl_db_new_id($sequence)
 {	
-	mysql_query("LOCK TABLES counters WRITE");
-	mysql_query("UPDATE counters SET count=count+1 WHERE id = '$sequence' LIMIT 1");
-	$result = mysql_query("SELECT count FROM counters WHERE id = '$sequence'")
+	DB::query("LOCK TABLES counters WRITE");
+	DB::query("UPDATE counters SET count=count+1 WHERE id = '$sequence' LIMIT 1");
+	$result = DB::query("SELECT count FROM counters WHERE id = '$sequence'")
 		or trigger_error("The  \"$sequence\" counter is not working correctly.");
-	mysql_query("UNLOCK TABLES");
-	$row = mysql_fetch_assoc($result);
+	DB::query("UNLOCK TABLES");
+	$row = DBResult::fetchArray($result);
 	return $row['count'];
 }
 
@@ -569,7 +571,7 @@ function pl_table_autosql_update($table, $data)
 			
 			else
 			{
-				$w = mysql_real_escape_string($data["$key"]);
+				$w = DB::escapeString($data["$key"]);
 				$sql .= " $key = '$w'";
 			}
 			// hopefully this works with other DBs besides MySQL & Postgres...
@@ -646,7 +648,7 @@ function pl_table_autosql_insert($table, $data)
 			
 			else
 			{
-				$sql .= " $key='" . mysql_real_escape_string($data["$key"]) . "'";
+				$sql .= " $key='" . DB::escapeString($data["$key"]) . "'";
 			}
 			
 			$i++;

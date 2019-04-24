@@ -127,7 +127,7 @@ switch ($action)
 		
 		$result = pikaCaseTab::getCaseTabsDB();
 		$case_tabs = array();
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{	
 			$case_tabs[$row['tab_id']] = $row;
 			$row['enable_text'] = 'Enable';

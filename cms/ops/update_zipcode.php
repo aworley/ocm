@@ -18,15 +18,15 @@ pika_init();
 $base_url = pl_settings_get('base_url');
 $screen = pl_grab_post('screen_name');
 $zipcode = pl_grab_post('zipcode');
-$safe_zipcode = mysql_real_escape_string($zipcode);
+$safe_zipcode = DB::escapeString($zipcode);
 $state = pl_grab_post('state');
-$safe_state = mysql_real_escape_string($state);
+$safe_state = DB::escapeString($state);
 $city = pl_grab_post('city');
-$safe_city = mysql_real_escape_string($city);
+$safe_city = DB::escapeString($city);
 $county = pl_grab_post('county');
-$safe_county = mysql_real_escape_string($county);
+$safe_county = DB::escapeString($county);
 $areacode = pl_grab_post('area_code');
-$safe_areacode = mysql_real_escape_string($areacode);
+$safe_areacode = DB::escapeString($areacode);
 
 
 switch ($screen) {
@@ -34,9 +34,9 @@ switch ($screen) {
 	case 'edit':
 		
 		$sql="DELETE FROM zip_codes WHERE zip='{$safe_zipcode}'";
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 		$sql="INSERT INTO zip_codes VALUES ('{$safe_city}', '{$safe_state}', '{$safe_zipcode}', '{$safe_areacode}', '{$safe_county}')";
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 		
 		header("Location: {$base_url}/zipcode.php?screen_msg=Zip Code {$safe_zipcode} Successfully Updated");	
 		
@@ -45,9 +45,9 @@ switch ($screen) {
 	case 'add':
 	
 		$sql="DELETE FROM zip_codes WHERE zip='{$safe_zipcode}'";
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 		$sql="INSERT INTO zip_codes VALUES ('{$safe_city}', '{$safe_state}', '{$safe_zipcode}', '{$safe_areacode}', '{$safe_county}')";
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 
 		header("Location: {$base_url}/zipcode.php?screen_msg=Zip Code {$safe_zipcode} Successfully Added");
 		

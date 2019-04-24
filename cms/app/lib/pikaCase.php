@@ -158,7 +158,7 @@ class pikaCase extends plBase
 		$case_id = $this->getValue('case_id');
 		$sql = "INSERT INTO conflict (conflict_id, contact_id, case_id, relation_code)
 					VALUES ('{$conflict_id}', '{$contact_id}', '{$case_id}', '{$role}')";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$this->contacts[$contact_id] = $role;
 		
 		// Update the conflict of interest information.
@@ -172,12 +172,12 @@ class pikaCase extends plBase
 								LEFT JOIN cases ON conflict.case_id=cases.case_id
 								LEFT JOIN contacts ON conflict.contact_id=contacts.contact_id 
 								WHERE conflict.case_id={$case_id} AND relation_code='1'";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			if (mysql_num_rows($result) == 1)
+			if (DBResult::numRows($result) == 1)
 			{
 				$this->setValue('client_id', $contact_id);
-				$row = mysql_fetch_assoc($result);
+				$row = DBResult::fetchRow($result);
 				
 				if ($row['birth_date'] && $row['open_date'])
 				{
@@ -261,14 +261,14 @@ class pikaCase extends plBase
 				LEFT JOIN menu_relation_codes ON conflict.relation_code = menu_relation_codes.value
 				WHERE conflict.case_id = '{$this->values['case_id']}'
 				ORDER BY menu_relation_codes.value ASC, last_name ASC, first_name ASC, extra_name ASC, middle_name ASC";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
 	
 	public function getNotes($order = 'ASC', $list_length = 50, $first_row = 0, &$row_count, &$total_hours)
 	{
-		$clean_order = mysql_real_escape_string($order);
+		$clean_order = DB::escapeString($order);
 		//$clean_first_row = mysql_real_escape_string($first_row);
 		//$clean_list_length = mysql_real_escape_string($list_length);
 		
@@ -276,8 +276,8 @@ class pikaCase extends plBase
 				FROM activities
 				WHERE case_id='{$this->values['case_id']}';";
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		$row = DBResult::fetchRow($result);
 		$row_count = $row['count'];
 		
 		$sql = "SELECT SUM(hours) AS hours
@@ -285,8 +285,8 @@ class pikaCase extends plBase
 				WHERE case_id='{$this->values['case_id']}'
 				AND completed = '1';";
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		$row = DBResult::fetchRow($result);
 		$total_hours = $row['hours'];
 		
 		$sql = "SELECT activities.*,
@@ -301,7 +301,7 @@ class pikaCase extends plBase
 		} elseif ($list_length){
 			$sql .= " LIMIT $list_length";
 		}
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -331,10 +331,10 @@ class pikaCase extends plBase
 		$new_case_no = autonumber($this->getValues());
 		
 		// Before proceeding, make certain that this case number does not already exist.
-		$clean_new_case_no = mysql_real_escape_string($new_case_no);
+		$clean_new_case_no = DB::escapeString($new_case_no);
 		$sql = "SELECT count(*) AS tally FROM cases WHERE number = '{$clean_new_case_no}'";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		$row = DBResult::fetchRow($result);
 		
 		if ($row['tally'] > 0) 
 		{
@@ -364,15 +364,15 @@ class pikaCase extends plBase
 		
 		// Delete conflict records.
 		$sql = "DELETE FROM conflict WHERE case_id = '{$this->case_id}'";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
 		// Delete documents.
 		$sql = "DELETE FROM doc_storage WHERE 1 AND case_id = '{$this->case_id}';";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
 		// Clean up orphaned activities
 		$sql = "UPDATE activities SET case_id = NULL WHERE 1 AND case_id = '{$this->case_id}';";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		parent::delete();
 	}
 
@@ -387,9 +387,9 @@ class pikaCase extends plBase
 							LEFT JOIN aliases ON conflict.contact_id=aliases.contact_id 
 							LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id 
 							WHERE case_id='{$case_id}'";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			// Match by contact ID
 			$sql = "SELECT conflict.*, contacts.*, number, cases.case_id, problem, status, label AS role
@@ -400,9 +400,9 @@ class pikaCase extends plBase
 					WHERE relation_code != {$row['relation_code']}
 					AND conflict.contact_id = {$row['contact_id']}
 					LIMIT $lim";
-			$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			while($tmp_row = mysql_fetch_assoc($sub_result))
+			while($tmp_row = DBResult::fetchRow($sub_result))
 			{
 				$tmp_row['match'] = 'ID';
 				$conflict_array[] = $tmp_row;
@@ -442,9 +442,9 @@ class pikaCase extends plBase
 					WHERE relation_code != {$row['relation_code']} AND aliases.mp_last='{$row['mp_last']}'{$mp_first}
 					AND conflict.contact_id != {$row['contact_id']}
 					LIMIT $lim";
-			$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			while($tmp_row = mysql_fetch_assoc($sub_result))
+			while($tmp_row = DBResult::fetchRow($sub_result))
 			{
 				$tmp_row['match'] = 'NAME';
 				$conflict_array[] = $tmp_row;
@@ -470,9 +470,9 @@ class pikaCase extends plBase
 					WHERE relation_code != {$row['relation_code']} AND aliases.ssn='{$row['ssn']}'
 					AND conflict.contact_id != {$row['contact_id']} AND aliases.mp_last!='{$row['mp_last']}'
 					LIMIT $lim";
-				$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+				$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 				
-				while($tmp_row = mysql_fetch_assoc($sub_result))
+				while($tmp_row = DBResult::fetchRow($sub_result))
 				{
 					$tmp_row['match'] = 'SSN';
 					$conflict_array[] = $tmp_row;
@@ -552,11 +552,11 @@ class pikaCase extends plBase
 	public function removeContact($conflict_id)
 	{
 		$sql = "DELETE FROM conflict WHERE conflict_id='{$conflict_id}' AND case_id='{$this->case_id}' LIMIT 1";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		if (mysql_affected_rows() != 1) 
+		if (DB::affectedRows() != 1)
 		{
-			trigger_error("Error: " . mysql_affected_rows() . " rows deleted");
+			trigger_error("Error: " . DB::affectedRows() . " rows deleted");
 		}
 		
 		$this->resetConflictStatus();
@@ -570,7 +570,7 @@ class pikaCase extends plBase
 				(SELECT users.* FROM users JOIN cases ON cases.cocounsel1 = users.user_id WHERE 1 AND case_id = '{$this->case_id}' LIMIT 1)
 				UNION
 				(SELECT users.* FROM users JOIN cases ON cases.cocounsel2 = users.user_id WHERE 1 AND case_id = '{$this->case_id}' LIMIT 1);";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -581,14 +581,14 @@ class pikaCase extends plBase
 				(SELECT pb_attorneys.* FROM pb_attorneys JOIN cases ON cases.pba_id2 = pb_attorneys.pba_id WHERE 1 AND case_id = '{$this->case_id}' LIMIT 1)
 				UNION
 				(SELECT pb_attorneys.* FROM pb_attorneys JOIN cases ON cases.pba_id3 = pb_attorneys.pba_id WHERE 1 AND case_id = '{$this->case_id}' LIMIT 1);";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
 	public function deleteOutcomes()
 	{
 		$sql = "DELETE FROM outcomes WHERE case_id = {$this->case_id}";		
-		return mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		return DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 	}
 	
 	public function addOutcome($outcome_goal_id, $result)

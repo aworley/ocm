@@ -75,10 +75,10 @@ class pikaContact extends plBase
 					WHERE 1 
 					AND contact_id='{$contact_id}' 
 					AND primary_name='1'";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			if(mysql_num_rows($result) == 1) {
-				$row = mysql_fetch_assoc($result);
+			if(DBResult::numRows($result) == 1) {
+				$row = DBResult::fetchRow($result);
 				$alias_id = $row['alias_id'];
 				$alias = new pikaAlias($row['alias_id']);
 			} else { 
@@ -104,7 +104,7 @@ class pikaContact extends plBase
 				FROM aliases 
 				WHERE 1
 				AND contact_id = '{$this->contact_id}'";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -114,7 +114,7 @@ class pikaContact extends plBase
 				FROM conflict LEFT JOIN cases ON conflict.case_id=cases.case_id
 				LEFT JOIN menu_relation_codes ON conflict.relation_code=menu_relation_codes.value
 				WHERE conflict.contact_id = '{$this->values['contact_id']}' ORDER BY cases.open_date ASC";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -123,7 +123,7 @@ class pikaContact extends plBase
 		$sql = "SELECT intakes.*
 				FROM intakes
 				WHERE intakes.client_id = '{$this->values['contact_id']}' ORDER BY intake_id ASC";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -249,7 +249,7 @@ class pikaContact extends plBase
 				    ORDER BY aliases.last_name, aliases.first_name, aliases.extra_name, aliases.middle_name";
 		}
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -270,46 +270,46 @@ class pikaContact extends plBase
 				$this->notes .= $notes_addendum . "\n\n" . $merge_contact->notes;
 				$this->save();
 				
-				$clean_new_id = mysql_real_escape_string($this->contact_id);
-				$clean_old_id = mysql_real_escape_string($contact_id);
+				$clean_new_id = DB::escapeString($this->contact_id);
+				$clean_old_id = DB::escapeString($contact_id);
 				$sql = "UPDATE cases SET client_id={$clean_new_id} WHERE client_id="
 					. $clean_old_id;
-				$result = mysql_query($sql);
+				$result = DB::query($sql);
 				
 				// Begin section to handle custom fields used at a program.
-				$result = mysql_query("DESCRIBE cases child_id");
+				$result = DB::query("DESCRIBE cases child_id");
 				
-				if (mysql_num_rows($result) == 1)
+				if (DBResult::numRows($result) == 1)
 				{
 					$sql = "UPDATE cases
 						SET child_id='{$this->contact_id}'
 						WHERE child_id='{$merge_contact->contact_id}';";
-					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 					
 					$sql = "UPDATE contacts
 						SET birth_mother='{$this->contact_id}'
 						WHERE birth_mother='{$merge_contact->contact_id}';";
-					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 					
 					$sql = "UPDATE contacts
 						SET birth_father='{$this->contact_id}'
 						WHERE birth_father='{$merge_contact->contact_id}';";
-					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 					
 					$sql = "UPDATE contacts
 						SET attorney_id='{$this->contact_id}'
 						WHERE attorney_id='{$merge_contact->contact_id}';";
-					mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+					DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 				}
 				// End custom fields section.
 				
 				$sql = "UPDATE conflict 
 						SET contact_id='{$this->contact_id}' 
 						WHERE contact_id='{$merge_contact->contact_id}';";
-				mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+				DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 				
 				$result = $merge_contact->getAliasesDb();
-				while($row = mysql_fetch_assoc($result)) {
+				while($row = DBResult::fetchRow($result)) {
 					//print_r($row);
 					$alias = new pikaAlias($row['alias_id']);
 					if($alias->primary_name != 1) {
@@ -368,13 +368,13 @@ class pikaContact extends plBase
 	
 	public function delete() {
 		$result = $this->getAliasesDb();
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$alias = new pikaAlias($row['alias_id']);
 			$alias->delete();
 		}
 		$result = $this->getCasesDb();
 		require_once('pikaCase.php');
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$case = new pikaCase($row['case_id']);
 			$case->removeContact($row['conflict_id']);
 			if($case->client_id == $this->contact_id) {

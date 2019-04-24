@@ -318,28 +318,28 @@ switch($_POST['action'])
 
 	$sql = "SELECT question_id, question_text FROM q_questions WHERE questionnaire_id=$questionnaire";
 	//	echo $sql . "<br>";
-	$results = pl_query($sql);
+	$results = DB::query($sql);
 
-	while ($row = $results->fetchRow()) {
+	while ($row = DBResult::fetchRow($results)) {
 		$old_questions[$row['question_id']] = $row['question_text'];
 	}
 
 	if ($respcheck) {
 		$q_sql  = "INSERT INTO q_questionnaires (title, problem, special_problem, revision) VALUES ";
 		$q_sql .= "('$title', '$problem', '$special_problem', $revision)";
-		pl_query($q_sql);
+		DB::query($q_sql);
 		$sql  = "SELECT questionnaire_id FROM q_questionnaires WHERE title='$title' ";
 		$sql .= "AND problem='$problem' AND special_problem='$special_problem' ORDER BY revision DESC LIMIT 1";
-		$results = pl_query($sql);
+		$results = DB::query($sql);
 
-		while ($row = $results->fetchRow()) {
+		while ($row = DBResult::fetchRow($results)) {
 			$new_questionnaire_id = $row['questionnaire_id'];
 		}
 
 	} else {
 		$q_sql  = "UPDATE q_questionnaires SET title='$title', problem='$problem', ";
 		$q_sql .= "special_problem='$special_problem' WHERE questionnaire_id=$questionnaire";
-		pl_query($q_sql);
+		DB::query($q_sql);
 		$new_questionnaire_id = $questionnaire;
 	}
 	//	echo "$q_sql\n";
@@ -351,7 +351,7 @@ switch($_POST['action'])
 
 	if (!$respcheck) {
 		$sql = "DELETE FROM q_questions WHERE questionnaire_id=$questionnaire";
-		pl_query($sql);
+		DB::query($sql);
 		//		echo "$sql \n";
 	}
 	for($i = 0; $i < count($questions); $i++) {
@@ -365,7 +365,7 @@ switch($_POST['action'])
 			$sql .= "VALUES ($new_questionnaire_id, '$questions[$i]', $i+1)";
 			//			echo "$sql\n";
 
-			pl_query($sql);
+			DB::query($sql);
 
 			if ($oldid) {
 				//				echo "Question number $i matches old ID number $oldid\n";
@@ -373,8 +373,8 @@ switch($_POST['action'])
 				$sql .= "AND question_text='$questions[$i]' AND question_order=($i+1) LIMIT 1";
 				//				echo "$sql\n";
 
-				$results = pl_query($sql);
-				while ($row = $results->fetchRow()) {
+				$results = DB::query($sql);
+				while ($row = DBResult::fetchRow($results)) {
 					$new_question_id = $row['question_id'];
 				}
 				if ($i == (count($questions)-1)) {
@@ -386,7 +386,7 @@ switch($_POST['action'])
 				$sql .= "SELECT $new_question_id, answer_text, $next_question, answer_order FROM q_answers ";
 				$sql .= "WHERE question_id=$oldid";
 				//				echo "$sql\n";
-				pl_query($sql);
+				DB::query($sql);
 
 			}
 		}
@@ -394,7 +394,7 @@ switch($_POST['action'])
 	if (!$respcheck) {
 		foreach($old_questions as $key => $value) {
 			$sql  = "DELETE FROM q_answers WHERE question_id=$key";
-			pl_query($sql);
+			DB::query($sql);
 			//			echo "$sql\n";
 		}
 	}
@@ -431,13 +431,13 @@ switch($_POST['action'])
 	} else {
 		$q_sql  = "INSERT INTO q_questionnaires (title, problem, special_problem) VALUES ";
 		$q_sql .= "('$title', '$problem', '$special_problem')";
-		pl_query($q_sql);
+		DB::query($q_sql);
 	}
 
 	$last_id_sql = "SELECT questionnaire_id FROM q_questionnaires WHERE title = '$title' ORDER BY revision DESC LIMIT 1";
 
-	$results = pl_query($last_id_sql);
-	while ($row = $results->fetchRow()) {
+	$results = DB::query($last_id_sql);
+	while ($row = DBResult::fetchRow($results)) {
 		$a = $row;
 	}
 	$last_id = $a['questionnaire_id'];
@@ -449,7 +449,7 @@ switch($_POST['action'])
 		if ($questions[$i]) {
 			$sql  = "INSERT INTO q_questions (questionnaire_id, question_text, question_order) ";
 			$sql .= "VALUES ($last_id, '$questions[$i]', $i+1 )";
-			pl_query($sql);
+			DB::query($sql);
 		}
 	}
 
@@ -476,7 +476,7 @@ switch($_POST['action'])
 
 	while (list($key, $val) = each($q)) {
 		$sql = "UPDATE q_questionnaires SET active=$active WHERE questionnaire_id=$key";
-		pl_query($sql);
+		DB::query($sql);
 		//		echo "<br>$sql\n";
 	}
 	header("Location: questionnaires.php");
@@ -520,7 +520,7 @@ switch($_POST['action'])
 		$answer_order = 1;
 		$delsql = "DELETE FROM q_answers WHERE question_id=$question_id";
 		//		echo $delsql . "<br>\n";
-		pl_query($delsql);
+		DB::query($delsql);
 		for ($i = 0; $i < count($indiv_answers); $i++) 
 		{
 			$jump_array = explode(' | ',$indiv_answers[$i]);
@@ -529,8 +529,8 @@ switch($_POST['action'])
 				$next_sql  = "SELECT * FROM q_questions WHERE questionnaire_id=$questionnaire_id AND ";
 				$next_sql .= "question_order=$jumpto ORDER BY question_id DESC LIMIT 1";
 				//				echo "$next_sql<br>\n";
-				$results = pl_query($next_sql);
-				while ($row = $results->fetchRow()) {
+				$results = DB::query($next_sql);
+				while ($row = DBResult::fetchRow($results)) {
 					$next_question = $row['question_id'];
 				}
 			} else {
@@ -551,7 +551,7 @@ switch($_POST['action'])
 				$sql  = "INSERT INTO q_answers (question_id, answer_text, next_question, answer_order) ";
 				$sql .= "VALUES ($question_id, '$answer_text', $next_question, $answer_order)";
 				//				echo $sql . "<br>\n";
-				pl_query($sql);
+				DB::query($sql);
 				$answer_order++;
 				if ($i > 0) {
 					$question_type = "radio";
@@ -564,7 +564,7 @@ switch($_POST['action'])
 		//		echo "Question Type = $question_type<br>";
 		$quest_sql = "UPDATE q_questions SET question_type='$question_type' WHERE question_id=$question_id";
 		//		echo "$quest_sql<br>";
-		pl_query($quest_sql);
+		DB::query($quest_sql);
 	}
 	header("Location: admin_quest_view.php?questionnaire_id=$questionnaire_id");
 	//	echo "</pre>\n";

@@ -65,9 +65,9 @@ $sql = "SELECT cases.*, contacts.*, MAX(activities.act_date) as last_act
 		WHERE 1";
 
 
-$safe_open_date_begin = mysql_real_escape_string(pl_date_mogrify($open_date_begin));
-$safe_open_date_end = mysql_real_escape_string(pl_date_mogrify($open_date_end));
-$safe_inactive_date_begin = mysql_real_escape_string(pl_date_mogrify($inactive_date_begin));
+$safe_open_date_begin = DB::escapeString(pl_date_mogrify($open_date_begin));
+$safe_open_date_end = DB::escapeString(pl_date_mogrify($open_date_end));
+$safe_inactive_date_begin = DB::escapeString(pl_date_mogrify($inactive_date_begin));
 
 if ($open_date_begin && $open_date_end) {
 	$t->add_parameter('Cases Opened Between',$open_date_begin . " - " . $open_date_end);
@@ -83,7 +83,7 @@ if ($open_date_begin && $open_date_end) {
 
 // Other filters
 if(is_numeric($user_id)) {
-	$safe_user_id = mysql_real_escape_string($user_id);
+	$safe_user_id = DB::escapeString($user_id);
 	$t->add_parameter('User(s)',pl_array_lookup($user_id,$staff_array));
 	$sql .= " AND (cases.user_id='{$safe_user_id}' OR cases.cocounsel1='{$safe_user_id}' OR cases.cocounsel2='{$safe_user_id}')";
 }
@@ -115,7 +115,7 @@ if ($x != false) {
 
 if ($gender) {
 	$t->add_parameter('Gender Code',$gender);
-	$safe_gender = mysql_real_escape_string($gender);
+	$safe_gender = DB::escapeString($gender);
 	$sql .= " AND gender='{$safe_gender}'";
 }
 
@@ -129,7 +129,7 @@ if ($inactive_date_begin) {
 if($limit)
 {
 	$t->add_parameter('Limit Results',$limit . " Row(s)");
-	$safe_limit = mysql_real_escape_string($limit);
+	$safe_limit = DB::escapeString($limit);
 	$sql .= " LIMIT {$safe_limit};";
 }
 
@@ -137,8 +137,8 @@ $t->title = $report_title;
 $t->display_row_count(true);
 $t->set_header(array('Number','Client','Status','Office','Funding','Atty','Open Date','Last Activity'));
 	
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$rpt_row = array();
 		

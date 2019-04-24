@@ -69,11 +69,11 @@ class plBase
 		}
 		else
 		{
-			$clean_id = mysql_real_escape_string($id);
+			$clean_id = DB::escapeString($id);
 			$sql = "SELECT * FROM {$this->db_table} WHERE {$this->db_table_id_column} = '{$clean_id}' LIMIT 1";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			$this->last_query = $sql;
-			if (mysql_num_rows($result) < 1)
+			if (DBResult::numRows($result) < 1)
 			{
 				trigger_error("{$this->db_table_id_column} = '{$clean_id}'; No such record found.");
 				return false;
@@ -81,7 +81,7 @@ class plBase
 			
 			else 
 			{
-				$row = mysql_fetch_assoc($result);
+				$row = DBResult::fetchRow($result);
 				$this->loadValues($row);
 			}
 		}
@@ -142,19 +142,19 @@ class plBase
 		if ($this->is_new == true)
 		{
 			$sql = $this->tableAutosqlInsert($this->values);
-			mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			$this->last_query = $sql;
 			$this->is_new = false;
 			$this->is_modified = false;
-			return mysql_affected_rows();
+			return DBResult::numRows($result);
 		}
 		else if ($this->is_modified == true)
 		{
 			$sql = $this->tableAutosqlUpdate($this->values);
-			mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			$this->last_query = $sql;
 			$this->is_modified = false;
-			return mysql_affected_rows();
+			return DBResult::numRows($result);
 		}
 		else 
 		{
@@ -193,7 +193,7 @@ class plBase
 		$sql = "DELETE FROM {$this->db_table} 
 				WHERE `{$this->db_table_id_column}` = '{$this->values[$this->db_table_id_column]}' 
 				LIMIT 1;";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$this->last_query = $sql;
 		return true;
 	}
@@ -262,16 +262,16 @@ class plBase
 					break;
 				case 'date':
 					$field_value = pl_date_mogrify($field_value);
-					$safe_field_value = mysql_real_escape_string($field_value);
+					$safe_field_value = DB::escapeString($field_value);
 					$sql = "{$field_name} = '{$safe_field_value}'";
 					break;
 				case 'time':
 					$field_value = pl_time_mogrify($field_value);
-					$safe_field_value = mysql_real_escape_string($field_value);
+					$safe_field_value = DB::escapeString($field_value);
 					$sql = "{$field_name} = '{$safe_field_value}'";
 					break;
 				case 'timestamp':
-					$safe_field_value = mysql_real_escape_string($field_value);
+					$safe_field_value = DB::escapeString($field_value);
 					if(strpos($field_value,'CURRENT_TIMESTAMP') === false)
 					{  // Only need quotes if timestamp provided - variables cannot be quoted
 						$safe_field_value = "'{$safe_field_value}'";
@@ -279,7 +279,7 @@ class plBase
 					$sql = "{$field_name} = {$safe_field_value}";
 					break;
 				default:
-					$safe_field_value = mysql_real_escape_string($field_value);
+					$safe_field_value = DB::escapeString($field_value);
 					$sql = "{$field_name} = '{$safe_field_value}'";
 					break;
 			}
@@ -336,9 +336,9 @@ class plBase
 	{
 		if(strlen($db_table) > 0) 
 		{
-			$safe_db_table = mysql_real_escape_string($db_table);
+			$safe_db_table = DB::escapeString($db_table);
 			$sql = "DESCRIBE {$safe_db_table};";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			return $result;
 		}
 		else 
@@ -361,7 +361,7 @@ class plBase
 		$describe_array = array();
 		
 		$result = plBase::describeTableDB($db_table);
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$describe_array[$row['Field']] = $row;
 		}
 		
@@ -381,7 +381,7 @@ class plBase
 		$db_table_columns = array();
 		$result = plBase::describeTableDB($this->db_table);
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$column_row = array();
 			//$column_row['Field'] = $row['Field'];
@@ -526,35 +526,35 @@ class plBase
 	 */
 	public static function getNextID($sequence)
 	{
-		$safe_sequence = mysql_real_escape_string($sequence);
+		$safe_sequence = DB::escapeString($sequence);
 		$next_id = null;
 		
 		$sql = "LOCK TABLES counters WRITE";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . DB::error());
 		$sql = "SELECT count 
 				FROM counters 
 				WHERE 1 AND id = '{$safe_sequence}' 
 				LIMIT 1";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . DB::error());
 		
-		if (mysql_num_rows($result) < 1)
+		if (DBResult::numRows($result) < 1)
 		{
 			$sql = "INSERT INTO counters SET id = '{$safe_sequence}', count = '1'";
-			mysql_query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . mysql_error());
+			DB::query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . DB::error());
 			$next_id = 1;
 		}
 	
 		else
 		{
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			$next_id = $row['count'] + 1;
 			$sql = "UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1";
-			mysql_query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . mysql_error());
+			DB::query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . DB::error());
 			
 		}
 	
 		$sql = "UNLOCK TABLES";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . ' Error: ' . DB::error());
 		return $next_id;
 	}
 	

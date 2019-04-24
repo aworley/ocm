@@ -28,9 +28,9 @@ if ('system' != $auth_row['group_id'])
 }
 
 $tables = array();
-$result = mysql_query("SHOW TABLES");
+$result = DB::query("SHOW TABLES");
 
-while ($row= mysql_fetch_array($result))
+while ($row= DBResult::fetchArray($result))
 {
 	if ($row[0] != 'doc_storage')
 	{

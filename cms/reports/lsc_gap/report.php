@@ -74,8 +74,8 @@ from cases where 1";
 // Filters
 $odb = pl_date_mogrify($open_date_begin);
 $ode = pl_date_mogrify($open_date_end);
-$safe_odb = mysql_real_escape_string($odb);
-$safe_ode = mysql_real_escape_string($ode);
+$safe_odb = DB::escapeString($odb);
+$safe_ode = DB::escapeString($ode);
 
 if ($odb && $ode) 
 {
@@ -90,7 +90,7 @@ else
 
 if ($undup == 1 || ($undup == 0 && $undup != '')) {
 	$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
-	$safe_undup = mysql_real_escape_string($undup);
+	$safe_undup = DB::escapeString($undup);
 	$sql .= " AND undup = '{$safe_undup}'";
 }
 
@@ -134,9 +134,9 @@ $t->set_header(array('Category',
 
 // RUN Report
 
-$result = mysql_query($sql) or trigger_error('');
+$result = DB::query($sql) or trigger_error('');
 
-while($row = mysql_fetch_assoc($result)) 
+while($row = DBResult::fetchRow($result))
 {
 	if (strlen($row['category']) < 1)
 	{

@@ -35,14 +35,14 @@ function field_list($field_name = null, $field_value = null, $menu_array = null,
 	if(!in_array($field_name,$allowed_tables)) {
 		$field_name = 'cases';
 	}
-	$safe_field_name = mysql_real_escape_string($field_name);
+	$safe_field_name = DB::escapeString($field_name);
 	
 	$menu_table_annotation = pikaTempLib::getMenu('annotate_'.$field_name);
 
 	$sql = "DESCRIBE {$safe_field_name}";
-	$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+	$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 	$field_list = array();
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = DBResult::fetchRow($result)) {
 		$field = $row['Field'];
 		if(isset($menu_table_annotation[$field])) {
 			$label = $menu_table_annotation[$field];

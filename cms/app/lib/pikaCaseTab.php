@@ -31,7 +31,7 @@ class pikaCaseTab extends plBase
 				WHERE 1";
 		if(!is_null($enabled)) {$sql .= " AND enabled = '1'";}
 		$sql .= " ORDER BY tab_order ASC";
-		$result = mysql_query($sql) or trigger_error(mysql_error());
+		$result = DB::query($sql) or trigger_error(DB::error());
 		return $result;
 	}
 	
@@ -67,9 +67,9 @@ class pikaCaseTab extends plBase
 				WHERE 1 AND tab_order < '{$this->tab_order}' 
 				ORDER BY tab_order DESC 
 				LIMIT 1";
-		$result = mysql_query($sql);
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql);
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$tab = new pikaCaseTab($row['tab_id']);
 			$new_order = $tab->tab_order;
 			$tab->tab_order = $this->tab_order;
@@ -90,9 +90,9 @@ class pikaCaseTab extends plBase
 				WHERE 1 AND tab_order > '{$this->tab_order}' 
 				ORDER BY tab_order ASC 
 				LIMIT 1";
-		$result = mysql_query($sql);
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql);
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$tab = new pikaCaseTab($row['tab_id']);
 			$new_order = $tab->tab_order;
 			$tab->tab_order = $this->tab_order;
@@ -113,9 +113,9 @@ class pikaCaseTab extends plBase
 				WHERE 1
 				ORDER BY tab_order DESC 
 				LIMIT 1";
-		$result = mysql_query($sql);
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql);
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$next_order = 1 + $row['tab_order'];
 			return $next_order;
 		} else {

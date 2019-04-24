@@ -48,11 +48,11 @@ if (is_numeric($case1->getValue('client_id')))
 	/* AMW 2017-02-10 - A missing contact record is rare but happens often enough
 	that we	should check for it	and handle it gracefully if it occurs. */
 	
-	$clean_client_id = mysql_real_escape_string($case1->getValue('client_id'));
-	$resultc = mysql_query("SELECT contact_id FROM contacts WHERE contact_id = 
+	$clean_client_id = DB::escapeString($case1->getValue('client_id'));
+	$resultc = DB::query("SELECT contact_id FROM contacts WHERE contact_id = 
 	{$clean_client_id}");
 	
-	if (mysql_num_rows($resultc) == 1)
+	if (DBResult::numRows($resultc) == 1)
 	{
 	require_once('pikaContact.php');
 	
@@ -186,7 +186,7 @@ $contacts_html = '';
 
 // get contacts info to complement the $caserow array
 $result = $case1->getContactsDb();
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$contact_ids[] = $row['contact_id'];
 	$clean_contact_name = addslashes($row['last_name']) . ', ' . addslashes($row['first_name']);
@@ -408,7 +408,7 @@ else
 {
 	$result = pikaCaseTab::getCaseTabsDB();
 	$menu_case_tabs = array();
-	while($row = mysql_fetch_assoc($result)) 
+	while($row = DBResult::fetchRow($result))
 	{
 		$menu_case_tabs[$row['file']] = $row;
 	}

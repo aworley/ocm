@@ -53,8 +53,8 @@ $open_date_end = pl_grab_post('open_date_end');
 $redact_client = pl_grab_post('redact_client');
 $show_sql = pl_grab_post('show_sql');
 
-$safe_odb = mysql_real_escape_string(pl_date_mogrify($open_date_begin));
-$safe_ode = mysql_real_escape_string(pl_date_mogrify($open_date_end));
+$safe_odb = DB::escapeString(pl_date_mogrify($open_date_begin));
+$safe_ode = DB::escapeString(pl_date_mogrify($open_date_end));
 
 $where_sql = '';
 
@@ -84,8 +84,8 @@ $sql = "SELECT case_id, number, primary_client.first_name, primary_client.last_n
 		WHERE 1{$where_sql}
 		ORDER BY open_date ASC";
 
-$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$r = array();
 	if (strlen($row['number']) < 1)

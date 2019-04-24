@@ -313,7 +313,7 @@ function pika_task_list($user_id)
 	$filter['user_id'] = $user_id;
 	
 	$result = $pk->fetchActivities($filter, $dummy);
-	while ($row = $result->fetchRow())
+	while ($row = DBResult::fetchRow($result))
 	{
 		$t->addRow($row);
 	}
@@ -913,7 +913,7 @@ function pika_act_case_menu($user_id, $case_id)
 	{
 		$case_appears_on_list = false;
 		
-		while ($rr = $result->fetchRow())
+		while ($rr = DBResult::fetchRow($result))
 		{
 			if ($rr['case_id'] == $case_id)
 			{
@@ -939,7 +939,7 @@ function pika_act_case_menu($user_id, $case_id)
 		if (false == $case_appears_on_list)
 		{
 			$result = $pk->fetchCaseList(array('case_id' => $case_id), $dummy);
-			$case_row = $result->fetchRow();
+			$case_row = DBResult::fetchRow($result);
 			
 			$new_case_menu = "<option selected value=\"{$case_id}\">{$case_row['contacts.last_name']}, , {$case_row['contacts.first_name']} {$case_row['contacts.middle_name']} {$case_row['contacts.extra_name']} - {$case_row['number']} - {$case_row['problem']} - {$case_row['area_code']} {$case_row['phone']}" . $new_case_menu;
 			$js_array .= "funding['{$rr['case_id']}'] = '{$rr['funding']}';\n";
@@ -957,7 +957,7 @@ function pika_act_case_menu($user_id, $case_id)
 		$new_case_menu .= "<option selected value=\"\">No Cases Available\n";
 	}
 	
-	else while ($rr = $result->fetchRow())
+	else while ($rr = DBResult::fetchRow($result))
 	{
 		$new_case_menu .= "<option value=\"{$rr['case_id']}\">{$rr['last_name']}, {$rr['first_name']} {$rr['middle_name']} {$rr['extra_name']} - {$rr['number']} - {$rr['problem']} - {$rr['area_code']} {$rr['phone']}\n";
 		$js_array .= "funding['{$rr['case_id']}'] = '{$rr['funding']}';\n";
@@ -1214,8 +1214,8 @@ function pika_ref_agencies_get_array()
 	LIMIT 1000
 END;
 
-	$result = pl_query($sql);
-	while ($row = $result->fetchRow())
+	$result = DB::query($sql);
+	while ($row = DBResult::fetchRow($result))
 	{
 		$a[$row['contact_id']] = pl_format_name($row);
 	}
@@ -1231,7 +1231,7 @@ function pika_get_attorneys($filter, &$pba_count, $first_row="", $list_length=""
 	// Filter elements need to be escaped
 	foreach ($filter as $key => $val)
 	{
-		$filter[$key] = mysql_real_escape_string($val);
+		$filter[$key] = DB::escapeString($val);
 	}
 		
 	if (isset($filter['pba_id']) && $filter['pba_id'])
@@ -1275,9 +1275,9 @@ function pika_get_attorneys($filter, &$pba_count, $first_row="", $list_length=""
 
 		$sql = "SELECT count(*) FROM users WHERE attorney > '0'" . $sql_filter;
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
-		$row = $result->fetchRow();
+		$row = DBResult::fetchRow($result);
 		
 		$pba_count = $row["count(*)"];
 		
@@ -1285,44 +1285,44 @@ function pika_get_attorneys($filter, &$pba_count, $first_row="", $list_length=""
 		$sql = "SELECT * FROM users WHERE attorney > '0'" . $sql_filter . " ORDER BY last_name, first_name, middle_name, extra_name" . $sql_limit;
 	}
 	
-	return pl_query($sql);
+	return DB::query($sql);
 }
 
 function pika_transfer_options_get()
 {
-	return pl_query("SELECT * FROM transfer_options");
+	return DB::query("SELECT * FROM transfer_options");
 }
 
 // Needed for new autonumber.php script.
 function pl_mysql_next_id($sequence)
 {
 	// VARIABLES
-	$safe_sequence = mysql_real_escape_string($sequence);
+	$safe_sequence = DB::escapeString($sequence);
 	$next_id = null;
 	
 	pl_mysql_init() or trigger_error('');
 	
-	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
-	$result = mysql_query("SELECT count FROM counters WHERE id = '{$safe_sequence}' LIMIT 1")
+	DB::query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
+	$result = DB::query("SELECT count FROM counters WHERE id = '{$safe_sequence}' LIMIT 1")
 		or trigger_error('');
 	
-	if (mysql_num_rows($result) < 1)
+	if (DBResult::numRows($result) < 1)
 	{
-		mysql_query("INSERT INTO counters SET id = '{$safe_sequence}', count = '1'")
+		DB::query("INSERT INTO counters SET id = '{$safe_sequence}', count = '1'")
 		or trigger_error('');
 		$next_id = 1;
 	}
 	
 	else
 	{
-		$row = mysql_fetch_assoc($result);
+		$row = DBResult::fetchRow($result);
 		$next_id = $row['count'] + 1;
 		
-		mysql_query("UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1")
+		DB::query("UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1")
 			or trigger_error('error_during_increment');
 	}
 	
-	mysql_query("UNLOCK TABLES") or trigger_error('error');
+	DB::query("UNLOCK TABLES") or trigger_error('error');
 	return $next_id;
 }
 ?>

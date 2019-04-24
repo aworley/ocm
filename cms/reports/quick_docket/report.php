@@ -62,7 +62,7 @@ else
 
 
 // run the report
-$safe_user_id = mysql_real_escape_string($user_id);
+$safe_user_id = DB::escapeString($user_id);
 $t->add_parameter('User',$user_id);
 
 $sql = "SELECT	case_id, open_date, last_name, status, number, user_id, 
@@ -78,13 +78,13 @@ $t->title = $report_title;
 $t->set_header(array('Open Date', 'Last Name', 'Status', 'Case Number', 'Counsel',
 					'Co-counsel', 'Co-counsel', 'Office', 'Case Notes'));
 
-$result = mysql_query($sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error();
+while ($row = DBResult::fetchArray($result))
 {
 	$notes = '';
 	$case = new pikaCase($row['case_id']);
 	$notesdb = $case->getNotes('DESC');
-	while ($rb = mysql_fetch_assoc($notesdb))
+	while ($rb = DBResult::fetchArray($notesdb))
 	{
 		$notes .= pl_date_unmogrify($rb['act_date']);
 		$notes .= ": " . $rb['summary'];

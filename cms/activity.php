@@ -163,7 +163,7 @@ $filter['show_cases'] = '0';
 $row_count = 0;
 $open_cases_result = pikaMisc::getCases($filter,$row_count,'client_name','ASC',0,500);
 $open_case_menu_array = array();
-while($row = mysql_fetch_assoc($open_cases_result)) {
+while($row = DBResult::fetchRow($open_cases_result)) {
 	$open_case_menu_array[$row['case_id']] = $row;
 }
 
@@ -202,7 +202,7 @@ $act_row['textFormat'] = $textformat->draw();
 require_once('pikaInterview.php');
 $result = pikaInterview::getInterviewsDB(1);
 $menu_interviews = array();
-while($row = mysql_fetch_assoc($result)) {
+while($row = DBResult::fetchRow($result)) {
         $menu_interviews[$row['interview_id']] = $row['name'];
 }
 

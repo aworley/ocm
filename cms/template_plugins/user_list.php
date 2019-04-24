@@ -45,7 +45,7 @@ function user_list($field_name = null, $field_value = null, $menu_array = null, 
 	}
 	$row_count = 0;
 	$result = pikaUser::getUsers($filter,$row_count,'name','ASC',0,0);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$staff_array[$row['user_id']] = pikaTempLib::plugin('text_name','',$row,'',array('order=last','no_extra','no_middle'));
 	}

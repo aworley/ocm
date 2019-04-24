@@ -39,10 +39,10 @@ function rand_zip()
 			AND area_code IS NOT NULL 
 			ORDER BY RAND() 
 			LIMIT 1";
-	$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-	if(mysql_num_rows($result) == 1)
+	$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+	if(DBResult::numRows($result) == 1)
 	{
-		$zip = mysql_fetch_assoc($result);
+		$zip = DBResult::fetchRow($result);
 	}
 	return $zip;
 }
@@ -415,7 +415,7 @@ if($gen && strlen($gen) > 0)
 		}
 
 		$result = pikaMisc::getCases(array('number' => $case->number),$row_count);
-		if(mysql_num_rows($result) > 0)
+		if(DBResult::numRows($result) > 0)
 		{
 			$case->number = null;
 		}

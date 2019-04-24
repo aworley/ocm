@@ -49,7 +49,7 @@ $cases_table->page_offset = $offset;
 
 $result = $contact->getCasesDb();
 
-if (mysql_num_rows($result) > 1)
+if (DBResult::numRows($result) > 1)
 {
 	// remind the user that edit the contact record will cascade thru the system
 	$clean_contact_screen['preamble'] = '<p><strong>Note</strong>:  The contact information on this screen is linked to multiple cases.
@@ -59,7 +59,7 @@ if (mysql_num_rows($result) > 1)
 
 $i = 0;
 $staff = pikaMisc::fetchStaffArray();
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if (strlen($row['number']) < 1)
 	{
@@ -75,7 +75,7 @@ while ($row = mysql_fetch_assoc($result))
 	$i++;
 }
 
-if (mysql_num_rows($result) > 0)
+if (DBResult::numRows($result) > 0)
 {
 	$clean_contact_screen['case_list'] = $cases_table->draw();
 }
@@ -94,8 +94,8 @@ else
 
 $i_sql = "select count(*) AS table_count from information_schema.tables where table_name = 'intakes'";
 $i_sql .= " and table_schema='" . pl_settings_get('db_name') . "'";
-$i_result = mysql_query($i_sql);
-$i_row = mysql_fetch_assoc($i_result);
+$i_result = DB::query($i_sql);
+$i_row = DBResult::fetchRow($i_result);
 
 if ('1' == $i_row['table_count'])
 {
@@ -107,12 +107,12 @@ if ('1' == $i_row['table_count'])
 	$intake_table->records_per_page = $_SESSION['paging'];
 	$result = $contact->getIntakesDb();
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$intake_table->addRow($row);
 	}
 	
-	if (mysql_num_rows($result) > 0)
+	if (DBResult::numRows($result) > 0)
 	{
 		$clean_contact_screen['intake_list'] = $intake_table->draw();
 	}
@@ -130,10 +130,10 @@ if ('1' == $i_row['table_count'])
 $aliases_str = "";
 
 $result = $contact->getAliasesDb();
-if (mysql_num_rows($result) > 1)
+if (DBResult::numRows($result) > 1)
 {
 	$aliases_str .= "<ul>\n";
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if($row['primary_name'] != 1) {
 			$aliases_str .= "<li>\n";

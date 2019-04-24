@@ -58,12 +58,12 @@ function is_valid_number($number, $sid, $token)
 */
 function mysql_column_exists($table, $column)
 {
-	$clean_table = mysql_real_escape_string($table);
-	$clean_column = mysql_real_escape_string($column);
+	$clean_table = DB::escapeString($table);
+	$clean_column = DB::escapeString($column);
 	
-	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	$result = DB::query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
 	
-	if (mysql_num_rows($result) == 1)
+	if (DBResult::numRows($result) == 1)
 	{
 		return true;
 	}
@@ -115,9 +115,9 @@ $sql = "SELECT first_name, middle_name, last_name, extra_name,
 	WHERE conflict.case_id = {$safe_case_id}
 	AND conflict.relation_code = 1
 	ORDER BY last_name ASC, first_name ASC, extra_name ASC";
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if (strlen($row['area_code']) == 3 && strlen($row['phone']) == 8 &&
 			$row['ok_to_text'] == 1)
@@ -162,11 +162,11 @@ if ($case1->unread_sms > 0)
 // Start SMS listing
 $sql = "SELECT act_date, act_time, summary, notes FROM activities WHERE act_type = 'S'"
 	. " AND case_id = {$safe_case_id} ORDER BY act_date DESC, act_time DESC";
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
 $sms_listing_rows = '';
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$from_text = substr(htmlentities($row['summary']), 13);
 	$from_text = substr($from_text, 0, -1);

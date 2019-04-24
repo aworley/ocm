@@ -45,10 +45,10 @@ switch ($action) {
 			AND open_date <> '0000-00-00'
 			AND client_age IS NULL";
 		//$sql .= " LIMIT 1000";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . mysql_error());
-		$a['num_found'] = mysql_num_rows($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . DB::error());
+		$a['num_found'] = DBResult::numRows($result);
 		$a['num_updated'] = 0;
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = DBResult::fetchRow($result)) {
 			if(function_exists('date_parse')) {
 				$dob_array = date_parse($row['birth_date']);
 			} else {
@@ -76,7 +76,7 @@ switch ($action) {
 					WHERE 1
 					AND case_id = '{$row['case_id']}'
 					LIMIT 1;";
-			mysql_query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . mysql_error());
+			DB::query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . DB::error());
 			$a['num_updated']++;
 		}
 		$a['duration'] = time() - $start_time;
@@ -94,11 +94,11 @@ switch ($action) {
 		set_time_limit(0);
 		$start_time = time();
 		$sql = "SELECT alias_id FROM aliases";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . mysql_error());
-		$a['num_found'] = mysql_num_rows($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . DB::error());
+		$a['num_found'] = DBResult::numRows($result);
 		$a['num_updated'] = 0;
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchRow($result))
 		{
 						$x = new pikaAlias($row['alias_id']);
 						$x->genMetaphone();
@@ -107,10 +107,10 @@ switch ($action) {
 		}
 		
 		$sql = "SELECT contact_id FROM contacts";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . mysql_error());
-		$a['num_found'] += mysql_num_rows($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " ERROR: " . DB::error());
+		$a['num_found'] += DBResult::numRows($result);
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchRow($result))
 		{
 						$x = new pikaContact($row['contact_id']);
 						$x->genMetaphone();
@@ -129,10 +129,10 @@ switch ($action) {
 		
 	case 'ssn_truncate':
 		set_time_limit(0);
-		$result = mysql_query("UPDATE contacts SET ssn = RIGHT(ssn, 4)") or trigger_error(mysql_error());
-		$result = mysql_query("ALTER TABLE contacts MODIFY ssn CHAR(4)") or trigger_error(mysql_error());
-		$result = mysql_query("UPDATE aliases SET ssn = RIGHT(ssn, 4)") or trigger_error(mysql_error());
-		$result = mysql_query("ALTER TABLE aliases MODIFY ssn CHAR(4)") or trigger_error(mysql_error());
+		$result = DB::query("UPDATE contacts SET ssn = RIGHT(ssn, 4)") or trigger_error(DB::error());
+		$result = DB::query("ALTER TABLE contacts MODIFY ssn CHAR(4)") or trigger_error(DB::error());
+		$result = DB::query("UPDATE aliases SET ssn = RIGHT(ssn, 4)") or trigger_error(DB::error());
+		$result = DB::query("ALTER TABLE aliases MODIFY ssn CHAR(4)") or trigger_error(DB::error());
 		$main_html['content'] .= 'SSNs have been truncated to the last 4 digits.';
 		$main_html['nav'] = "<a href=\"{$base_url}\">Pika Home</a> &gt;
 					 <a href=\"{$base_url}/site_map.php\">Site Map</a> &gt;
@@ -142,10 +142,10 @@ switch ($action) {
 		
 	case 'ssn_remove':
 		set_time_limit(0);
-		$result = mysql_query("UPDATE contacts SET ssn = NULL") or trigger_error(mysql_error());
-		$result = mysql_query("ALTER TABLE contacts MODIFY ssn char(0)") or trigger_error(mysql_error());
-		$result = mysql_query("UPDATE aliases SET ssn = NULL") or trigger_error(mysql_error());
-		$result = mysql_query("ALTER TABLE aliases MODIFY ssn char(0)") or trigger_error(mysql_error());
+		$result = DB::query("UPDATE contacts SET ssn = NULL") or trigger_error(DB::error());
+		$result = DB::query("ALTER TABLE contacts MODIFY ssn char(0)") or trigger_error(DB::error());
+		$result = DB::query("UPDATE aliases SET ssn = NULL") or trigger_error(DB::error());
+		$result = DB::query("ALTER TABLE aliases MODIFY ssn char(0)") or trigger_error(DB::error());
 		$main_html['content'] .= 'SSNs have been removed from the data.';
 		$main_html['nav'] = "<a href=\"{$base_url}\">Pika Home</a> &gt;
 					 <a href=\"{$base_url}/site_map.php\">Site Map</a> &gt;

@@ -62,8 +62,8 @@ $sql = "SELECT number, user_id, close_date, office, status, undup
 	WHERE 1";
 
 $range1 = $range2 = "";
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
 
 if ($clb && $cle) {
 	$t->add_parameter('Closed Between',$close_date_begin . " - " . $close_date_end);
@@ -97,7 +97,7 @@ if ($x != false)
 	$sql .= " AND status IN $x";
 }
 
-$safe_undup = mysql_real_escape_string($undup);
+$safe_undup = DB::escapeString($undup);
 if ($undup == 1 || ($undup == 0 && $undup != ''))
 {
 	$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
@@ -115,8 +115,8 @@ $t->set_header($columns);
 
 
 
-$result = mysql_query($sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error();
+while ($row = DBResult::fetchRow($result))
 {
 	$row['close_date'] = pl_date_unmogrify($row['close_date']);
 	$t->add_row($row);

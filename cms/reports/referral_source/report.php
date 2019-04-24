@@ -54,8 +54,8 @@ $close_date_end = pl_grab_post('close_date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_clb = mysql_real_escape_string(pl_date_mogrify($close_date_begin));
-$safe_cle = mysql_real_escape_string(pl_date_mogrify($close_date_end));
+$safe_clb = DB::escapeString(pl_date_mogrify($close_date_begin));
+$safe_cle = DB::escapeString(pl_date_mogrify($close_date_end));
 
 
 $where_sql = '';
@@ -78,10 +78,10 @@ if ($close_date_begin && $close_date_end) {
 
 
 $sql = "SELECT COUNT( * ) as total FROM cases WHERE 1{$where_sql};";
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-if(mysql_num_rows($result) == 1)
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+if(DBResult::numRows($result) == 1)
 {
-	$row = mysql_fetch_assoc($result);
+	$row = DBResult::fetchRow($result);
 	$total = $row['total'];
 }
 
@@ -96,8 +96,8 @@ $sql = "SELECT label, COUNT(*) AS nbr, (COUNT(*)/{$total})*100 AS prc
 $t->title = $report_title;
 $t->set_header(array('Referral Source', '#', '%'));
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$row['prc'] = number_format($row['prc'],2);
 	$t->add_row($row);

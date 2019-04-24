@@ -19,14 +19,14 @@ $home_page = array();
 $messages_text = '';
 
 $result = pikaMotd::getMotdDB();
-if (mysql_num_rows($result) < 1) 
+if (DBResult::numRows($result) < 1)
 {
 	$messages_text .= "<blockquote><tt>Welcome to the Pika Case Management System!</tt></blockquote>\n";
 }
 
 else 
 {
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$row['staff_name'] = pl_text_name($row);
 		$row['summary_content'] = $row['content'];

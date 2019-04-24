@@ -44,13 +44,13 @@ class pikaMenu extends plBase
 		$this->old_menu_value = $value;
 		$this->label = 'Menu Item Label';
 		$this->menu_order = self::getNextOrderNumber($menu_name);
-		$clean_value = mysql_real_escape_string($value);
+		$clean_value = DB::escapeString($value);
 		$sql = "SELECT * FROM {$this->db_table} WHERE {$this->db_table_id_column} = '{$clean_value}' LIMIT 1";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$this->last_query = $sql;
-		if (mysql_num_rows($result) == 1)
+		if (DBResult::numRows($result) == 1)
 		{
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			$this->loadValues($row);		
 		}
 			
@@ -66,7 +66,7 @@ class pikaMenu extends plBase
 	 */
 	public static function getMenuAllDB() {
 		$sql = "SHOW TABLES LIKE 'menu_%';";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -81,7 +81,7 @@ class pikaMenu extends plBase
 	{
 		$result = self::getMenuAllDB();
 		$menu_array = array();
-		while($row = mysql_fetch_array($result)) 
+		while($row = DBResult::fetchArray($result))
 		{
 			$menu_array[$row[0]] = $row[0];
 		}
@@ -103,12 +103,12 @@ class pikaMenu extends plBase
 		{
 			$menu_name = 'menu_' . $menu_name;
 		}
-		$safe_menu_name = mysql_real_escape_string($menu_name);
+		$safe_menu_name = DB::escapeString($menu_name);
 		
 		$sql = "SELECT * 
 				FROM {$safe_menu_name} WHERE 1 
 				ORDER BY menu_order;";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -126,7 +126,7 @@ class pikaMenu extends plBase
 	{
 		$result = self::getMenuDB($menu_name);
 		$menu_array = array();
-		while($row = mysql_fetch_assoc($result)) 
+		while($row = DBResult::fetchRow($result))
 		{
 			$menu_array[$row['value']] = $row['label'];
 		}
@@ -149,9 +149,9 @@ class pikaMenu extends plBase
 		{
 			$menu_name = 'menu_' . $menu_name;
 		}
-		$safe_menu_name = mysql_real_escape_string($menu_name);
+		$safe_menu_name = DB::escapeString($menu_name);
 		$sql = "DELETE FROM {$safe_menu_name};";
-		mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		if(is_array($menu_array) && count($menu_array) > 0)
 		{
 			$menu_order = 0;
@@ -188,7 +188,7 @@ class pikaMenu extends plBase
 	{
 		$menu_array = array();
 		$result = self::getMenuDB($menu_name);
-		while($row = mysql_fetch_assoc($result))
+		while($row = DBResult::fetchRow($result))
 		{
 			$value = $row['value'];
 			unset($row['value']);
@@ -240,8 +240,8 @@ class pikaMenu extends plBase
 		{
 			$menu_name = 'menu_' . $menu_name;
 		}
-		$safe_menu_name = mysql_real_escape_string($menu_name);
-		$safe_value = mysql_real_escape_string($value);
+		$safe_menu_name = DB::escapeString($menu_name);
+		$safe_value = DB::escapeString($value);
 		
 		$sql = "SELECT * 
 				FROM {$safe_menu_name} 
@@ -249,8 +249,8 @@ class pikaMenu extends plBase
 				AND value='{$safe_value}'
 				LIMIT 1;";
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) 
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1)
 		{
 			return true;
 		}
@@ -278,8 +278,8 @@ class pikaMenu extends plBase
 				$menu_name = 'menu_' . $menu_name;
 			}
 			$sql = "SHOW TABLES LIKE 'menu_%';";
-			$result = mysql_query($sql);
-			while ($result !== false && $row = mysql_fetch_assoc($result)) 
+			$result = DB::query($sql);
+			while ($result !== false && $row = DBResult::fetchRow($result))
 			{
 				foreach ($row as $key => $val) 
 				{
@@ -307,13 +307,13 @@ class pikaMenu extends plBase
 		{
 			$menu_name = 'menu_' . $menu_name;
 		}
-		$safe_menu_name = mysql_real_escape_string($menu_name);
+		$safe_menu_name = DB::escapeString($menu_name);
 		$sql = "SELECT MAX(menu_order) as next_order
 				FROM {$safe_menu_name}";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) 
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1)
 		{
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			$next_order = $row['next_order'] + 1;
 			return $next_order;
 		}
@@ -337,10 +337,10 @@ class pikaMenu extends plBase
 				WHERE 1 AND menu_order < '{$this->menu_order}' 
 				ORDER BY menu_order DESC 
 				LIMIT 1";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) {
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1) {
 			
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			
 			$menu_item = new pikaMenu($this->db_table,$row['value']);
 			$new_order = $menu_item->menu_order;
@@ -378,9 +378,9 @@ class pikaMenu extends plBase
 				WHERE 1 AND menu_order > '{$this->menu_order}' 
 				ORDER BY menu_order ASC 
 				LIMIT 1";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());;
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());;
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			
 			$menu_item = new pikaMenu($this->db_table,$row['value']);
 			$new_order = $menu_item->menu_order;
@@ -445,16 +445,16 @@ class pikaMenu extends plBase
 		$sql = "DELETE FROM {$this->db_table} 
 				WHERE `value` = '{$this->old_menu_value}' 
 				LIMIT 1;";
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		echo $sql;
 		
 		$sql = $this->tableAutosqlInsert($this->values);
 		echo $sql;
-		mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$this->last_query = $sql;
 		$this->is_new = false;
 		$this->is_modified = false;
-		return mysql_affected_rows();
+		return DB::affectedRows();
 		
 		
 	}
