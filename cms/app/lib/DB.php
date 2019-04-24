@@ -1,5 +1,10 @@
 <?php
 
+/***************************************/
+/* Pika CMS (C) 2019 Pika Software LLC */
+/* https://pikasoftware.com            */
+/***************************************/
+
 class DB
 {
 	protected static $link = null;

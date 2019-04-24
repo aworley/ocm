@@ -1,5 +1,10 @@
 <?php
 
+/***************************************/
+/* Pika CMS (C) 2019 Pika Software LLC */
+/* https://pikasoftware.com            */
+/***************************************/
+
 class DBResult
 {
 	protected static $mysqli_mode = PIKACMS_MYSQLI_MODE;
