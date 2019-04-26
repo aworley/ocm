@@ -92,53 +92,18 @@ function pl_menu_init($menu_name)
 	return true;
 }
 
-/*
 if(!function_exists('pl_query'))
 {
 function pl_query($sql)
 {
-	static $db = null;
-	$plSettings = pl_settings_get_all();
-	
-	// Initialize the database connection, if necessary
-	if (!is_object($db))
-	{
-		require_once("DB.php");
-		$db_cx = "{$plSettings['db_type']}://{$plSettings['db_user']}:{$plSettings['db_password']}@{$plSettings['db_host']}/{$plSettings['db_name']}";
-		
-		$db = DB::connect($db_cx, 0);
-		
-		if (DB::isError($db))
-		{
-			$m = $db->getMessage() . "<br>Database Name:  {$db->dsn}" .
-			"Database Vendor:  {$db->phptype}";
-			trigger_error($m);
-		}
-		
-		$db->fetchmode = DB_FETCHMODE_ASSOC;
-	}
-	
-	$result = $db->query($sql);
-	
-	if (DB::isError($result))
-	{
-		if (defined('PL_DIE_ON_QUERY_ERROR') && PL_DIE_ON_QUERY_ERROR == false)
-		{
-			return null;
-		}
-		
-		else 
-		{
-			die(pika_error_notice($result->getMessage(), $result->getDebugInfo()));
-		}
-	}
-	
-	//echo $sql . "<br>\n";
-	
-	return $result;
+	require_once('app/extralib/lib/plQueryResult.php');
+
+	$result = DB::query($sql);
+	$a = DBResult::fetchArray($result);
+	$x = new plQueryResult($a);
+	return $x;
 }
 }
-*/
 
 function pl_new_id($sequence)
 {
