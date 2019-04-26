@@ -1,0 +1,26 @@
+<div style="padding:5px;" id="form_container">
+	<div style="" id="form_header">
+		%%[flags]%%
+	</div>
+	<div style="float:left;padding:5px" id="form_col1" class="de">
+		<form method="POST" autocomplete="off">
+
+			<h2>SMS Settings</h2>
+
+			Twilio Account SID:<br>
+			%%[twilio_account_sid,input_text]%%<br>
+			Twilio Authentication Token:<br>
+			%%[twilio_auth_token,input_text]%%<br>
+			Twilio Telephone Number:<br>
+			%%[twilio_number,input_text]%%<br>
+			Sparkpost API Key:<br>
+			%%[sparkpost_api_key,input_text]%%<br>
+			Sparkpost From Address:<br>
+			%%[sparkpost_from_address,input_text]%%<br>
+
+			%%[action,input_hidden,default=update]%%
+			<input type="submit" name="gen" value="Save" class="save" tabindex="1" />
+
+		</form>
+	</div>
+</div>
