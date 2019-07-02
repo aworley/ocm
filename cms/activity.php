@@ -168,10 +168,21 @@ while($row = DBResult::fetchRow($open_cases_result)) {
 }
 
 $case_menu_args = array();
+$case_menu_js = '';
 
 if (pl_settings_get('autofill_time_funding') == 1)
 {
-	$case_menu_args = array('onchange=setFunding(this.value);setSmsVisibility();');
+	$case_menu_js .= 'setFunding(this.value);';
+}
+
+if ($act_type == 'C')
+{
+	$case_menu_js .= 'setSmsVisibility();';
+}
+
+if (strlen($case_menu_js) > 0)
+{
+	$case_menu_args[] = "onchange=" . $case_menu_js;
 }
 
 $act_row['new_case_menu'] = pikaTempLib::plugin('case_menu', 'case_id', 

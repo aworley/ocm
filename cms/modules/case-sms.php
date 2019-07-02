@@ -149,7 +149,7 @@ Cell Number:<br>
 <select name='cell'>{$mobile_options}</select><br>
 Message:<br>
 <textarea name=\"message\" rows=\"8\" maxlength=\"1600\" placeholder=\"Please enter your message here.\"></textarea><br>
-<input type='submit' name='send_sms' value='Send SMS'>
+<input type='submit' name='send_sms' value='Send SMS' class='btn btn-primary'>
 </form>";
 
 $save_case_changes = false;
@@ -184,7 +184,7 @@ while ($row = DBResult::fetchRow($result))
 	$sms_listing_rows .= "<tr><td><p>{$from_text}</p><p>" 
 		. pl_date_unmogrify($row['act_date']) . " "
 		. pl_time_unmogrify($row['act_time']) . "</p></td><td><strong>" 
-		. htmlentities($row['notes']) 
+		. nl2br(htmlentities($row['notes']), false)
 		. "</strong></td></tr>";
 }
 
