@@ -26,7 +26,7 @@ class pikaTransferOption extends plBase
 	
 	function getTransferOptionDB() {
 		$sql = "SELECT * FROM transfer_options;";
-		return mysql_query($sql);
+		return DB::query($sql);
 	}
 	
 	

@@ -83,7 +83,7 @@ switch ($action) {
 		$options_list->template_file = 'subtemplates/transfer_options.html';
 
 		$result = pikaTransferOption::getTransferOptionDB();
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			if ($row['transfer_mode']) {
 				$row['transfer_mode'] = $plMenus['transfer_mode'][$row['transfer_mode']];
 			} else {$row['transfer_mode'] = '';}

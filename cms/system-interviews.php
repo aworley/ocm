@@ -102,7 +102,7 @@ switch($action) {
 		$a['action'] = 'test';
 		$result = pikaInterview::getInterviewsDB();
 		
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			
 			$row['enable_text'] = 'Enable';
 			if(isset($menu_enable[$row['enabled']])) {

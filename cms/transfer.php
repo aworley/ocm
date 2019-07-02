@@ -47,7 +47,7 @@ switch ($action) {
 		$option_list = new plFlexList();
 		$option_list->template_file = 'subtemplates/transfer.html';
 		$result = pikaTransferOption::getTransferOptionDB();
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$row['case_id'] = $case_id;
 			$row['case_number'] = $case_number;
 			// TODO - Need to find a better way to do this - perhaps the menu_transfer_mode

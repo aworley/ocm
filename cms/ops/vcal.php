@@ -112,7 +112,7 @@ function vc_duration($start_time, $hours) {
 // MAIN CODE
 	// It's an existing activity... fetch its record
 	$result = $pk->fetchActivity("$act_id");
-	$b = $result->fetchRow();  // there should be only one record
+	$b = DBResult::fetchRow($result);  // there should be only one record
 	$a = array_merge($a, $b);
 	/* this will clobber any same-keyed elements in the $a array (initialized
 	at the top of the screen. */
@@ -150,7 +150,7 @@ function vc_duration($start_time, $hours) {
 	if ($a['case_id'])
 	{
 		$result = $pk->fetchCaseList(array('case_id' => $a['case_id']), $dummy);
-		$case_row = $result->fetchRow();
+		$case_row = DBResult::fetchRow($result);
 	}
 	
 	if (isset($a["act_date"]))

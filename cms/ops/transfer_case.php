@@ -147,7 +147,7 @@ if (!is_numeric($response))
 // contacts and conflicts.
 $stack = array();
 $result = $case->getContactsDb();
-while ($contact_row = mysql_fetch_assoc($result))
+while ($contact_row = DBResult::fetchRow($result))
 {
 	$data = array(	'action' => 'newContact',
 					'payload' => serialize($contact_row)				
@@ -188,7 +188,7 @@ while (sizeof($stack) > 0)
 
 // activities - notes and timekeeping.
 $result = $case->getNotes('ASC',10000);
-while ($notes = mysql_fetch_assoc($result))
+while ($notes = DBResult::fetchRow($result))
 {
 	$notes['case_id'] = $tx_case_id;
 	

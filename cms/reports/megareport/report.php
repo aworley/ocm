@@ -152,7 +152,7 @@ else
 }
 
 // Clean $showfields before sending it to MySQL.
-$showfields = mysql_real_escape_string($showfields);
+$showfields = DB::escapeString($showfields);
 
 if (substr_count($showfields, 'activities.') > 0)
 {
@@ -177,7 +177,7 @@ while (list($key, $val) = each($ffield))
 {
 	if ($val)
 	{
-		$val = mysql_real_escape_string($val);
+		$val = DB::escapeString($val);
 		list($table_name, $field_name) = explode('.', $val);
 		$field_data_type = $tables[$table_name][$field_name];
 		
@@ -203,7 +203,7 @@ while (list($key, $val) = each($ffield))
 				foreach($val_array as $x)
 				{
 					$x = trim($x);
-					$x = mysql_real_escape_string($x);
+					$x = DB::escapeString($x);
 					
 					if ($field_data_type == 'date')
 					{
@@ -242,7 +242,7 @@ while (list($key, $val) = each($ffield))
 				foreach($val_array as $x)
 				{
 					$x = trim($x);
-					$x = mysql_real_escape_string($x);
+					$x = DB::escapeString($x);
 					
 					if ($field_data_type == 'date')
 					{
@@ -320,8 +320,8 @@ while (list($key, $val) = each($ffield))
 						$value_b = $val_array[1];
 					}
 				
-				$value_a = mysql_real_escape_string($value_a);
-				$value_b = mysql_real_escape_string($value_b);
+				$value_a = DB::escapeString($value_a);
+				$value_b = DB::escapeString($value_b);
 				
 				$sql .= " AND ($val >= '$value_a' AND $val <= '$value_b')";
 			}
@@ -345,8 +345,8 @@ while (list($key, $val) = each($ffield))
 						$field_value = $fvalue[$i];
 					}
 					
-					$field_value = mysql_real_escape_string($field_value);
-					$comp = mysql_real_escape_string($comp);
+					$field_value = DB::escapeString($field_value);
+					$comp = DB::escapeString($comp);
 				
 				$sql .= " AND $val$comp'$field_value'";
 			}
@@ -413,12 +413,12 @@ if (strlen($users_list) > 0)
 // Build ORDER BY clause
 if ($order_by)
 {
-	$order_by = mysql_real_escape_string($order_by);
+	$order_by = DB::escapeString($order_by);
 	$sql .= " ORDER BY $order_by";
 	
 	if ($order_by2)
 	{
-		$order_by2 = mysql_real_escape_string($order_by2);
+		$order_by2 = DB::escapeString($order_by2);
 		$sql .= ", $order_by2";
 	}
 }
@@ -426,12 +426,12 @@ if ($order_by)
 // Build GROUP BY clause
 if ($group_by)
 {
-	$group_by = mysql_real_escape_string($group_by);
+	$group_by = DB::escapeString($group_by);
 	$sql .= " GROUP BY $group_by";
 	
 	if ($group_by2)
 	{
-		$group_by2 = mysql_real_escape_string($group_by2);
+		$group_by2 = DB::escapeString($group_by2);
 		$sql .= ", $group_by2";
 	}
 }
@@ -442,12 +442,12 @@ if (!$recordlimit) {
 }
         $sql .= " LIMIT $recordlimit";
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
 $r->title = $report_title;
 $r->display_row_count(true);
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if (isset($row['open_date']))
 	{

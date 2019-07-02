@@ -29,7 +29,7 @@ class pikaMotd extends plBase
 	}
 	
 	public static function getMotdDB() {
-		$result = mysql_query('SELECT motd.*, users.* FROM motd LEFT JOIN users ON motd.user_id = users.user_id');
+		$result = DB::query('SELECT motd.*, users.* FROM motd LEFT JOIN users ON motd.user_id = users.user_id');
 		return $result;
 	}
 }

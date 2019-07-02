@@ -73,8 +73,8 @@ $sql = "SELECT cases.number, cases.case_id, cases.number, cases.office,
 
 if($filed_date_begin && $filed_date_end) 
 {
-$safe_filed_date_begin = mysql_real_escape_string(pl_date_mogrify($filed_date_begin));
-$safe_filed_date_end = mysql_real_escape_string(pl_date_mogrify($filed_date_end));
+$safe_filed_date_begin = DB::escapeString(pl_date_mogrify($filed_date_begin));
+$safe_filed_date_end = DB::escapeString(pl_date_mogrify($filed_date_end));
 
 $t->add_parameter('Filed Between',$filed_date_begin . " - " . $filed_date_end);
 
@@ -96,7 +96,7 @@ else if (3 == $program_filed)
 }
 // office
 //$x = pl_process_comma_vals($office);
-$x = mysql_real_escape_string($office);
+$x = DB::escapeString($office);
 if ($x != false) 
 {
 	$t->add_parameter('Office',$office);
@@ -105,7 +105,7 @@ if ($x != false)
 // litigation status
 //$x = pl_process_comma_vals($lit_status);
 $x = implode(',', $lit_status);
-$x = mysql_real_escape_string($x);
+$x = DB::escapeString($x);
 if ($x != false) 
 {	
 	$t->add_parameter('Litigation Status',$x);
@@ -134,7 +134,7 @@ if ($x != false)
 if($user_id)
 {
         $t->add_parameter('Staff',pl_array_lookup($user_id,$staff_array) . " ({$user_id})");
-        $safe_user_id = mysql_real_escape_string($user_id);
+        $safe_user_id = DB::escapeString($user_id);
         $sql .= " AND (user_id = '{$safe_user_id}' OR cocounsel1 = '{$safe_user_id}' OR cocounsel2 = '{$safe_user_id}')";
 }
 
@@ -148,8 +148,8 @@ $t->display_row_count(false);
 $t->set_header($cols);
 
 // execute the SQL statement, format the results, and add to the table object	
-$result = mysql_query($sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error();
+while ($row = DBResult::fetchRow($result))
 {
 	$r = array();
 // the client name column displays more than just client info	
@@ -203,8 +203,8 @@ while ($row = mysql_fetch_assoc($result))
 	$sql_con .= " AND conflict.relation_code !=1";
 
 // execute opposing party search
-$result_con = mysql_query($sql_con) or trigger_error();
-while ($row_con = mysql_fetch_assoc($result_con))
+$result_con = DB::query($sql_con) or trigger_error();
+while ($row_con = DBResult::fetchRow($result_con))
 {
 		$r['client_name'] .= "<br><b>" .pl_array_lookup($row_con['relation_code'],$menu_relation_codes) ."</b>";
 		$r['client_name'] .= "<br>" .pikaTempLib::plugin('text_name','',$row_con);

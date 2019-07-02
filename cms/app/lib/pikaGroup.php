@@ -25,7 +25,7 @@ class pikaGroup extends plBase
 	
 	public static function getGroupsDB() {
 		$sql = "SELECT * FROM groups WHERE 1";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 }

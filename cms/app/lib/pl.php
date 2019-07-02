@@ -842,10 +842,10 @@ function pl_date_unmogrify($date)
 
 function pl_db_column_type($table, $column)
 {
-	$clean_table = mysql_real_escape_string($table);
-	$clean_column = mysql_real_escape_string($column);
-	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} WHERE Field = '{$clean_column}'") or trigger_error(mysql_error());
-	$row = mysql_fetch_assoc($result) or trigger_error(mysql_error());
+	$clean_table = DB::escapeString($table);
+	$clean_column = DB::escapeString($column);
+	$result = DB::query("SHOW COLUMNS FROM {$clean_table} WHERE Field = '{$clean_column}'") or trigger_error(DB::error());
+	$row = DBResult::fetchRow($result) or trigger_error(DB::error());
 	return $row['Type'];
 }
 
@@ -1326,9 +1326,9 @@ function pl_keywords_build($first_name, $middle_name, $last_name, $extra_name)
 		if (strlen($value) > 1)  // Ignore punctuation and initials.
 		{
 			$sql = "SELECT root_name FROM name_variants WHERE first_name = '{$value}'";
-			$result = mysql_query($sql) or trigger_error('hi');
+			$result = DB::query($sql) or trigger_error('hi');
 			
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$keywords .= ' ' . $row['root_name'];
 				$keywords .= ' ' . metaphone($row['root_name']);
@@ -1386,16 +1386,16 @@ function pl_menu_get($menu_name, $key = null)
 		
 		$menu_exists = false;
 		$sql = "SHOW TABLES;";
-		$result = mysql_query($sql) or trigger_error($sql . "  " . mysql_error());
-		while ($row = mysql_fetch_array($result)) {
+		$result = DB::query($sql) or trigger_error($sql . "  " . DB::error());
+		while ($row = DBResult::fetchArray($result)) {
 			if($menu_table_name == $row[0]) {$menu_exists = true;}
 		}
 		if($menu_exists) {
 			$sql = "SELECT $key, $val FROM $menu_table_name ORDER BY $ord";
-			$result = mysql_query($sql) or trigger_error(mysql_error());
+			$result = DB::query($sql) or trigger_error(DB::error());
 		
 			$plMenus[$menu_name] = array();
-			while ($y = mysql_fetch_assoc($result))
+			while ($y = DBResult::fetchRow($result))
 			{
 				$plMenus[$menu_name][$y['value']] = $y['label'];
 			}
@@ -1419,8 +1419,8 @@ function pl_menu_list()
 	$db_name = pl_settings_get('db_name');
 	$a = array();
 	
-	$result = mysql_query("SHOW TABLES");
-	while ($row = mysql_fetch_assoc($result))
+	$result = DB::query("SHOW TABLES");
+	while ($row = DBResult::fetchRow($result))
 	{
 		$table_name = $row["Tables_in_{$db_name}"];
 		if ('menu_' == substr($table_name, 0, 5))
@@ -1438,13 +1438,13 @@ function pl_menu_set($menu_name, $menu_array)
 	global $plMenus;
 	
 	$plMenus[$menu_name] = array();
-	mysql_query("DELETE FROM menu_$menu_name");
+	DB::query("DELETE FROM menu_$menu_name");
 	
 	pl_menu_set_temp($menu_name, $menu_array);
 	
 	foreach ($menu_array as $x => $y)
 	{
-		mysql_query("INSERT INTO menu_$menu_name SET value='{$y['value']}', label='{$y['label']}', menu_order='$x'");
+		DB::query("INSERT INTO menu_$menu_name SET value='{$y['value']}', label='{$y['label']}', menu_order='$x'");
 	}
 	
 	return true;
@@ -1469,12 +1469,12 @@ function pl_menu_set_temp($menu_name, $menu_array)
 
 function pl_mysql_column_exists($table, $column)
 {
-	$clean_table = mysql_real_escape_string($table);
-	$clean_column = mysql_real_escape_string($column);
+	$clean_table = DB::escapeString($table);
+	$clean_column = DB::escapeString($column);
 	
-	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	$result = DB::query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
 	
-	if (mysql_num_rows($result) == 1)
+	if (DBResult::numRows($result) == 1)
 	{
 		return true;
 	}
@@ -1485,25 +1485,28 @@ function pl_mysql_column_exists($table, $column)
 
 function pl_mysql_init()
 {
-	/*	Don't trigger any errors if the connection fails, just return false
-		and let the app. code handle the error.
-	*/
-	$db_host = pl_settings_get('db_host');
-	$db_name = pl_settings_get('db_name');
-	$db_user = pl_settings_get('db_user');
-	$db_password = pl_settings_get('db_password');
-	static $connection_is_live = false;
-	
-	if (false == $connection_is_live)
+	require_once('DB.php');
+	require_once('DBResult.php');
+
+	if (function_exists('mysql_connect'))
 	{
-		$status = mysql_connect($db_host, $db_user, $db_password);
-		if ($status !== false)
+		if (!defined('PIKACMS_MYSQLI_MODE'))
 		{
-			$connection_is_live = mysql_select_db($db_name) or trigger_error(mysql_error());
+			define('PIKACMS_MYSQLI_MODE', false);
 		}
 	}
-	
-	return $connection_is_live;
+
+	else
+	{
+		define('PIKACMS_MYSQLI_MODE', true);
+		require_once('app/extralib/mysql_compat.php');
+	}
+
+	DB::init(pl_settings_get('db_host'),
+		pl_settings_get('db_name'),
+		pl_settings_get('db_user'),
+		pl_settings_get('db_password'));
+	return true;
 }
 
 if (!function_exists('pl_mysql_next_id')) 
@@ -1511,32 +1514,32 @@ if (!function_exists('pl_mysql_next_id'))
 function pl_mysql_next_id($sequence)
 {
 	// VARIABLES
-	$safe_sequence = mysql_real_escape_string($sequence);
+	$safe_sequence = DB::escapeString($sequence);
 	$next_id = null;
 	
 	pl_mysql_init() or trigger_error('');
 	
-	mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
-	$result = mysql_query("SELECT count FROM counters WHERE id = '{$safe_sequence}' LIMIT 1")
+	DB::query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
+	$result = DB::query("SELECT count FROM counters WHERE id = '{$safe_sequence}' LIMIT 1")
 		or trigger_error('');
 	
-	if (mysql_num_rows($result) < 1)
+	if (DBResult::numRows($result) < 1)
 	{
-		mysql_query("INSERT INTO counters SET id = '{$safe_sequence}', count = '1'")
+		DB::query("INSERT INTO counters SET id = '{$safe_sequence}', count = '1'")
 		or trigger_error('');
 		$next_id = 1;
 	}
 	
 	else
 	{
-		$row = mysql_fetch_assoc($result);
+		$row = DBResult::fetchRow($result);
 		$next_id = $row['count'] + 1;
 		
-		mysql_query("UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1")
+		DB::query("UPDATE counters SET count = count + '1' WHERE id = '{$safe_sequence}' LIMIT 1")
 			or trigger_error('error_during_increment');
 	}
 	
-	mysql_query("UNLOCK TABLES") or trigger_error('error');
+	DB::query("UNLOCK TABLES") or trigger_error('error');
 	return $next_id;
 }
 }
@@ -1698,9 +1701,9 @@ function pl_settings_init($x = null)
 		pl_mysql_init();
 
 		$sql = "SELECT label, value FROM settings";
-		$result = mysql_query($sql);
+		$result = DB::query($sql);
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$plSettings[$row['label']] = $row['value'];
 		}
@@ -1728,17 +1731,17 @@ function pl_settings_save()
 	unset($pl_settings['base_url']);
 	unset($pl_settings['base_directory']);
 	
-	mysql_query("LOCK TABLE settings LOW_PRIORITY WRITE");
-	mysql_query("DELETE FROM settings");
+	DB::query("LOCK TABLE settings LOW_PRIORITY WRITE");
+	DB::query("DELETE FROM settings");
 	
 	foreach($pl_settings as $x => $y)
 	{
-		$safe_x = mysql_real_escape_string($x);
-		$safe_y = mysql_real_escape_string($y);
-		mysql_query("INSERT INTO settings SET label='$safe_x', value='$safe_y'") or trigger_error(mysql_error());
+		$safe_x = DB::escapeString($x);
+		$safe_y = DB::escapeString($y);
+		DB::query("INSERT INTO settings SET label='$safe_x', value='$safe_y'") or trigger_error(DB::error());
 	}
 
-	mysql_query("UNLOCK TABLES");
+	DB::query("UNLOCK TABLES");
 	return true;
 }
 
@@ -1804,10 +1807,10 @@ function pl_simple_url($request_uri = null, $script_filename = null)
 function pl_table_fields_get($table_name)
 {
 	$field_list = array();
-	$result = mysql_query("DESCRIBE $table_name") 
+	$result = DB::query("DESCRIBE $table_name")
 		or trigger_error("no table $table_name");
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if ($row['Key'] == 'PRI')
 		{
@@ -2884,7 +2887,7 @@ function pl_process_comma_vals($str)
 	$out = false;
 	$a = explode(",", $str);
 	foreach ($a as $val) { // Remove blank values and escape non-blank values
-		if($val != '') {$tmp_array[] = mysql_real_escape_string($val);}
+		if($val != '') {$tmp_array[] = DB::escapeString($val);}
 	}
 	if(count($tmp_array) > 0) { // Ensure non-empty set
 		$out = "('" . implode("','",$tmp_array) . "')";

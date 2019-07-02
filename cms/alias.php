@@ -95,7 +95,7 @@ switch ($action) {
 		$result = $contact->getAliasesDb();
 		$alias_list = new plFlexList();
 		$alias_list->template_file = 'subtemplates/alias.html';
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			if($row['primary_name'] != 1) {
 				$row['alias_name'] = pikaTempLib::plugin('text_name','',$row);
 				$alias_list->addRow($row);

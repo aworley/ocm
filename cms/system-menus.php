@@ -48,7 +48,7 @@ switch ($action)
 		$result = pikaMenu::getMenuDB($menu_name);
 		$a['menu_name'] = $menu_name;
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchRow($result))
 		{
 			$row['menu_name'] = $menu_name;
 			$menu_listing->addRow($row);
@@ -70,7 +70,7 @@ switch ($action)
 		$a['menu_name'] = $menu_name;
 		$a['values'] = '';
 		$result = pikaMenu::getMenuDB($menu_name);
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$a['values'] .= "{$row['value']} | {$row['label']}\n";
 		}
 		

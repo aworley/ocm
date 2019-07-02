@@ -66,10 +66,10 @@ class pikaAuth
 		
 		// First check to see if existing non-expired session
 		$result = pikaUserSession::getSessions(array('session_id' => $this->session_id));
-		if(mysql_num_rows($result) == 1)
+		if(DBResult::numRows($result) == 1)
 		{
 			$session_timeout = $settings['session_timeout'];
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			
 			if($row['logout'] == 1)
 			{// User has logged out or has been logged out by admin. Need to change SID at this point
@@ -182,9 +182,9 @@ class pikaAuth
 	public function logout()
 	{
 		$result = pikaUserSession::getSessions(array('session_id' => $this->session_id));
-		if(mysql_num_rows($result) == 1)
+		if(DBResult::numRows($result) == 1)
 		{
-			$row = mysql_fetch_assoc($result);
+			$row = DBResult::fetchRow($result);
 			$user_session = new pikaUserSession($row['user_session_id']);
 			$user_session->logout = 1;
 			$user_session->save();

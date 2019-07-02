@@ -3,9 +3,9 @@ function input_ssn($field_name = null, $field_value = null, $menu_array = null, 
 {
 	$C = '';
 	$ssn_type = null;
-	$result = mysql_query("DESCRIBE contacts") or trigger_error(mysql_error());
+	$result = DB::query("DESCRIBE contacts") or trigger_error(DB::error());
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if ($row['Field'] == 'ssn')
 		{

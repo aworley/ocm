@@ -386,9 +386,9 @@ function pika_exit($buffer)
 */
 function pika_ssn_mode()
 {
-	$result = mysql_query("DESCRIBE contacts") or trigger_error(mysql_error());
+	$result = DB::query("DESCRIBE contacts") or trigger_error(DB::error());
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if ($row['Field'] == 'ssn')
 		{

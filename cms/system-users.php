@@ -71,7 +71,7 @@ if (!pika_authorize('users', $a))
 
 $result = pikaGroup::getGroupsDB();
 $groups = array();
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = DBResult::fetchRow($result)) {
 	$groups[$row['group_id']] = $row['group_id'];
 }
 
@@ -98,9 +98,9 @@ switch ($action)
 	 	$a['last_addr'] = "Never logged in";
 	 	$a['last_active'] = "Never logged in";
 	 	
-		if(mysql_num_rows($result) == 1)
+		if(DBResult::numRows($result) == 1)
 		{
-	 		$row = mysql_fetch_assoc($result);
+	 		$row = DBResult::fetchRow($result);
 			$a['last_addr'] = $row['ip_address'];
 			$a['last_active'] = date('n/d/Y g:i A', $row['last_updated']);
 		}
@@ -173,7 +173,7 @@ switch ($action)
 		$row_count = 0;
 		$result = pikaUser::getUsers($filter,$row_count,$order_field,$order,$offset,$page_size);
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$r = array();
 			$r['user_id'] = $row['user_id'];

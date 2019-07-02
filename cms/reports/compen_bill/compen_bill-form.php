@@ -37,7 +37,7 @@ $bill_list->template_file = 'reports/compen_bill/compen_bill.html';
 
 $total_bill = 0;
 
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = DBResult::fetchRow($result)) {
 	$row['billing_date'] = pikaTempLib::plugin('text_date','billing_date',$row['billing_date']);
 	$total_bill += $row['billing_amount'];
 	

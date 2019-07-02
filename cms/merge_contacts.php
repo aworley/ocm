@@ -45,7 +45,7 @@ switch ($action) {
 		$contact_list = new plFlexList();
 		$contact_list->template_file = 'subtemplates/merge_contacts.html';
 		
-		if(mysql_num_rows($result) > 0) {
+		if(DBResult::numRows($result) > 0) {
 			$i = 2;
 			$row = $contact->getValues();
 			$row['row_class'] = $i;	
@@ -57,7 +57,7 @@ switch ($action) {
 			$row['birth_date'] = pl_date_unmogrify($row['birth_date']);
 			$contact_list->addHtmlRow($row);
 			$i = 1;
-			while ($row = mysql_fetch_assoc($result)) {
+			while ($row = DBResult::fetchRow($result)) {
 				$row['row_class'] = $i;
 				if ($i > 1){$i = 1;}
 				else {$i++;}

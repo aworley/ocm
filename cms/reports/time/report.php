@@ -81,32 +81,32 @@ $sql = "SELECT act_date, act_time, hours, completed,
 if ($date_start)
 {
 	$t->add_parameter('Date Start',$date_start);
-	$safe_date_start = mysql_real_escape_string(pl_date_mogrify($date_start));
+	$safe_date_start = DB::escapeString(pl_date_mogrify($date_start));
 	$sql .= " AND act_date >= '{$safe_date_start}'";
 }
 
 if ($date_end)
 {
 	$t->add_parameter('Date End',$date_end);
-	$safe_date_end = mysql_real_escape_string(pl_date_mogrify($date_end));
+	$safe_date_end = DB::escapeString(pl_date_mogrify($date_end));
 	$sql .= " AND act_date <= '{$safe_date_end}'";
 }
 
 if ($number) {
 	$t->add_parameter('Case Number',$number);
-	$safe_number = mysql_real_escape_string($number);
+	$safe_number = DB::escapeString($number);
 	$sql .= " AND number='{$safe_number}'";
 }
 
 if ($funding) {
 	$t->add_parameter('Funding Code',$funding);
-	$safe_funding = mysql_real_escape_string($funding);
+	$safe_funding = DB::escapeString($funding);
 	$sql .= " AND activities.funding='{$safe_funding}'";
 }
 
 if ($office) {
 	$t->add_parameter('Office Code',$office);
-	$safe_office = mysql_real_escape_string($office);
+	$safe_office = DB::escapeString($office);
 	$sql .= " AND office='{$safe_office}'";
 }
 
@@ -121,12 +121,12 @@ $by_pba = false;
 if ($user_id)
 {
 	$t->add_parameter('User',$user_id);
-	$safe_user_id = mysql_real_escape_string($user_id);
+	$safe_user_id = DB::escapeString($user_id);
 	$sql .= " AND activities.user_id = '{$safe_user_id}'";
 } else if ($pba_id) {
 	$by_pba = true;
 	$t->add_parameter('PBA',$pba_id);
-	$safe_pba_id = mysql_real_escape_string($pba_id);
+	$safe_pba_id = DB::escapeString($pba_id);
 	$sql .= " AND activities.pba_id = '{$safe_pba_id}'";
 }
 
@@ -146,9 +146,9 @@ $cols = array('Date', 'Time', 'Hours', 'Completed', 'Staff', 'Vol. Atty.',
 				'Summary', 'Case Number', 'Office', 'Funding Source');
 				
 // execute the SQL statement, format the results, and add to the table object
-$result = mysql_query($sql) or trigger_error();
+$result = DB::query($sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = DBResult::fetchRow($result)) {
 	if(!$by_pba) {$act_user["{$row['user_id']}"][] = $row; }// Searching by Staff Atty
 	else {$act_user["{$row['pba_id']}"][] = $row; } // Searching by Pro Bono Atty
 }

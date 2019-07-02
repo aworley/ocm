@@ -92,8 +92,8 @@ switch ($action)
 		
 		$motd_list = new plFlexList();
 		$motd_list->template_file = 'subtemplates/motd.html';
-		$num_rows = mysql_num_rows($result);
-		while ($row = mysql_fetch_assoc($result)) {
+		$num_rows = DBResult::numRows($result);
+		while ($row = DBResult::fetchRow($result)) {
 				
 				$row['content'] = pl_html_text($row['content']);
 				$row['staff_name'] = pl_text_name($row);

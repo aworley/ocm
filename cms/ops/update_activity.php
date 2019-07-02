@@ -144,10 +144,10 @@ if($act_id && is_numeric($act_id)) {
 			
 			if (strlen($case0->office) > 0)
 			{
-				if (mysql_num_rows(mysql_query("SHOW TABLES LIKE 'office_email'")) == 1)
+				if (DBResult::numRows(DB::query("SHOW TABLES LIKE 'office_email'")) == 1)
 				{
-					$x = mysql_real_escape_string($case0->office);
-					$y = mysql_fetch_assoc(mysql_query("SELECT label FROM office_email WHERE value = '{$x}'"));
+					$x = DB::escapeString($case0->office);
+					$y = DBResult::fetchRow(DB::query("SELECT label FROM office_email WHERE value = '{$x}'"));
 					$z['tickler_email'][] = $y['label'];
 				}
 			}

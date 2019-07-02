@@ -54,8 +54,8 @@ $close_date_end = pl_grab_post('close_date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_clb = mysql_real_escape_string(pl_date_mogrify($close_date_begin));
-$safe_cle = mysql_real_escape_string(pl_date_mogrify($close_date_end));
+$safe_clb = DB::escapeString(pl_date_mogrify($close_date_begin));
+$safe_cle = DB::escapeString(pl_date_mogrify($close_date_end));
 
 
 $where_sql = '';
@@ -82,10 +82,10 @@ $t->title = $report_title;
 // Determine total cases in period
 
 $sql = "SELECT COUNT( * ) as total FROM cases WHERE 1{$where_sql};";
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-if(mysql_num_rows($result) == 1)
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+if(DBResult::numRows($result) == 1)
 {
-	$row = mysql_fetch_assoc($result);
+	$row = DBResult::fetchRow($result);
 	$total = $row['total'];
 }
 
@@ -110,8 +110,8 @@ $sql = "SELECT IFNULL(label,IFNULL(gender,'No Data')), COUNT(*) AS nbr, (COUNT(*
 		ORDER BY menu_order ASC;";
 
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$row['prc'] = number_format($row['prc'],2);
 	$t->add_row($row);
@@ -136,8 +136,8 @@ $sql = "SELECT TRUNCATE(income/10000,0) as income_category, COUNT(*) AS nbr, (CO
 		ORDER BY income_category ASC;";
 
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	
 	if(is_numeric($row['income_category']))
@@ -173,8 +173,8 @@ $sql = "SELECT TRUNCATE(client_age/10,0) as age_category, COUNT(*) AS nbr, (COUN
 		ORDER BY age_category ASC;";
 
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	
 	if(is_numeric($row['age_category']))
@@ -213,8 +213,8 @@ $sql = "SELECT IFNULL(label,IFNULL(marital,'No Data')), COUNT(*) AS nbr, (COUNT(
 		ORDER BY menu_order ASC;";
 
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$row['prc'] = number_format($row['prc'],2);
 	$t->add_row($row);
@@ -241,8 +241,8 @@ $sql = "SELECT IFNULL(label,IFNULL(ethnicity,'No Data')), COUNT(*) AS nbr, (COUN
 		ORDER BY menu_order ASC;";
 
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$row['prc'] = number_format($row['prc'],2);
 	$t->add_row($row);
