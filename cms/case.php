@@ -13,6 +13,7 @@ require_once('pikaCase.php');
 require_once('pikaMisc.php');
 require_once('pikaTempLib.php');
 require_once('pikaCaseTab.php');
+require_once('pikaScreen.php');
 
 
 // TODO - deprecate this when the case_screen module is revamped for PHP 5.
@@ -390,6 +391,12 @@ if (file_exists("{$custom_dir}/case_tabs/{$clean_screen}/{$clean_screen}.php")){
 	include("modules/case-{$clean_screen}.php");
 }
 
+else if (pikaScreen::exists($clean_screen))
+{
+	$s = new pikaScreen($clean_screen);
+	$C .= $s->htmlForm($case1->getValues());
+}
+
 else
 {
 	$C .= "Error:  Invalid screen mode ({$clean_screen}) cannot be loaded";
@@ -412,6 +419,12 @@ else
 	{
 		$menu_case_tabs[$row['file']] = $row;
 	}
+}
+
+$custom_screens = pikaScreen::getScreens();
+foreach ($custom_screens as $key => $value)
+{
+	$menu_case_tabs["custom-screen-{$key}"] = array('name' => $value, 'file' => "case-{$key}.php", 'enabled' => 1, 'tab_order' => 1000+$key, 'autosave' => true, 'tab_row' => 2);
 }
 
 $case_row['case_tabs'] = pikaTempLib::plugin('case_tabs',$screen,$case_row,$menu_case_tabs,array('js_mode'));

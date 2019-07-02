@@ -1,3 +1,5 @@
+SET sql_mode = '';
+
 --
 -- Table structure for table `activities`
 --
@@ -196,6 +198,7 @@ CREATE TABLE `cases` (
   `vawa_served` tinyint(4) default NULL,
   `unread_sms` tinyint(4) NOT NULL default 0,
   lsc_justice_gap TINYINT,
+  udf JSON,
   PRIMARY KEY  (`case_id`),
   UNIQUE KEY `number` (`number`),
   KEY `client_id` (`client_id`),
@@ -967,6 +970,15 @@ CREATE TABLE `rss_feeds` (
   PRIMARY KEY  (`feed_id`)
 ) ENGINE = INNODB;
 
+--
+-- Table structure for table `screens`
+--
+
+CREATE TABLE `screens` (
+  `screen_id` int(11) DEFAULT NULL,
+  `screen_name` char(32) NOT NULL,
+  `screen_fields` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- 
 -- Table structure for table `settings`
@@ -1005,6 +1017,16 @@ CREATE TABLE transfers (
   KEY accepted (accepted)
 ) ENGINE = INNODB;
 
+--
+-- Table structure for table `udfs`
+--
+
+CREATE TABLE `udfs` (
+  `udf_id` int(11) DEFAULT NULL,
+  `label` char(64) DEFAULT NULL,
+  `data_type` char(2) DEFAULT NULL,
+  `table_name` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `users`

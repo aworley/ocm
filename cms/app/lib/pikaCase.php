@@ -5,7 +5,7 @@
 /* http://pikasoftware.com        */
 /**********************************/
 
-require_once('plBase.php');
+require_once('plBaseWithUdf.php');
 
 /**
 * Something.
@@ -14,7 +14,7 @@ require_once('plBase.php');
 * @version 1.0
 * @package Danio
 */
-class pikaCase extends plBase 
+class pikaCase extends plBaseWithUdf
 {
 	private $contacts = array();
 	private $attorneys = array();
