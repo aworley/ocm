@@ -1490,7 +1490,10 @@ function pl_mysql_init()
 
 	if (function_exists('mysql_connect'))
 	{
-		define('PIKACMS_MYSQLI_MODE', false);
+		if (!defined('PIKACMS_MYSQLI_MODE'))
+		{
+			define('PIKACMS_MYSQLI_MODE', false);
+		}
 	}
 
 	else
