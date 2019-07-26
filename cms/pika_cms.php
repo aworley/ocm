@@ -952,7 +952,7 @@ function pika_act_case_menu($user_id, $case_id)
 		}
 	}
 	
-	else if ($result->numRows() == 0)
+	else if (DBResult::numRows($result) == 0)
 	{
 		$new_case_menu .= "<option selected value=\"\">No Cases Available\n";
 	}

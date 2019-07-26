@@ -521,7 +521,7 @@ $a['cocounsel2'] = pl_array_lookup($a['cocounsel2'],$tmpstaff);
 	
 	// A link to reverse the current display order of activities
 	// Note:  Show this only if there are cases to display
-	$notes_count = $result->numRows();
+	$notes_count = DBResult::numRows($result);
 	if (0 == $notes_count)
 
 	{
