@@ -1506,6 +1506,7 @@ function pl_mysql_init()
 		pl_settings_get('db_name'),
 		pl_settings_get('db_user'),
 		pl_settings_get('db_password'));
+	DB::query("SET sql_mode = 'ALLOW_INVALID_DATES'");
 	return true;
 }
 
