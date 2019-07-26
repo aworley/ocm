@@ -386,7 +386,7 @@ class pikaCms
 			$sql = "SELECT * FROM zip_codes WHERE zip='{$a["zip"]}'";
 			$result = DB::query($sql);
 			
-			if ($result->numRows() >= 1)
+			if (DBResult::numRows($result) >= 1)
 			{
 				$r = DBResult::fetchRow($result);
 				
@@ -412,7 +412,7 @@ class pikaCms
 			$result = DB::query($sql);
 			
 			// if there's more than one zip code in that city, don't auto-fill
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
 				$r = DBResult::fetchRow($result);
 				
@@ -483,7 +483,7 @@ class pikaCms
 			$sql = "SELECT * FROM zip_codes WHERE zip='{$five_digit_zip}'";
 			$result = DB::query($sql);
 			
-			if ($result->numRows() >= 1)
+			if (DBResult::numRows($result) >= 1)
 			{
 				$r = DBResult::fetchRow($result);
 				
@@ -509,7 +509,7 @@ class pikaCms
 			$result = DB::query($sql);
 			
 			// if there's more than one zip code in that city, don't auto-fill
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
 				$r = DBResult::fetchRow($result);
 				
@@ -760,7 +760,7 @@ class pikaCms
 								LEFT JOIN contacts ON conflict.contact_id=contacts.contact_id 
 								WHERE conflict.case_id=$case_id AND relation_code=1");
 			
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
 				$row = DBResult::fetchRow($result);
 				
