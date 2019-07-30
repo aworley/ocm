@@ -667,11 +667,11 @@ class pikaMisc
 		$clean_offset = DB::escapeString($offset);
 		$clean_limit = DB::escapeString($limit);
 
-		// get the total number of contacts
-		$result = DB::query("SELECT COUNT(*) AS Rows FROM aliases WHERE last_name LIKE '{$clean_letter}%'")
+		// get the total number of contacts ## modified 072219 following db server version upgrade: replaced "Rows" alias (reserved word as of version 10.2.4) ##
+		$result = DB::query("SELECT COUNT(*) AS RowCount FROM aliases WHERE last_name LIKE '{$clean_letter}%'")
 			or trigger_error("Could not count the full list of alias records.");
 		$row = DBResult::fetchArray($result);
-		$dataset_size = $row['Rows'];
+		$dataset_size = $row['RowCount'];
 
 		$sql = "SELECT contacts.*, aliases.last_name AS last_name, aliases.first_name AS first_name, aliases.extra_name AS extra_name, aliases.middle_name AS middle_name
 			    FROM aliases LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id 
@@ -999,13 +999,15 @@ class pikaMisc
 		lists w/o filters.  Instead of doing a "COUNT(*)" to determine
 		the number of records in the resulting list, it uses "SHOW STATUS
 		TABLES" to get the number of records in the 'cases' table.  This
-		is of course MySQL-specific.
+		is of course MySQL-specific. ## modified 072219 following db server 
+		version upgrade: replaced "Rows" alias (reserved word as of version 
+		10.2.4) ##
 		*/
 		$db_name = pl_settings_get('db_name');
-		$result = DB::query("SELECT COUNT(*) AS Rows FROM cases WHERE matter = '1' AND active_matter = '1'")
+		$result = DB::query("SELECT COUNT(*) AS RowCount FROM cases WHERE matter = '1' AND active_matter = '1'")
 		or trigger_error("Count not count all matters records");
 		$row = DBResult::fetchArray($result);
-		$row_count = $row['Rows'];
+		$row_count = $row['RowCount'];
 
 
 		/*	next, run a query on matter-mode case record, sorting the results and only
