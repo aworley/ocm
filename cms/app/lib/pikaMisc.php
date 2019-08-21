@@ -1151,7 +1151,6 @@ class pikaMisc
 			break;
 			
 			case 'case_contact':
-			default:
 			$pager_url = 'case_contact.php';
 			$template_file = 'subtemplates/case_contact_list.html';
 			$case_id = pl_grab_get('case_id');
