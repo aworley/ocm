@@ -1145,7 +1145,6 @@ class pikaMisc
 			break;
 			
 			case 'contacts':
-			default:
 			$pager_url = 'addressbook.php';
 			$template_file = 'subtemplates/contact_list.html';
 			break;
