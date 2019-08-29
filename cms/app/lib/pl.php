@@ -1498,7 +1498,11 @@ function pl_mysql_init()
 
 	else
 	{
-		define('PIKACMS_MYSQLI_MODE', true);
+		if (!defined('PIKACMS_MYSQLI_MODE'))
+		{
+			define('PIKACMS_MYSQLI_MODE', true);
+		}
+
 		require_once('app/extralib/mysql_compat.php');
 	}
 
