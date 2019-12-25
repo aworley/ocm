@@ -48,11 +48,11 @@ class pikaUserSession extends plBase
 			
 		}
 		// AMW - 2011-08-02 - Added users.password_expire.
-		$sql = "SELECT user_sessions.*, users.username, users.enabled, users.session_data, users.group_id AS group_name, groups.*, users.password_expire,
+		$sql = "SELECT user_sessions.*, users.username, users.enabled, users.session_data, users.group_id AS group_name, `groups`.*, users.password_expire,
 				(UNIX_TIMESTAMP() - last_updated) as seconds_elapsed
 				FROM user_sessions 
 				JOIN users ON user_sessions.user_id = users.user_id 
-				LEFT JOIN groups on groups.group_id = users.group_id 
+				LEFT JOIN `groups` on `groups`.group_id = users.group_id 
 				WHERE 1{$sql_filter}";
 
 		if($order != 'ASC') {$order = 'DESC'; }
