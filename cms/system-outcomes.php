@@ -130,7 +130,7 @@ switch ($action)
 			$main_html['content'] .= "<a class=\"btn btn-block\" href=\"{$base_url}/system-outcomes.php?action=edit&outcome={$i}X\">{$i}0's</a><br>\n";
 		}
 		
-		$problem_codes = pl_menu_get('problem');
+		$problem_codes = pl_menu_get('problem_2008');
 		
 		foreach ($problem_codes as $key => $value)
 		{
