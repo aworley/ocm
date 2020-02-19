@@ -40,7 +40,7 @@ class plTable
 	var $min_row_height = '';
 	
 	
-	function plTable($table_name='default')
+	function __construct($table_name='default')
 	{
 		$this->table_name = $table_name;
 	}
