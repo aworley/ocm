@@ -113,7 +113,7 @@ if ($x != false) {
 	$sql .= " AND status IN $x";
 }
 
-$sql .= " GROUP BY category ASC WITH ROLLUP";
+$sql .= " GROUP BY category WITH ROLLUP ORDER BY category ASC";
 
 $t->set_title($report_title);
 $t->display_row_count(false);
