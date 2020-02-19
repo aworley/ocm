@@ -266,7 +266,7 @@ class pikaCase extends plBaseWithUdf
 	}
 	
 	
-	public function getNotes($order = 'ASC', $list_length = 50, $first_row = 0, &$row_count, &$total_hours)
+	public function getNotes($order = 'ASC', $list_length = 50, $first_row = 0, &$row_count = NULL, &$total_hours = NULL)
 	{
 		$clean_order = DB::escapeString($order);
 		//$clean_first_row = mysql_real_escape_string($first_row);
