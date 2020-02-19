@@ -31,6 +31,7 @@ $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $county = pl_grab_post('county');
 $undup = pl_grab_post('undup');
+$show_sql = pl_grab_post('show_sql');
 
 $menu_undup = pl_menu_get('undup');
 
