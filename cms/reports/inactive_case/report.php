@@ -33,6 +33,7 @@ $funding = pl_grab_post('funding');
 $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $limit = pl_grab_post('limit');
+$show_sql = pl_grab_post('show_sql');
 
 $menu_case_status = pl_menu_get('case_status');
 $menu_office = pl_menu_get('office');

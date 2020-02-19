@@ -33,6 +33,7 @@ $funding = pl_grab_post('funding');
 $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $undup = pl_grab_post('undup');
+$show_sql = pl_grab_post('show_sql');
 
 $office_menu = pl_menu_get('office');
 $menu_undup = pl_menu_get('undup');

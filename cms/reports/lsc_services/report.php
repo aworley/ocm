@@ -69,6 +69,7 @@ $funding = pl_grab_post('funding');
 $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $county = pl_grab_post('county');
+$show_sql = pl_grab_post('show_sql');
 
 pl_menu_get('lsc_other_services');
 pl_menu_get('problem_2007');

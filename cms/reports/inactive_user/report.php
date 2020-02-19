@@ -27,6 +27,7 @@ if(!pika_report_authorize($report_name)) {
 $report_format = pl_grab_post('report_format');
 $inactive_date_begin = pl_grab_post('inactive_date_begin');
 $limit = pl_grab_post('limit');
+$show_sql = pl_grab_post('show_sql');
 
 $menu_act_type = pl_menu_get('act_type');
 $staff_array = pikaUser::getUserArray();
