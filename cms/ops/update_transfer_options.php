@@ -6,7 +6,7 @@
 /**********************************/
 
 /*
-This code adds/updates zipcodes in the zip_codes table in Pika.
+This code adds/updates case transfer options in the transfer_options table in Pika.
 */
 chdir("..");
 require_once ('pika-danio.php'); 

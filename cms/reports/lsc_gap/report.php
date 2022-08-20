@@ -33,6 +33,7 @@ $funding = pl_grab_post('funding');
 $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $undup = pl_grab_post('undup');
+$show_sql = pl_grab_post('show_sql');
 
 $office_menu = pl_menu_get('office');
 $menu_undup = pl_menu_get('undup');
@@ -113,7 +114,7 @@ if ($x != false) {
 	$sql .= " AND status IN $x";
 }
 
-$sql .= " GROUP BY category ASC WITH ROLLUP";
+$sql .= " GROUP BY category WITH ROLLUP ORDER BY category ASC";
 
 $t->set_title($report_title);
 $t->display_row_count(false);

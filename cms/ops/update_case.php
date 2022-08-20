@@ -53,6 +53,16 @@ if ($allow_edits)
 	}
 	
 	$case_data->setValues(pl_clean_form_input($submitted_data));
+	
+	$check_valid_client_id_sql = "select contact_id from contacts where contact_id = '" . $case_data->getValue('client_id') . "'";
+        $valid_client_id_result = DB::query($check_valid_client_id_sql) or trigger_error("SQL: " . $check_valid_client_id_sql . " Error: " . DB::error());
+        $num_valid_client_id = DBResult::numrows($valid_client_id_result);
+        if ($num_valid_client_id == 0)
+        {
+          $case_data->setValue('client_id', '');
+        }
+	
+	
 	$case_data->save();
 	
 	if (array_key_exists('outcomes', $_POST))
@@ -74,6 +84,13 @@ if ($allow_edits)
 		$case_data->deleteOutcomes();
 		$case_data->addOutcome(pl_grab_post('single_outcome', null, 'number'), 1);
 	}
+	
+	// AC - clear outcomes if the problem code changes
+        if (array_key_exists('prior_problem', $_POST) && array_key_exists('problem', $_POST) && $_POST['prior_problem'] != $_POST['problem'])
+        {
+                $reset_sql = "DELETE FROM outcomes WHERE case_id = {$case_id}";
+                DB::query($reset_sql) or trigger_error("SQL: " . $reset_sql . " Error: " . DB::error());
+        }
 
 }
 

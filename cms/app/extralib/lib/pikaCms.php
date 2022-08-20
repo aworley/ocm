@@ -1484,7 +1484,7 @@ class pikaCms
 	// GROUPS
 	function fetchGroups()
 	{
-		$sql = "SELECT * FROM groups";
+		$sql = "SELECT * FROM `groups`";
 		$result = DB::query($sql);
 		
 		return $result;
@@ -1493,7 +1493,7 @@ class pikaCms
 	function getGroupsMenuArray()
 	{
 		$a = array();
-		$sql = "SELECT group_id FROM groups";
+		$sql = "SELECT group_id FROM `groups`";
 		$result = DB::query($sql);
 		
 		while ($row = DBResult::fetchRow($result))
@@ -1506,14 +1506,14 @@ class pikaCms
 	
 	function addGroup($a)
 	{
-		$sql = pl_build_sql('INSERT', 'groups', $a);
+		$sql = pl_build_sql('INSERT', '`groups`', $a);
 		$result = DB::query($sql);
 		return $result;
 	}
 	
 	function updateGroup($a)
 	{
-		$sql = pl_build_sql('UPDATE', 'groups', $a);
+		$sql = pl_build_sql('UPDATE', '`groups`:', $a);
 		$result = DB::query($sql);
 		return $result;
 	}

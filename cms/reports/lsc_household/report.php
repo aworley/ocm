@@ -34,6 +34,7 @@ $status = pl_grab_post('status');
 $county = pl_grab_post('county');
 $gender = pl_grab_post('gender');
 $undup = pl_grab_post('undup');
+$show_sql = pl_grab_post('show_sql');
 
 $menu_undup = pl_menu_get('undup');
 
