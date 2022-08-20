@@ -14,7 +14,7 @@ function scan_extension_folder($subdir, $base_path)
 	$a = array();
 	$h = opendir($path);
 	
-	while (false !== ($entry = readdir($h))) 
+	while ($h != false && false !== ($entry = readdir($h))) 
 	{
 	    if ($entry != "." && $entry != ".." && is_dir($path . "/" . $entry))
 	    {
