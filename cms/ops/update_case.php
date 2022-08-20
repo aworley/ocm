@@ -53,6 +53,16 @@ if ($allow_edits)
 	}
 	
 	$case_data->setValues(pl_clean_form_input($submitted_data));
+	
+	$check_valid_client_id_sql = "select contact_id from contacts where contact_id = '" . $case_data->getValue('client_id') . "'";
+        $valid_client_id_result = DB::query($check_valid_client_id_sql) or trigger_error("SQL: " . $check_valid_client_id_sql . " Error: " . DB::error());
+        $num_valid_client_id = DBResult::numrows($valid_client_id_result);
+        if ($num_valid_client_id == 0)
+        {
+          $case_data->setValue('client_id', '');
+        }
+	
+	
 	$case_data->save();
 	
 	if (array_key_exists('outcomes', $_POST))
