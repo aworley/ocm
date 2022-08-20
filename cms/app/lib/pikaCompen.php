@@ -25,16 +25,16 @@ class pikaCompen extends plBase
 	}
 	
 	public static function getCaseCompen($case_id = null) {
-		$safe_case_id = mysql_real_escape_string($case_id);
+		$safe_case_id = DB::escapeString($case_id);
 		$sql = "SELECT * FROM compens WHERE 1 AND case_id = '{$safe_case_id}'";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
 	public static function getCaseCompenBill($case_id = null) {
-		$safe_case_id = mysql_real_escape_string($case_id);
+		$safe_case_id = DB::escapeString($case_id);
 		$sql = "SELECT * FROM compens WHERE 1 AND payment_date IS NULL AND case_id = '{$safe_case_id}'";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	

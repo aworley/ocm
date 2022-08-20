@@ -15,7 +15,7 @@ pika_init();
 
 $zip = pl_grab_get('zip');
 $zip = substr($zip, 0, 5);
-$safe_zip = mysql_real_escape_string($zip);
+$safe_zip = DB::escapeString($zip);
 
 $buffer = '';
 $city = '';
@@ -27,8 +27,8 @@ $zipcode = $doc->appendChild($zipcode);
 
 if (strlen($zip) == 5)
 {
-	$result = mysql_query("SELECT city, state, county, zip FROM zip_codes WHERE zip='{$safe_zip}' LIMIT 1");
-	$row = mysql_fetch_assoc($result);
+	$result = DB::query("SELECT city, state, county, zip FROM zip_codes WHERE zip='{$safe_zip}' LIMIT 1");
+	$row = DBResult::fetchRow($result);
 	$city = $row['city'];
 	$state = $row['state'];
 	$county = $row['county'];

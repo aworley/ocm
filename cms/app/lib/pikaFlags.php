@@ -40,7 +40,7 @@ class pikaFlags extends plBase
 			$sql .= ' AND enabled = 1';
 		}
 		//echo $sql;
-		$result = mysql_query($sql) or trigger_error($sql);
+		$result = DB::query($sql) or trigger_error($sql);
 		return $result;
 	}
 	
@@ -61,7 +61,7 @@ class pikaFlags extends plBase
 			foreach ($relation_codes as $code => $label) {
 				$contact_counts["relation_code.{$code}"] = 0;
 			}
-			while($row = mysql_fetch_assoc($contacts)) {
+			while($row = DBResult::fetchRow($contacts)) {
 				if ($row['contact_id'] == $case->client_id) {
 					$client = array();
 					foreach ($row as $key => $val) {
@@ -74,7 +74,7 @@ class pikaFlags extends plBase
 			$values = array_merge($values,$contact_counts);
 			//print_r($values);
 			$result = self::getFlagsDB('1');
-			while ($row = mysql_fetch_assoc($result)) {
+			while ($row = DBResult::fetchRow($result)) {
 				$row['rules'] = unserialize($row['rules']);
 				foreach ($row['rules'] as $rule) {
 					if(self::validateRule($rule,$values)) {
@@ -190,8 +190,8 @@ class pikaFlags extends plBase
 		$sql = "DESCRIBE cases;";
 		$table_prefix = 'cases.';
 		if($no_field_prefix) {$table_prefix = '';}
-		$result = mysql_query($sql) or trigger_error($sql);
-		while ($row = mysql_fetch_assoc($result)) {
+		$result = DB::query($sql) or trigger_error($sql);
+		while ($row = DBResult::fetchRow($result)) {
 			if($row['Key'] != 'PRI') {  // Don't allow Primary Keys  to be shown
 				$fields_menu['Cases']["{$table_prefix}{$row['Field']}"] = $row['Field'];
 			}
@@ -199,8 +199,8 @@ class pikaFlags extends plBase
 		$table_prefix = 'primary_client.';
 		if($no_field_prefix) {$table_prefix = '';}
 		$sql = "DESCRIBE contacts;";
-		$result = mysql_query($sql) or trigger_error($sql);
-		while ($row = mysql_fetch_assoc($result)) {
+		$result = DB::query($sql) or trigger_error($sql);
+		while ($row = DBResult::fetchRow($result)) {
 			if($row['Key'] != 'PRI') {  // Don't allow Primary Keys  to be shown
 				$fields_menu['Client']["{$table_prefix}{$row['Field']}"] = $row['Field'];
 			}

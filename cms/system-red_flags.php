@@ -320,7 +320,7 @@ switch($action) {
 		$a['action'] = 'test';
 		$result = pikaFlags::getFlagsDB();
 		
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = DBResult::fetchRow($result)) {
 			$row['enable_text'] = 'Enable';
 			if(isset($menu_enable[$row['enabled']])) {
 				$row['enable_text'] = $menu_enable[$row['enabled']];

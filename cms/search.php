@@ -106,7 +106,7 @@ else
 		$i = 1;
 		$filter = array('number' => $search_value, 'show_open' => true, 'show_closed' => true);
 		$result = pikaMisc::getCases($filter, $row_count, 'number', 'ASC', 0, $page_size);
-		$j = mysql_num_rows($result);
+		$j = DBResult::numRows($result);
 
 		$number_table = new plFlexList();
 		$number_table->template_file = 'subtemplates/case_list.html';
@@ -114,7 +114,7 @@ else
 		if ($j > 0)
 		{
 
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				if ($row['number'] == $search_value && strlen($search_value) > 0)
 				{
@@ -172,9 +172,9 @@ else
 			$a['telephone'] = $phone_search_value;
 
 			$result = pikaMisc::getContacts($a);
-			$j = mysql_num_rows($result);
+			$j = DBResult::numRows($result);
 
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$row['client_name'] = pl_text_name($row);
 				$row['client_phone'] = pl_text_phone($row);
@@ -205,9 +205,9 @@ else
 			$a['ssn'] = $search_value;
 
 			$result = pikaMisc::getContacts($a);
-			$j = mysql_num_rows($result);
+			$j = DBResult::numRows($result);
 
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$row['client_name'] = pl_text_name($row);
 				$contact_table->addRow($row);
@@ -228,14 +228,14 @@ else
 		$i = 1;
 
 		$result = pikaMisc::getContactsPhonetically($last_name, $first_name);
-		$j = mysql_num_rows($result);
+		$j = DBResult::numRows($result);
 
 		$contact_table = new plFlexList();
 		$contact_table->template_file = 'subtemplates/contact_list.html';
 
 		if ($j > 0)
 		{
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$row['row_class'] = $i;
 				if ($i > 1)
@@ -293,10 +293,10 @@ else
 		$result = pikaMisc::getActivitiesByText($search_value, $row_count, $order_field, $order, $offset, 100);
 		
 
-		if (mysql_num_rows($result) > 0)
+		if (DBResult::numRows($result) > 0)
 		{
 			$i = 1;
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$row['row_class'] = $i;
 				if ($i > 1)
@@ -338,12 +338,12 @@ else
 		}
 		
 		$result = pikaDocument::getDocumentsByText($search_value);
-		$j = mysql_num_rows($result);
+		$j = DBResult::numRows($result);
 
 		if ($j > 0)
 		{
 
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchRow($result))
 			{
 				$doc_table->addRow($row);
 			}

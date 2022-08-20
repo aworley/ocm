@@ -98,7 +98,7 @@ switch ($action)
 		$group_list->template_file = 'subtemplates/system-groups.html';
 		
 		$result = pikaGroup::getGroupsDB();
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{	
 			$row['read_all'] = pl_array_lookup($row['read_all'],$plMenus['yes_no']);
 			$row['edit_office'] = $row['edit_office'];

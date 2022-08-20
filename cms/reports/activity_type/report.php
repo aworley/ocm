@@ -54,8 +54,8 @@ $date_end = pl_grab_post('date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_ds = mysql_real_escape_string(pl_date_mogrify($date_start));
-$safe_de = mysql_real_escape_string(pl_date_mogrify($date_end));
+$safe_ds = DB::escapeString(pl_date_mogrify($date_start));
+$safe_de = DB::escapeString(pl_date_mogrify($date_end));
 
 
 $where_sql = '';
@@ -121,7 +121,7 @@ $t->set_header($cols);
 // Run the Opened Before
 $ob_where_sql = " AND open_date <= '{$safe_ds}' AND (cases.close_date IS NULL OR (cases.close_date <= '{$safe_de}' AND cases.close_date >= '{$safe_ds}'))";
 
-$result = mysql_query($sql . $ob_where_sql) or trigger_error('SQL:' . $sql . $ob_where_sql . ' Error: ' . mysql_error());
+$result = DB::query($sql . $ob_where_sql) or trigger_error('SQL:' . $sql . $ob_where_sql . ' Error: ' . DB::error());
 
 $total_open = $total_closed = array(
 'category' => '',
@@ -139,7 +139,7 @@ $total_open = $total_closed = array(
 
 $total = 0;
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	
 	foreach ($row as $col => $nbr)
@@ -156,11 +156,11 @@ while($row = mysql_fetch_assoc($result))
 // Run the Opened During
 $od_where_sql = " AND open_date >= '{$safe_ds}' AND open_date <= '{$safe_de}' AND ('close_date' IS NULL OR close_date = '0000-00-00' OR (close_date <= '{$safe_de}' AND close_date >= '{$safe_ds}'))";
 
-$result = mysql_query($sql . $od_where_sql) or trigger_error('SQL:' . $sql . $od_where_sql . ' Error: ' . mysql_error());
+$result = DB::query($sql . $od_where_sql) or trigger_error('SQL:' . $sql . $od_where_sql . ' Error: ' . DB::error());
 
 $total = 0;
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	
 	foreach ($row as $col => $nbr)
@@ -191,11 +191,11 @@ $t->set_header($cols);
 // Run the Closed During
 $cd_where_sql = " AND open_date <= '{$safe_de}' AND (close_date >= '{$safe_ds}' AND close_date <= '{$safe_de}')";
 
-$result = mysql_query($sql . $cd_where_sql) or trigger_error('SQL:' . $sql . $cd_where_sql . ' Error: ' . mysql_error());
+$result = DB::query($sql . $cd_where_sql) or trigger_error('SQL:' . $sql . $cd_where_sql . ' Error: ' . DB::error());
 
 $total = 0;
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	
 	foreach ($row as $col => $nbr)
@@ -213,11 +213,11 @@ while($row = mysql_fetch_assoc($result))
 // Run the Still Open
 $so_where_sql = " AND open_date <= '{$safe_de}' AND (close_date IS NULL OR close_date = '0000-00-00')";
 
-$result = mysql_query($sql . $so_where_sql) or trigger_error('SQL:' . $sql . $so_where_sql . ' Error: ' . mysql_error());
+$result = DB::query($sql . $so_where_sql) or trigger_error('SQL:' . $sql . $so_where_sql . ' Error: ' . DB::error());
 
 $total = 0;
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	$row['category'] = 'Still Open';
 	foreach ($row as $col => $nbr)

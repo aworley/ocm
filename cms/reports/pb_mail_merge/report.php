@@ -70,8 +70,8 @@ if ($base_url == '/judicare')
 
 // run the report
 
-$result = mysql_query($sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error();
+while ($row = DBResult::fetchRow($result))
 {
 	$row['last_case'] = pl_date_unmogrify($row['last_case']);
 	$t->add_row($row);

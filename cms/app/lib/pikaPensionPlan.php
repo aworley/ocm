@@ -26,7 +26,7 @@ class pikaPensionPlan extends plBase
 		$where_sql = '';
 		foreach ($filter as $field_name => $field_value)
 		{
-			$filter[$field_name] = mysql_real_escape_string($field_value);
+			$filter[$field_name] = DB::escapeString($field_value);
 		}
 		
 		if(isset($filter['plan_name']) && strlen($filter['plan_name']))
@@ -55,10 +55,10 @@ class pikaPensionPlan extends plBase
 		}
 		
 		$sql = "SELECT COUNT(*) as nbr FROM pension_plans WHERE 1{$where_sql};";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) { 
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$row_count = $row['nbr'];
 		} else { $row_count = 0; }
 		
@@ -68,7 +68,7 @@ class pikaPensionPlan extends plBase
 				WHERE 1{$where_sql}
 				{$order_sql}
 				{$limit_sql}";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		return $result;
 	}
 	
@@ -77,7 +77,7 @@ class pikaPensionPlan extends plBase
 		$where_sql = '';
 		foreach ($filter as $field_name => $field_value)
 		{
-			$filter[$field_name] = mysql_real_escape_string($field_value);
+			$filter[$field_name] = DB::escapeString($field_value);
 		}
 		
 		if(isset($filter['closed']))
@@ -107,10 +107,10 @@ class pikaPensionPlan extends plBase
 		}
 		
 		$sql = "SELECT COUNT(*) as nbr FROM cases WHERE 1{$where_sql};";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) { 
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$row_count = $row['nbr'];
 		} else { $row_count = 0; }
 		
@@ -121,7 +121,7 @@ class pikaPensionPlan extends plBase
 				WHERE 1{$where_sql}
 				{$order_sql}
 				{$limit_sql}";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		
 		return $result;
 	}

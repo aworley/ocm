@@ -55,7 +55,7 @@ switch ($action) {
 	
 		$total_billed = $total_payed = $total_hours = 0;
 		$row_class = 1;
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$row['row_class'] = $row_class;
 			if ($row_class > 1) { $row_class = 1;}

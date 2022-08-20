@@ -55,8 +55,8 @@ $redact_client = pl_grab_post('redact_client');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_clb = mysql_real_escape_string(pl_date_mogrify($close_date_begin));
-$safe_cle = mysql_real_escape_string(pl_date_mogrify($close_date_end));
+$safe_clb = DB::escapeString(pl_date_mogrify($close_date_begin));
+$safe_cle = DB::escapeString(pl_date_mogrify($close_date_end));
 
 
 $where_sql = '';
@@ -88,8 +88,8 @@ $sql = "SELECT	case_id, number, close_date, pension_case_closure_notes, primary_
 $t->title = $report_title;
 $t->set_header(array('Case Number', 'Client Name', 'Closing Date', 'Closure Notes'));
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$r = array();
 	if (strlen($row['number']) < 1)

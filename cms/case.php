@@ -13,6 +13,7 @@ require_once('pikaCase.php');
 require_once('pikaMisc.php');
 require_once('pikaTempLib.php');
 require_once('pikaCaseTab.php');
+require_once('pikaScreen.php');
 
 
 // TODO - deprecate this when the case_screen module is revamped for PHP 5.
@@ -48,11 +49,11 @@ if (is_numeric($case1->getValue('client_id')))
 	/* AMW 2017-02-10 - A missing contact record is rare but happens often enough
 	that we	should check for it	and handle it gracefully if it occurs. */
 	
-	$clean_client_id = mysql_real_escape_string($case1->getValue('client_id'));
-	$resultc = mysql_query("SELECT contact_id FROM contacts WHERE contact_id = 
+	$clean_client_id = DB::escapeString($case1->getValue('client_id'));
+	$resultc = DB::query("SELECT contact_id FROM contacts WHERE contact_id = 
 	{$clean_client_id}");
 	
-	if (mysql_num_rows($resultc) == 1)
+	if (DBResult::numRows($resultc) == 1)
 	{
 	require_once('pikaContact.php');
 	
@@ -186,7 +187,7 @@ $contacts_html = '';
 
 // get contacts info to complement the $caserow array
 $result = $case1->getContactsDb();
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$contact_ids[] = $row['contact_id'];
 	$clean_contact_name = addslashes($row['last_name']) . ', ' . addslashes($row['first_name']);
@@ -390,6 +391,12 @@ if (file_exists("{$custom_dir}/case_tabs/{$clean_screen}/{$clean_screen}.php")){
 	include("modules/case-{$clean_screen}.php");
 }
 
+else if (pikaScreen::exists($clean_screen))
+{
+	$s = new pikaScreen($clean_screen);
+	$C .= $s->htmlForm($case1->getValues());
+}
+
 else
 {
 	$C .= "Error:  Invalid screen mode ({$clean_screen}) cannot be loaded";
@@ -408,10 +415,16 @@ else
 {
 	$result = pikaCaseTab::getCaseTabsDB();
 	$menu_case_tabs = array();
-	while($row = mysql_fetch_assoc($result)) 
+	while($row = DBResult::fetchRow($result))
 	{
 		$menu_case_tabs[$row['file']] = $row;
 	}
+}
+
+$custom_screens = pikaScreen::getScreens();
+foreach ($custom_screens as $key => $value)
+{
+	$menu_case_tabs["custom-screen-{$key}"] = array('name' => $value, 'file' => "case-{$key}.php", 'enabled' => 1, 'tab_order' => 1000+$key, 'autosave' => true, 'tab_row' => 2);
 }
 
 $case_row['case_tabs'] = pikaTempLib::plugin('case_tabs',$screen,$case_row,$menu_case_tabs,array('js_mode'));

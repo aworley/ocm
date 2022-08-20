@@ -49,7 +49,7 @@ else
 	$t = new plHtmlReport();
 }
 
-$safe_inactive_date_begin = mysql_real_escape_string(pl_date_mogrify($inactive_date_begin));
+$safe_inactive_date_begin = DB::escapeString(pl_date_mogrify($inactive_date_begin));
 
 // build the sql using UNION to combine the different selects into a derived table 
 // sort the derived table creating a 2nd derived table that can then be grouped
@@ -160,7 +160,7 @@ if ($inactive_date_begin)
 if($limit)
 {
 	$t->add_parameter('Limit Results',$limit . " Row(s)");
-	$safe_limit = mysql_real_escape_string($limit);
+	$safe_limit = DB::escapeString($limit);
 	$sql .= " LIMIT {$safe_limit};";
 }
 
@@ -168,10 +168,10 @@ $t->title = $report_title;
 $t->display_row_count(true);
 $t->set_header(array('Staff Name','Date','Action','Link'));
 	
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
 // interogate resulting output for report
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {	
 	$rpt_row = array();	
 	$rpt_row['staff'] = pl_array_lookup($row['staff'],$staff_array);

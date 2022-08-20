@@ -1,0 +1,33 @@
+
+<form action="%%[base_url]%%/ops/update_case.php" method="post" name="ws">
+<table cellpadding="0" summary="">
+<tr valign="top"> 
+  <td nowrap class="de">
+    %%[lsc_cfr_1605,yes_no,checkbox,label=45 CFR 1605 - Appeals on behalf of Clients]%%<br/>
+  	%%[lsc_cfr_1609,yes_no,checkbox,label=45 CFR 1609 - Fee Generating Cases]%%<br/>
+    %%[lsc_cfr_1612,yes_no,checkbox,label=45 CFR 1612 - Legislative and Rulemaking Activity Report]%%<br/>
+    %%[lsc_cfr_1620,yes_no,checkbox,label=45 CFR 1620 - Emergency Non-priority Case]%%<br/>
+    %%[lsc_cfr_1633,yes_no,checkbox,label=45 CFR 1633 - Restriction on Representation in Certain Eviction Proceedings]%%<br/>
+    %%[lsc_cfr_1636,yes_no,checkbox,label=45 CFR 1636 - Client Identity and Statement of Facts]%%<br/>
+    %%[lsc_cfr_1637,yes_no,checkbox,label=45 CFR 1637 - Representation of Prisoners]%%<br/>
+  </td>
+</tr>
+</table>
+  
+  
+<input type="hidden" name="screen" value="lsc-compliance"/>
+%%[case_id,input_hidden]%%
+
+<p>
+	<br/>
+	<input type=submit name="update_case" value="Save" tabindex=1 class="save" accesskey="s" />
+</p>
+<!--
+<input type=submit name="update_case" value="Save, Next Tab" tabindex="1" class="save" onclick="document.forms.ws.screen.value='pb';"><br/><br/>
+-->
+</form>
+
+%%[case-info.js,javascript,parse]%%
+%%[ajax_init.js,javascript]%%
+%%[date_selector.js,javascript,parse]%%
+%%[problem-server-ajax.js,javascript]%%

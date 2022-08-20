@@ -10,9 +10,9 @@
 $auth_row = array();
 
 // CONSTANTS
-if(!defined('PIKA_VERSION'))   {  define('PIKA_VERSION', '6');       }
+if(!defined('PIKA_VERSION'))   {  define('PIKA_VERSION', '7');       }
 if(!defined('PIKA_REVISION'))  {  define('PIKA_REVISION', '0');     }
-if(!defined('PIKA_PATCH_LEVEL'))  {  define('PIKA_PATCH_LEVEL', '6');     }
+if(!defined('PIKA_PATCH_LEVEL'))  {  define('PIKA_PATCH_LEVEL', '0');     }
 if(!defined('PIKA_CODE_NAME')) {  define('PIKA_CODE_NAME', 'danio'); }
 
 
@@ -386,9 +386,9 @@ function pika_exit($buffer)
 */
 function pika_ssn_mode()
 {
-	$result = mysql_query("DESCRIBE contacts") or trigger_error(mysql_error());
+	$result = DB::query("DESCRIBE contacts") or trigger_error(DB::error());
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if ($row['Field'] == 'ssn')
 		{

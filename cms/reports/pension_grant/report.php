@@ -64,8 +64,8 @@ $date_end = pl_grab_post('date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_ds = mysql_real_escape_string(pl_date_mogrify($date_start));
-$safe_de = mysql_real_escape_string(pl_date_mogrify($date_end));
+$safe_ds = DB::escapeString(pl_date_mogrify($date_start));
+$safe_de = DB::escapeString(pl_date_mogrify($date_end));
 
 
 $where_sql = '';
@@ -98,9 +98,9 @@ if(in_array($report_output,array(1,3)))
 	$t->display_row_count(false);
 	
 	$sql = "SELECT COUNT(DISTINCT case_id) as cases FROM cases WHERE 1{$where_sql}";
-	$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+	$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 	
-	$row = mysql_fetch_assoc($result);
+	$row = DBResult::fetchRow($result);
 	$t->add_row($row);
 	
 	if($show_sql) {
@@ -150,8 +150,8 @@ if(in_array($report_output,array(1,3)))
 			)) AS issue_type_counts
 			GROUP BY issue_type_lbl
 			";
-	$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
-	while($row = mysql_fetch_assoc($result))
+	$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
+	while($row = DBResult::fetchRow($result))
 	{
 		$t->add_row(array($row['issue_type_lbl'],$row['issue_type_count']));
 	}
@@ -201,9 +201,9 @@ if(in_array($report_output,array(1,3)))
 			$sql_joins .= " LEFT JOIN {$stats_fields_menus[$field_name]} AS menu_label ON menu_label.value = cases.{$field_name}";
 		}
 		$sql = "SELECT{$sql_label} COUNT(*) as stat FROM cases{$sql_joins} WHERE 1{$where_sql} GROUP BY {$field_name}";
-		$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 		
-		while($row = mysql_fetch_assoc($result))
+		while($row = DBResult::fetchRow($result))
 		{
 			$t->add_row($row);
 		}
@@ -273,7 +273,7 @@ if(in_array($report_output,array(2,3)))
 			LEFT JOIN menu_benefit_qualifier ON menu_benefit_qualifier.value = cases.benefit_qualifier
 			LEFT JOIN menu_benefit_claimant ON menu_benefit_claimant.value = cases.benefit_claimant
 			WHERE 1{$where_sql}";
-	$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+	$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 	
 	$totals_array = array_fill(0,11,NULL);
 	$totals_array['annuity_interest'] = 0;
@@ -285,7 +285,7 @@ if(in_array($report_output,array(2,3)))
 	$totals_array['annuity_total_cash_accumulated'] = 0;
 	$totals_array['annuity_total_present_value'] = 0;
 
-	while($row = mysql_fetch_assoc($result))
+	while($row = DBResult::fetchRow($result))
 	{
 		$case_id = $row['case_id'];
 		unset($row['case_id']);

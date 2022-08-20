@@ -123,8 +123,8 @@ $cases_table->order = $order;
 $cases_table->records_per_page = $page_size;
 $cases_table->page_offset = $offset;
 
-$sresult = mysql_query("DESCRIBE cases supervisor");
-if (mysql_num_rows($sresult) == 1)
+$sresult = DB::query("DESCRIBE cases supervisor");
+if (DBResult::numRows($sresult) == 1)
 {
 	$cases_table->column_names = array('number', 'client_name', 'status', 'user_id', 'supervisor', 'office', 'problem', 'funding', 'open_date', 'close_date');
 }
@@ -150,7 +150,7 @@ else
 // begin CASE LIST
 $i = 1;
 $result = pikaMisc::getCases($filter, $row_count, $order_field, $order, $offset, $page_size);
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$row['row_class'] = $i;
 	

@@ -38,7 +38,7 @@ $filter['user_id'] = $auth_row['user_id'];
 $row_count = 0;
 $open_cases_result = pikaMisc::getCases($filter,$row_count);
 $open_case_menu_array = array();
-while($row = mysql_fetch_assoc($open_cases_result)) {
+while($row = DBResult::fetchRow($open_cases_result)) {
 	$open_case_menu_array[$row['case_id']] = $row;
 }
 

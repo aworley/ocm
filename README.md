@@ -15,8 +15,9 @@ systems are on the way!
 
 * Install Apache web server, PHP, and mod_ssl.
 
-* Install MySQL or MariaDB.  CentOS 7 ships with MariaDB so it is often simplest
-to use that.
+* Install MySQL 5.7 or MariaDB 10.3.  These are the versions that the project
+officially supports.  Other MySQL/MariaDB versions are not supported and may not
+work correctly.
 
 * OCM requires the following PHP modules:  curl, DOM, JSON, mbstring, mcrypt,
 mysql, SimpleXML, SOAP, and zip.  This command will install the additional

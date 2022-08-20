@@ -87,7 +87,7 @@ class pikaLSXML
 		$contactsDB = $case->getContactsDb();
 		$contacts = $attorneys = array();
 
-		while ($row = mysql_fetch_assoc($contactsDB)) {
+		while ($row = DBResult::fetchRow($contactsDB)) {
 			$contacts[] = $row;
 		}
 
@@ -144,7 +144,7 @@ class pikaLSXML
 			
 			$aliases = array();
 			$aliasesDB = $contact_obj->getAliasesDb();
-			while($row = mysql_fetch_assoc($aliasesDB)) {
+			while($row = DBResult::fetchRow($aliasesDB)) {
 				if(isset($row['primary_name']) && !$row['primary_name']) {
 					$aliases[] = $row;
 				}
@@ -264,10 +264,10 @@ class pikaLSXML
 
 		// Notes
 		$sql = "SELECT * FROM activities WHERE case_id = '{$case->case_id}';";
-		$notes = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$notes = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$this->setXMLValue('/ClientIntake', array('Notes' => ''));
 		$notes_count = 1;
-		while ($row = mysql_fetch_assoc($notes)) {
+		while ($row = DBResult::fetchRow($notes)) {
 			$this->setXMLValue('/ClientIntake/Notes', array('Note' => ''));
 			$note_xml_prefix = "/ClientIntake/Notes/Note[{$notes_count}]";
 
@@ -848,7 +848,7 @@ class pikaLSXML
 			}
 			if ($row['birth_date'])
 			{
-				$safe_birth_date = mysql_real_escape_string(date('Y-m-d',strtotime($row['birth_date'])));
+				$safe_birth_date = DB::escapeString(date('Y-m-d',strtotime($row['birth_date'])));
 				$mp_first .= " AND (birth_date='{$safe_birth_date}' OR birth_date IS NULL)";
 			}
 			$sql = "SELECT conflict.*, contacts.*, number, cases.case_id, problem, cases.status, label AS role
@@ -860,9 +860,9 @@ class pikaLSXML
 					WHERE relation_code != {$row['relation_code']} AND aliases.mp_last='{$row['mp_last']}'{$mp_first}
 					LIMIT $lim";
 			
-			$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			while($tmp_row = mysql_fetch_assoc($sub_result))
+			while($tmp_row = DBResult::fetchRow($sub_result))
 			{
 				$tmp_row['match'] = 'NAME';
 				$conflict_array[] = $tmp_row;
@@ -888,9 +888,9 @@ class pikaLSXML
 					WHERE relation_code != {$row['relation_code']} AND aliases.ssn='{$row['ssn']}'
 					AND aliases.mp_last!='{$row['mp_last']}'
 					LIMIT $lim";
-				$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());;
+				$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());;
 				//echo $sql;
-				while($tmp_row = mysql_fetch_assoc($sub_result))
+				while($tmp_row = DBResult::fetchRow($sub_result))
 				{
 					$tmp_row['match'] = 'SSN';
 					$conflict_array[] = $tmp_row;
@@ -907,9 +907,9 @@ class pikaLSXML
 		$income_fields_array = array();
 		
 		$sql = "SHOW COLUMNS FROM cases LIKE 'annual%';";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		
-		while($row = mysql_fetch_assoc($result))
+		while($row = DBResult::fetchRow($result))
 		{
 			if(preg_match('/annual[0-9]+$/',$row['Field']) === 1)
 			{
@@ -925,9 +925,9 @@ class pikaLSXML
 		$asset_fields_array = array();
 		
 		$sql = "SHOW COLUMNS FROM cases LIKE 'asset%';";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		
-		while($row = mysql_fetch_assoc($result))
+		while($row = DBResult::fetchRow($result))
 		{
 			if(preg_match('/asset[0-9]+$/',$row['Field']) === 1)
 			{

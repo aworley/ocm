@@ -63,7 +63,7 @@ switch ($action)
 		{
 			$i = 1;
 			$result = pikaPensionPlan::getPensionPlanCases(array('pension_plan_id' => $pension_plan_id),$row_count,$order_field,$order,$offset,$page_size);
-			while($row = mysql_fetch_assoc($result))
+			while($row = DBResult::fetchRow($result))
 			{
 				$row['row_class'] = $i;
 
@@ -148,7 +148,7 @@ switch ($action)
 		$plan_list->page_offset = $offset;
 
 		$result = pikaPensionPlan::getPensionPlansDB($filter,$row_count,$order_field,$order,$offset,$page_size);
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$plan_name = "No Name";
 			if(isset($row['plan_name']) && strlen($row['plan_name']) > 0)

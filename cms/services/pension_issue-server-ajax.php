@@ -14,7 +14,7 @@ pika_init();
 $pension_issue = pl_grab_get('pension_issue');
 $pension_issue = substr($pension_issue, 0, 2);
 
-$safe_pension_issue = mysql_real_escape_string($pension_issue);
+$safe_pension_issue = DB::escapeString($pension_issue);
 
 $buffer = '';
 
@@ -31,8 +31,8 @@ if (strlen($pension_issue) == 2)
 
 $sql = "SELECT value, label FROM menu_pension_sub_issue WHERE 1 {$where_sql} ORDER BY menu_order";
 // echo $sql;
-$result = mysql_query($sql);
-while ($row = mysql_fetch_assoc($result)) {
+$result = DB::query($sql);
+while ($row = DBResult::fetchRow($result)) {
 	$problem_node = $doc->createElement('pension_issue');
 	$problem_node = $problem_xml->appendChild($problem_node);
 	$node = $doc->createElement('value',$row['value']);
