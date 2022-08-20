@@ -44,7 +44,13 @@ class DBResult
 	public static function numRows($result)
 	{
 		if (self::$mysqli_mode) {
-			return mysqli_num_rows($result);
+			if ($result === true) {
+				return DB::affectedRows();
+			}
+
+			else {
+				return mysqli_num_rows($result);
+			}
 		}
 
 		else {
