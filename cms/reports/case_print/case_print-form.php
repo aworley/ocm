@@ -120,10 +120,10 @@ $tmpstaff = $pk->fetchStaffArray();
 
 
 $result = $pk->fetchCase($case_id);
-$a = $result->fetchRow();
+$a = DBResult::fetchRow($result);
 
 $result = $pk->fetchContact($a['client_id']);
-$b = $result->fetchRow();
+$b = DBResult::fetchRow($result);
 
 $a = array_merge($a, $b);
 
@@ -346,7 +346,7 @@ $dummy = null;
 if($a['client_id'])
 {
 	$result = $pk->fetchCaseList(array('client_id' => $a['client_id']), $dummy);
-	while($row = $result->fetchRow())
+	while($row = DBResult::fetchRow($result))
 	{
 		if($a['case_id']<>$row['case_id'])
 		{
@@ -464,7 +464,7 @@ $a['additional'] = '';
 $rc = pl_menu_get('relation_codes');
 
 $result = $pk->fetchCaseContacts($case_id);
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$nametmp = pl_format_name($row);
 	$phonetmp = pl_format_phone($row);
@@ -521,7 +521,7 @@ $a['cocounsel2'] = pl_array_lookup($a['cocounsel2'],$tmpstaff);
 	
 	// A link to reverse the current display order of activities
 	// Note:  Show this only if there are cases to display
-	$notes_count = $result->numRows();
+	$notes_count = DBResult::numRows($result);
 	if (0 == $notes_count)
 
 	{
@@ -531,7 +531,7 @@ $a['cocounsel2'] = pl_array_lookup($a['cocounsel2'],$tmpstaff);
 	else  // only show these if there are actually activities to sort...
 	{
 		$a['case_notes'] = '';
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a['case_notes'] .= case_note($row);
 

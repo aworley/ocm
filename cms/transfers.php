@@ -45,9 +45,9 @@ function potential_conflicts($row, $relation_code, $description)
 			WHERE relation_code != {$row['relation_code']} AND aliases.mp_last='{$row['mp_last']}'{$mp_first}
 			AND conflict.contact_id != {$row['contact_id']}
 			LIMIT $lim";
-	$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+	$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
-	while($tmp_row = mysql_fetch_assoc($sub_result))
+	while($tmp_row = DBResult::fetchArray($sub_result))
 	{
 		$tmp_row['match'] = 'NAME';
 		$conflict_array[] = $tmp_row;
@@ -69,9 +69,9 @@ function potential_conflicts($row, $relation_code, $description)
 			WHERE relation_code != {$row['relation_code']} AND aliases.ssn='{$row['ssn']}'
 			AND conflict.contact_id != {$row['contact_id']} AND aliases.mp_last!='{$row['mp_last']}'
 			LIMIT $lim";
-		$sub_result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$sub_result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		while($tmp_row = mysql_fetch_assoc($sub_result))
+		while($tmp_row = DBResult::fetchArray($sub_result))
 		{
 			$tmp_row['match'] = 'SSN';
 			$conflict_array[] = $tmp_row;
@@ -98,7 +98,7 @@ $base_url = pl_settings_get('base_url');
 
 if (strlen(pl_grab_post('accept')) > 0)
 {
-	$safe_transfer_id = mysql_real_escape_string(pl_grab_post('transfer_id'));
+	$safe_transfer_id = DB::escapeString(pl_grab_post('transfer_id'));
 	require_once('pikaTransfer.php');
 	$tx = new pikaTransfer($safe_transfer_id);	
 	$x = json_decode($tx->getValue('json_data'), 1);
@@ -159,7 +159,7 @@ if (strlen(pl_grab_post('accept')) > 0)
 
 else if (strlen(pl_grab_post('reject')) > 0)
 {
-	$safe_transfer_id = mysql_real_escape_string(pl_grab_post('transfer_id'));
+	$safe_transfer_id = DB::escapeString(pl_grab_post('transfer_id'));
 	require_once('pikaTransfer.php');
 	$tx = new pikaTransfer($safe_transfer_id);
 	$tx->setValue('accepted', false);
@@ -172,14 +172,12 @@ else if (!$transfer_id)
 {
 	$z .= "<table class=\"table\">";
 		$z .= "<thead><tr><th></th><th>Record ID</th><th>Last Name</th><th>First Name</th><th>County</th><th>City</th><th>Problem Code</th><th>Date Received</th></tr></thead><tbody>";
-	$result = mysql_query("SELECT * FROM transfers WHERE accepted = '2'");
+	$result = DB::query("SELECT * FROM transfers WHERE accepted = '2'");
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchArray($result))
 	{
 		$j = json_decode($row['json_data'], true);
 		
-		$safe_transfer_id = mysql_real_escape_string($row['transfer_id']);
-		$safe_date = mysql_real_escape_string($row['created']);
 		/*
 		foreach ($j as $key => $val)
 		{
@@ -188,7 +186,15 @@ else if (!$transfer_id)
 		*/
 		
 		$safe_transfer_id = pl_clean_html($row['transfer_id']);
-		$safe_date = pl_clean_html($row['created']);
+
+		$safe_date = '';
+
+		if (strlen($row['created']) == 19)
+		{
+			$unix_ts = pl_mysql_timestamp_to_unix($row['created']);
+			$safe_date = pl_clean_html(date('F j, Y - g:ia', $unix_ts));
+		}
+
 		$z .= "<tr><td><a href=\"{$base_url}/transfers.php?transfer_id={$safe_transfer_id}\" class=\"btn\">";
 		$z .= "Review</a></td><td>{$safe_transfer_id}</td>";
 		$z .= "<td>{$j['client']['last_name']}</td>";
@@ -204,9 +210,9 @@ else if (!$transfer_id)
 
 else
 {
-	$safe_transfer_id = mysql_real_escape_string($transfer_id);
-	$result = mysql_query("SELECT * FROM transfers WHERE transfer_id = '{$safe_transfer_id}'");
-	$single_row = mysql_fetch_assoc($result);
+	$safe_transfer_id = DB::escapeString($transfer_id);
+	$result = DB::query("SELECT * FROM transfers WHERE transfer_id = '{$safe_transfer_id}'");
+	$single_row = DBResult::fetchArray($result);
 	$safe_transfer_id = html_entity_decode($safe_transfer_id);
 	
 	$x = json_decode($single_row['json_data'], 1);

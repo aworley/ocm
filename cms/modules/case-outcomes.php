@@ -14,17 +14,17 @@ else
 	// This is a workaround for them.
 	$problem_code = str_pad($case_row['problem'], 2, "0", STR_PAD_LEFT);
 	$problem_category = substr($problem_code, 0, 1) . 'X';
-	$problem_code = mysql_real_escape_string($problem_code);
-	$problem_category = mysql_real_escape_string($problem_category);
+	$problem_code = DB::escapeString($problem_code);
+	$problem_category = DB::escapeString($problem_category);
 	$sql = "select outcome_goal_id, goal, NULL as result 
 			from outcome_goals 
 			where problem in ('{$problem_category}', '{$problem_code}') AND 
 			active = 1
 			order by problem ASC, outcome_goal_order ASC";
-	$result = mysql_query($sql) or trigger_error(mysql_error($result));	
+	$result = DB::query($sql) or trigger_error(DB::error());
 	$x = array();
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$x[$row['outcome_goal_id']] = $row;
 	}
@@ -33,14 +33,14 @@ else
 			from outcomes as b 
 			left join outcome_goals as a using (outcome_goal_id) 
 			where case_id = {$case_row['case_id']}";
-	$result = mysql_query($sql) or trigger_error(mysql_error($result));	
+	$result = DB::query($sql) or trigger_error(DB::error());
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$x[$row['outcome_goal_id']] = $row;
 	}
 	
-	$C .= "<form action=\"{$base_url}/ops/update_case.php\" method=\"POST\">";
+	$C .= "<form action=\"{$base_url}/ops/update_case.php\" method=\"POST\" name=\"ws\">";
 	$C .= "<table class=\"table table-striped\">\n";
 	$i = 0;
 	

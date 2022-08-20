@@ -109,8 +109,8 @@ switch ($screen)
 	$pba_case_list->order = $order;
 
 // AMW 2014-07-23 - Added for SMRLS and ILCM.
-$sresult = mysql_query("DESCRIBE cases supervisor");
-if (mysql_num_rows($sresult) == 1)
+$sresult = DB::query("DESCRIBE cases supervisor");
+if (DBResult::numRows($sresult) == 1)
 {
 	$pba_case_list->column_names = array('number', 'client_name', 'status', 'user_id', 'supervisor', 'office', 'problem', 'funding', 'open_date', 'close_date');
 }
@@ -123,7 +123,7 @@ else
 	$case_count = 0;
 	$i = 1;
 	$result = pikaMisc::getCases(array('pba_id' => $pba_id), $case_count, $order_field, $order, 0, 3000);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		
 		$row['base_url'] = $base_url;
@@ -243,7 +243,7 @@ else
 	
 	$result = pikaPbAttorney::getPbAttorneys($filter, $pba_count, $order_field, $order, $offset, $page_size);
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$row['atty_address'] = pl_text_address($row);
 		$row['last_case'] = pl_date_unmogrify($row['last_case']);

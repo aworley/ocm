@@ -60,7 +60,7 @@ function case_contacts_menu($field_name = null, $field_value = null, $menu_array
 		require_once('pikaCase.php');
 		$case = new pikaCase($data_array['case_id']);
 		$result = $case->getContactsDb();
-		while($row = mysql_fetch_assoc($result))
+		while($row = DBResult::fetchRow($result))
 		{
 			if(count($relation_codes) < 1 || in_array($row['relation_code'],$relation_codes))
 			{
@@ -74,7 +74,7 @@ function case_contacts_menu($field_name = null, $field_value = null, $menu_array
 		{
 			
 			$result = $case->getCaseAttorneysDB();
-			while($row = mysql_fetch_assoc($result))
+			while($row = DBResult::fetchRow($result))
 			{
 				$menu_array['atty'.$row['user_id']] = pikaTempLib::plugin('text_name','',$row);
 			}
@@ -83,7 +83,7 @@ function case_contacts_menu($field_name = null, $field_value = null, $menu_array
 		if($temp_args['show_pba'])
 		{
 			$result = $case->getCasePbAttorneysDB();
-			while($row = mysql_fetch_assoc($result))
+			while($row = DBResult::fetchRow($result))
 			{
 				$menu_array['pba'.$row['pba_id']] = pikaTempLib::plugin('text_name','',$row);
 			}

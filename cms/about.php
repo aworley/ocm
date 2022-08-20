@@ -8,8 +8,8 @@
 require_once ('pika-danio.php');
 pika_init();
 
-$result = mysql_query("SELECT VERSION() AS mysql_version") or trigger_error();
-$a = mysql_fetch_assoc($result);
+$result = DB::query("SELECT VERSION() AS mysql_version") or trigger_error();
+$a = DBResult::fetchRow($result);
 $a['pika_version'] = PIKA_VERSION;
 $a['pika_revision'] = PIKA_REVISION;
 $a['pika_patch_level'] = PIKA_PATCH_LEVEL;

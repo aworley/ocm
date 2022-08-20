@@ -8,7 +8,12 @@ require_once ('pika-danio.php');
 // For clients w/o HTTP authorization built-in
 if(isset($_GET['token']) && $_GET['token']) {
 	$auth = base64_decode($_GET['token']);
-	$auth_array = unserialize($auth);
+	
+	$auth_array = array();
+	$x = explode("\"", $auth);
+	$auth_array[] = $x[1];
+	$auth_array[] = $x[3];
+	
 	$_SERVER['PHP_AUTH_USER'] = $auth_array[0];
 	$_SERVER['PHP_AUTH_PW'] = $auth_array[1];
 	define('PL_DISABLE_SECURITY',true);
@@ -86,12 +91,12 @@ $sql = "SELECT activities.*, cases.number
 		ORDER BY act_date ASC, act_time ASC 
 		LIMIT 2000;";
 
-$result = mysql_query($sql) or trigger_error(mysql_error());
+$result = DB::query($sql) or trigger_error(DB::error());
 //echo $sql;
 $ical_list = new plFlexList();
 $ical_list->template_file = "subtemplates/ical/{$time_zone}/ical.txt";
 $counter = 0;
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$temp_description = "";
 	$row['notes'] = ical_text_mogrify($row['notes']);  //str_replace("\r", "=0D=0A=", stripslashes($row['notes']))

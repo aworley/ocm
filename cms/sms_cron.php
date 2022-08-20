@@ -60,7 +60,7 @@ $AuthToken = pl_settings_get('twilio_auth_token');
 $from = pl_settings_get('twilio_number');
 
 // Add 90 seconds in case cron does not fire off exactly on the dot.
-$ut_safe = mysql_real_escape_string(time() + 90);
+$ut_safe = DB::escapeString(time() + 90);
 
 /*  Notes on SMS reminder status
 
@@ -81,9 +81,9 @@ $sql .= "LEFT JOIN cases ON activities.case_id = cases.case_id ";
 $sql .= "LEFT JOIN contacts ON cases.client_id = contacts.contact_id ";
 $sql .= "WHERE sms_send_time < {$ut_safe} AND (sms_send_failures != 1 OR sms_send_failures IS NULL) ";
 $sql .= "AND sms_act_id is NULL";
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
   $sms_date = pl_date_unmogrify($row['act_date']);
   $sms_time = pl_time_unmogrify($row['act_time']);

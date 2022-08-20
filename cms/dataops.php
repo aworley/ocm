@@ -31,7 +31,7 @@ $case_row = NULL;
 if (array_key_exists('case_id', $_REQUEST) && $_REQUEST['case_id'])
 {
 	$result = $pk->fetchCase($_REQUEST['case_id']);
-	$case_row = $result->fetchRow();
+	$case_row = DBResult::fetchRow($result);
 	
 	$allow_edits = pika_authorize('edit_case', $case_row);
 	
@@ -692,7 +692,7 @@ switch($action)
 	if ($case_id && $user_id && 'user_id' == $field || 'cocounsel1' == $field || 'cocounsel2' == $field)
 	{
 		$result = $pk->fetchCase($case_id);
-		$a = $result->fetchRow();
+		$a = DBResult::fetchRow($result);
 		$a[$field] = $user_id;
 		$pk->updateCase($a);
 		// also update this attorney's last_case_assign field
@@ -707,7 +707,7 @@ switch($action)
 	case 'set_case_pba':
 	
 	$result = $pk->fetchCase($case_id);
-	$a = $result->fetchRow();
+	$a = DBResult::fetchRow($result);
 	
 	$x = "";
 	
@@ -1004,7 +1004,7 @@ switch($action)
 	// Create new transfer cases with appropriate defaults.
 	
 	$res = $pk->fetchCase($x['case_id']);
-	$y = $res->fetchRow();
+	$y = DBResult::fetchRow($res);
 	$y['office'] = pl_grab_var('trans_office', 'POST', 'X');
 	$y['number'] = 'auto';
 	$y['in_holding_pen'] = '1';
@@ -1015,14 +1015,14 @@ switch($action)
 	$y['transfer_to'] = '';
 	$new_case_id = $pk->newCase($y);
 	
-	$res = pl_query("SELECT * FROM conflict WHERE case_id='{$x['case_id']}'");
-	while ($row = $res->fetchRow())
+	$res = DB::query("SELECT * FROM conflict WHERE case_id='{$x['case_id']}'");
+	while ($row = DBResult::fetchRow($res))
 	{
 		$pk->addCaseContact($new_case_id, $row['contact_id'], $row['relation_code']);
 	}
 	
 	$res = $pk->fetchNotes($x['case_id']);
-	while ($row = $res->fetchRow())
+	while ($row = DBResult::fetchRow($res))
 	{
 		$row['case_id'] = $new_case_id;
 		$row['hours'] = '0';
@@ -1088,7 +1088,7 @@ switch($action)
 	
 	// cases record.
 	$r = $pk->fetchCase($case_id);
-	$case_row = $case_row2 = $r->fetchRow();
+	$case_row = $case_row2 = DBResult::fetchRow($r);
 	
 	unset($case_row['user_id']);
 	unset($case_row['cocounsel1']);
@@ -1114,7 +1114,7 @@ switch($action)
 	
 	// contacts and conflicts.
 	$r = $pk->fetchCaseContacts($case_id);
-	while ($row = $r->fetchRow())
+	while ($row = DBResult::fetchRow($r))
 	{		
 		$parameters = array($row);
 		$t_contact_id = $s->call('newContact', $parameters);
@@ -1133,7 +1133,7 @@ switch($action)
 	
 	// activities - notes and timekeeping.
 	$r = $pk->fetchNotes($case_id);
-	while ($notes = $r->fetchRow())
+	while ($notes = DBResult::fetchRow($r))
 	{
 		$notes['case_id'] = $t_case_id;
 
@@ -1180,8 +1180,8 @@ switch($action)
 			$completed_sql  = "SELECT completed_id FROM q_completed WHERE questionnaire_id=$questionnaire_id ";
 			$completed_sql .= "AND case_id=$case_id ORDER BY completed_time DESC LIMIT 1";
 //			echo $completed_sql . "<br>";
-			$results = pl_query($completed_sql);
-			while ($row = $results->fetchRow()) {
+			$results = DB::query($completed_sql);
+			while ($row = DBResult::fetchRow($results)) {
 				$completed_id = $row["completed_id"];
 			}
 
@@ -1189,26 +1189,26 @@ switch($action)
 				$completed_sql = "INSERT INTO q_completed (questionnaire_id, case_id, user_id, completed_time) ";
 				$completed_sql .= "VALUES ($questionnaire_id, $case_id, $user_id, CURDATE())";
 //				echo $completed_sql . "<br>";
-				pl_query($completed_sql);
+				DB::query($completed_sql);
 				$completed_sql  = "SELECT completed_id FROM q_completed WHERE questionnaire_id=$questionnaire_id ";
 				$completed_sql .= "AND case_id=$case_id AND user_id=$user_id ORDER BY completed_time DESC LIMIT 1";
 //				echo $completed_sql . "<br>";
-				$results = pl_query($completed_sql);
-				while ($row = $results->fetchRow()) {
+				$results = DB::query($completed_sql);
+				while ($row = DBResult::fetchRow($results)) {
 					$completed_id = $row["completed_id"];
 				}
 			} else {
 				$completed_sql = "UPDATE q_completed SET ";
 				$completed_sql .= "user_id=$user_id, completed_time=CURDATE() WHERE completed_id=$completed_id";
-				pl_query($completed_sql);
+				DB::query($completed_sql);
 				echo $completed_sql . "<br>";
 			}
 		}
 		
 		$response_sql  = "SELECT response_id FROM q_responses WHERE completed_id=$completed_id AND question_id=$question_id ORDER BY response_id DESC LIMIT 1";
 //		echo $response_sql . "<br>";
-		$results = pl_query($response_sql);
-		while ($row = $results->fetchRow()) {
+		$results = DB::query($response_sql);
+		while ($row = DBResult::fetchRow($results)) {
 			$response_id = $row["response_id"];
 		}
 		
@@ -1220,7 +1220,7 @@ switch($action)
 			$response_sql .= "WHERE response_id=$response_id";
 		}
 //		echo $response_sql . "<br>";
-		pl_query($response_sql);
+		DB::query($response_sql);
 //		echo "<a href=quest_answer.php?case_id=$case_id&questionnaire_id=$questionnaire_id&answer_id=$answer_id&case_id=$case_id&completed_id=$completed_id>Next</a>";
 		header("Location: quest_answer.php?case_id=$case_id&questionnaire_id=$questionnaire_id&answer_id=$answer_id&case_id=$case_id&completed_id=$completed_id");
 	break;

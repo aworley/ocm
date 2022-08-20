@@ -90,7 +90,7 @@ $i = 0;
 // START completed records
 $result = $pk->getActivitiesCompleted($user_id, $cal_date);
 
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$a = array();
 	$target = '';
@@ -189,7 +189,7 @@ else
 }
 $result = $pk->getActivitiesPending($user_id, $cal_date, $day_cal_time);
 
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$a = array();
 	$target = '';
@@ -278,7 +278,7 @@ while ($row = $result->fetchRow())
 // START overdue records
 $result = $pk->getActivitiesOverdue($user_id);
 
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$a = array();
 	$target = '';
@@ -372,7 +372,7 @@ while ($row = $result->fetchRow())
 // START to do records
 $result = $pk->getActivitiesTodo($user_id);
 
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$a = array();
 	$target = '';

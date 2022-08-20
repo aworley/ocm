@@ -35,7 +35,7 @@ $county = pl_grab_get('county');
 $gender = pl_grab_get('gender');
 $undup = pl_grab_get('undup');
 $calendar_year = pl_grab_get('calendar_year');
-$clean_calendar_year = mysql_real_escape_string($calendar_year);
+$clean_calendar_year = DB::escapeString($calendar_year);
 $show_sql = pl_grab_get('show_sql');
 
 $menu_undup = pl_menu_get('undup');
@@ -75,9 +75,9 @@ $range1 = $range2 = "";
 
 $sql = '';
 
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
-$safe_ood = mysql_real_escape_string($ood);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
+$safe_ood = DB::escapeString($ood);
 
 if ($clb && $cle) 
 {
@@ -157,14 +157,14 @@ if ($x != false)
 if ($gender) 
 {
 	$t->add_parameter('Gender Code',$gender);
-	$safe_gender = mysql_real_escape_string($gender);
+	$safe_gender = DB::escapeString($gender);
 	$sql .= " AND gender='{$safe_gender}'";
 }
 
 if ($undup == 1 || ($undup == 0 && $undup != '')) 
 {
 		$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
-		$safe_undup = mysql_real_escape_string($undup);
+		$safe_undup = DB::escapeString($undup);
         $sql .= " AND undup = '{$safe_undup}'";
 }
 
@@ -190,8 +190,8 @@ $total['category'] = "";
 	$total["D"] = "0";
 	$total["total"] = "0";
 	
-$result = mysql_query($eth_sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($eth_sql) or trigger_error();
+while ($row = DBResult::fetchRow($result))
 {
 	$t->add_row($row);
 
@@ -224,9 +224,9 @@ $pai_sql = "SELECT SUBSTRING(LPAD(problem, 2, '0'),1,1) AS category,
 	SUM(IF(ISNULL(close_date) OR close_date > '{$clean_calendar_year}-06-30', 1, 0)) AS 'Cases Remaining Open on June 30'
 	FROM cases
 	WHERE status='5'" . $sql . " GROUP BY category";
-$result = mysql_query($pai_sql) or trigger_error();
+$result = DB::query($pai_sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$t->add_row($row);
 }

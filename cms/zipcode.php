@@ -18,7 +18,7 @@ $screen = pl_grab_post('screen_name');  // Which mode to display.
 $screen_msg = pl_grab_get('screen_msg');  // Message to be displayed on the screen.
 $safe_screen_msg = pl_clean_html($screen_msg);
 $zipcode = pl_grab_post('zipcode');
-$safe_zipcode = mysql_real_escape_string($zipcode);
+$safe_zipcode = DB::escapeString($zipcode);
 
 
 // AUTHORIZATION
@@ -39,11 +39,11 @@ switch ($screen)
 	case 'edit':
 		
 		$sql = "SELECT * FROM zip_codes WHERE zip='{$safe_zipcode}' LIMIT 1";
-		$result = mysql_query($sql) or trigger_error("");
+		$result = DB::query($sql) or trigger_error("");
 		
-		if (mysql_num_rows($result) == 1) 
+		if (DBResult::numRows($result) == 1)
 		{
-			$row = mysql_fetch_assoc($result) or trigger_error('');
+			$row = DBResult::fetchRow($result) or trigger_error('');
 		}
 		
 		else 

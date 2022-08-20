@@ -29,7 +29,7 @@ class pikaCms
 		
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -67,7 +67,7 @@ class pikaCms
 		$a['created'] = date('YmdHis');
 		
 		$sql = pl_build_sql('INSERT', 'cases', $a);
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		return $a['case_id'];
 	}
@@ -100,7 +100,7 @@ class pikaCms
 		
 		$sql = pl_build_sql('UPDATE', 'cases', $a);
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		return 1;
 	}
@@ -118,7 +118,7 @@ class pikaCms
 		
 		// Get copy of original case info
 		$result = $this->fetchCase($case_id);
-		$row = $result->fetchRow();
+		$row = DBResult::fetchRow($result);
 
 		// Only copy certain data from 'cases' table
 		$case_info["client_id"] = $row['client_id'];
@@ -201,7 +201,7 @@ class pikaCms
 		$data['alias_id'] = pl_new_id('aliases');
 		
 		$sql = pl_build_sql('INSERT', 'aliases', $data);
-		pl_query($sql);
+		DB::query($sql);
 		
 		return true;
 	}
@@ -227,7 +227,7 @@ class pikaCms
 		if (is_numeric($data['alias_id']))
 		{
 			$sql = pl_build_sql('UPDATE', 'aliases', $data);
-			pl_query($sql);
+			DB::query($sql);
 		
 			return true;
 		}
@@ -235,13 +235,13 @@ class pikaCms
 		else if ($data['contact_id'] && true == $data['primary_name'])
 		{
 			$sql = "SELECT alias_id FROM aliases WHERE contact_id={$data['contact_id']} AND primary_name=1";
-			$result = pl_query($sql);
-			$row = $result->fetchRow();
+			$result = DB::query($sql);
+			$row = DBResult::fetchRow($result);
 			
 			$data['alias_id'] = $row['alias_id'];
 			
 			$sql = pl_build_sql('UPDATE', 'aliases', $data);
-			pl_query($sql);
+			DB::query($sql);
 			
 			return true;
 		}
@@ -257,7 +257,7 @@ class pikaCms
 		if ($alias_id)
 		{
 			$sql = "SELECT * FROM aliases WHERE alias_id=$alias_id";
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 	}
 	
@@ -266,7 +266,7 @@ class pikaCms
 		if ($contact_id)
 		{
 			$sql = "SELECT * FROM aliases WHERE contact_id=$contact_id";
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 	}
 		
@@ -274,12 +274,12 @@ class pikaCms
 	{
 		if ($alias_id && !$contact_id)
 		{
-			pl_query("DELETE FROM aliases WHERE alias_id=$alias_id LIMIT 1");
+			DB::query("DELETE FROM aliases WHERE alias_id=$alias_id LIMIT 1");
 		}
 		
 		else if ($contact_id && !$alias_id)
 		{
-			pl_query("DELETE FROM aliases WHERE contact_id=$contact_id");
+			DB::query("DELETE FROM aliases WHERE contact_id=$contact_id");
 		}
 		
 		return true;
@@ -322,7 +322,7 @@ class pikaCms
 		
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	function fetchContacts($filter)
@@ -354,7 +354,7 @@ class pikaCms
 		
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	/*
@@ -384,11 +384,11 @@ class pikaCms
 		if ($a["zip"] && (!$a["city"] || !$a["state"] || !$a["county"]))
 		{
 			$sql = "SELECT * FROM zip_codes WHERE zip='{$a["zip"]}'";
-			$result = pl_query($sql);
+			$result = DB::query($sql);
 			
-			if ($result->numRows() >= 1)
+			if (DBResult::numRows($result) >= 1)
 			{
-				$r = $result->fetchRow();
+				$r = DBResult::fetchRow($result);
 				
 				if (!$a["city"])
 				$a["city"] = $r["city"];
@@ -409,12 +409,12 @@ class pikaCms
 			$sql = "SELECT * FROM zip_codes WHERE city='{$city}' AND state='{$state}'";
 			*/
 			$sql = "SELECT * FROM zip_codes WHERE city='{$a["city"]}' AND state='{$a["state"]}'";
-			$result = pl_query($sql);
+			$result = DB::query($sql);
 			
 			// if there's more than one zip code in that city, don't auto-fill
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
-				$r = $result->fetchRow();
+				$r = DBResult::fetchRow($result);
 				
 				$a["zip"] = $r["zip"];
 				
@@ -434,7 +434,7 @@ class pikaCms
 		$a['state'] = strtoupper($a['state']);
 		
 		$sql = pl_build_sql('INSERT', 'contacts', $a);
-		pl_query($sql);
+		DB::query($sql);
 		
 		// create the corresponding alias record for this contact record
 		$a['primary_name'] = '1'; // true;
@@ -481,11 +481,11 @@ class pikaCms
 			$five_digit_zip = substr($a['zip'], 0, 5);
 			
 			$sql = "SELECT * FROM zip_codes WHERE zip='{$five_digit_zip}'";
-			$result = pl_query($sql);
+			$result = DB::query($sql);
 			
-			if ($result->numRows() >= 1)
+			if (DBResult::numRows($result) >= 1)
 			{
-				$r = $result->fetchRow();
+				$r = DBResult::fetchRow($result);
 				
 				if (!$a["city"])
 				$a["city"] = $r["city"];
@@ -506,12 +506,12 @@ class pikaCms
 			$sql = "SELECT * FROM zip_codes WHERE city='{$city}' AND state='{$state}'";
 			*/
 			$sql = "SELECT * FROM zip_codes WHERE city='{$a["city"]}' AND state='{$a["state"]}'";
-			$result = pl_query($sql);
+			$result = DB::query($sql);
 			
 			// if there's more than one zip code in that city, don't auto-fill
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
-				$r = $result->fetchRow();
+				$r = DBResult::fetchRow($result);
 				
 				$a["zip"] = $r["zip"];
 				
@@ -542,7 +542,7 @@ class pikaCms
 		
 		$sql = pl_build_sql('UPDATE', 'contacts', $a);
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		// handle this contact's primary alias
 		$a['primary_name'] = true;
@@ -579,8 +579,8 @@ class pikaCms
 			$sql = "SELECT COUNT(*) AS 'position' FROM aliases WHERE last_name LIKE '$letter%' AND last_name < '{$vals[0]}'";
 		}
 
-		$result = pl_query($sql);	
-		$row = $result->fetchRow();
+		$result = DB::query($sql);
+		$row = DBResult::fetchRow($result);
 			
 		return $row['position'];
 	}
@@ -653,8 +653,8 @@ class pikaCms
 	function fetchLetterContacts($letter, &$dataset_size, $offset='0', $limit='5')
 	{
 		// get the total number of contacts
-		$result = pl_query("SELECT COUNT(*) AS count FROM aliases WHERE last_name LIKE '$letter%'");
-		$row = $result->fetchRow();
+		$result = DB::query("SELECT COUNT(*) AS count FROM aliases WHERE last_name LIKE '$letter%'");
+		$row = DBResult::fetchRow($result);
 		$dataset_size = $row["count"];
 		
 		$sql = "SELECT contacts.*, aliases.last_name AS last_name, aliases.first_name AS first_name, aliases.extra_name AS extra_name, aliases.middle_name AS middle_name
@@ -665,7 +665,7 @@ class pikaCms
 		
 		//echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -682,7 +682,7 @@ class pikaCms
 				FROM conflict LEFT JOIN cases ON conflict.case_id=cases.case_id
 				LEFT JOIN menu_relation_codes ON conflict.relation_code=menu_relation_codes.value
 				WHERE conflict.contact_id=$contact_id ORDER BY conflict.relation_code ASC";
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -707,7 +707,7 @@ class pikaCms
 		$sql .= " ORDER BY relation_code ASC, conflict_id ASC";
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	// add a contact to a case
@@ -732,7 +732,7 @@ class pikaCms
 		$sql = "INSERT INTO conflict
 			    (conflict_id, contact_id, case_id, relation_code) VALUES
 			    ($conflict_id, $contact_id, $case_id, $relation_code)";
-		$result = pl_query( $sql );
+		$result = DB::query($sql);
 		
 		
 		// Make certain that the case's potential conflict field is up-to-date
@@ -754,15 +754,15 @@ class pikaCms
 		// If this is the first client for this case, make them the primary client and set age, county, ZIP code fields
 		if (1 == $relation_code)
 		{
-			$result = pl_query("SELECT birth_date, open_date, county, zip 
+			$result = DB::query("SELECT birth_date, open_date, county, zip 
 								FROM conflict 
 								LEFT JOIN cases ON conflict.case_id=cases.case_id
 								LEFT JOIN contacts ON conflict.contact_id=contacts.contact_id 
 								WHERE conflict.case_id=$case_id AND relation_code=1");
 			
-			if ($result->numRows() == 1)
+			if (DBResult::numRows($result) == 1)
 			{
-				$row = $result->fetchRow();
+				$row = DBResult::fetchRow($result);
 				
 				if ($row['birth_date'] && $row['open_date'])
 				{
@@ -780,7 +780,7 @@ class pikaCms
 					$extra_sql .= ", case_county='{$row['county']}'";
 				}
 				
-				pl_query("UPDATE cases SET client_id={$contact_id}{$extra_sql} WHERE case_id='$case_id' LIMIT 1");
+				DB::query("UPDATE cases SET client_id={$contact_id}{$extra_sql} WHERE case_id='$case_id' LIMIT 1");
 			}
 		}
 		
@@ -794,7 +794,7 @@ class pikaCms
 	function deleteConflict($conflict_id, $case_id)
 	{
 		$sql = "DELETE FROM conflict WHERE conflict_id=$conflict_id LIMIT 1";
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		/*
 		$poten_conflicts = $this->conflictCheck($case_id);
@@ -883,7 +883,7 @@ class pikaCms
 		
 		//		echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	/*
@@ -894,12 +894,12 @@ class pikaCms
 	{
 		$conflict_array = array();
 		
-		$result = pl_query("SELECT contact_id, relation_code FROM conflict WHERE case_id='$case_id'");
-		while ($row = $result->fetchRow())
+		$result = DB::query("SELECT contact_id, relation_code FROM conflict WHERE case_id='$case_id'");
+		while ($row = DBResult::fetchRow($result))
 		{
-			$result_b = pl_query("SELECT COUNT(*) AS tally FROM conflict
+			$result_b = DB::query("SELECT COUNT(*) AS tally FROM conflict
 				WHERE contact_id = {$row['contact_id']} AND relation_code != {$row['relation_code']}");
-			$row_b = $result_b->fetchRow();
+			$row_b = DBResult::fetchRow($result_b);
 			
 			if ($row_b['tally'] > 0)
 			{
@@ -913,7 +913,7 @@ class pikaCms
 	function resetConflictStatus($case_id, $reset_verification = true)
 	{
 		$tally = 0;
-		$result = pl_query("SELECT contact_id, relation_code FROM conflict WHERE case_id='$case_id'");
+		$result = DB::query("SELECT contact_id, relation_code FROM conflict WHERE case_id='$case_id'");
 		$conflict_reset_sql = '';
 		
 		if ($reset_verification)
@@ -921,23 +921,23 @@ class pikaCms
 			$conflict_reset_sql = ', conflicts = NULL';
 		}
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
-			$result_b = pl_query("SELECT COUNT(*) AS tally FROM conflict
+			$result_b = DB::query("SELECT COUNT(*) AS tally FROM conflict
                                 WHERE contact_id = {$row['contact_id']} AND relation_code != {$row['relation_code']}");
-			$row_b = $result_b->fetchRow();
+			$row_b = DBResult::fetchRow($result_b);
 			
 			$tally += $row_b['tally'];
 		}
 		
 		if ($tally > 0)
 		{
-			pl_query("UPDATE cases SET poten_conflicts = 1{$conflict_reset_sql} WHERE case_id='$case_id' LIMIT 1");
+			DB::query("UPDATE cases SET poten_conflicts = 1{$conflict_reset_sql} WHERE case_id='$case_id' LIMIT 1");
 		}
 		
 		else
 		{
-			pl_query("UPDATE cases SET poten_conflicts = 0{$conflict_reset_sql} WHERE case_id='$case_id' LIMIT 1");
+			DB::query("UPDATE cases SET poten_conflicts = 0{$conflict_reset_sql} WHERE case_id='$case_id' LIMIT 1");
 		}
 			
 		return $row_b['tally'];
@@ -953,9 +953,9 @@ class pikaCms
 							LEFT JOIN aliases ON conflict.contact_id=aliases.contact_id 
 							LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id 
 							WHERE case_id='{$case_id}'";		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			// Match by contact ID
 			$sql = "SELECT conflict.*, contacts.*, number, cases.case_id, problem, status, label AS role
@@ -966,9 +966,9 @@ class pikaCms
 					WHERE relation_code != {$row['relation_code']}
 					AND conflict.contact_id = {$row['contact_id']}
 					LIMIT $lim";
-			$result_b = pl_query($sql);
+			$result_b = DB::query($sql);
 			
-			while($tmp_row = $result_b->fetchRow())
+			while($tmp_row = DBResult::fetchRow($result_b))
 			{
 				$tmp_row['match'] = 'ID';
 				$conflict_array[] = $tmp_row;
@@ -1008,9 +1008,9 @@ class pikaCms
 					WHERE relation_code != {$row['relation_code']} AND aliases.mp_last='{$row['mp_last']}'{$mp_first}
 					AND conflict.contact_id != {$row['contact_id']}
 					LIMIT $lim";
-			$result_b = pl_query($sql);
+			$result_b = DB::query($sql);
 			
-			while($tmp_row = $result_b->fetchRow())
+			while($tmp_row = DBResult::fetchRow($result_b))
 			{
 				$tmp_row['match'] = 'NAME';
 				$conflict_array[] = $tmp_row;
@@ -1036,9 +1036,9 @@ class pikaCms
 					WHERE relation_code != {$row['relation_code']} AND aliases.ssn='{$row['ssn']}'
 					AND conflict.contact_id != {$row['contact_id']} AND aliases.mp_last!='{$row['mp_last']}'
 					LIMIT $lim";
-				$result_b = pl_query($sql);
+				$result_b = DB::query($sql);
 				
-				while($tmp_row = $result_b->fetchRow())
+				while($tmp_row = DBResult::fetchRow($result_b))
 				{
 					$tmp_row['match'] = 'SSN';
 					$conflict_array[] = $tmp_row;
@@ -1083,7 +1083,7 @@ class pikaCms
 		
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	/*
@@ -1126,7 +1126,7 @@ class pikaCms
 
 		// echo $sql;
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	/*
@@ -1180,7 +1180,7 @@ class pikaCms
 			cocounsel2 = '{$user_id}')
 			ORDER BY last_name, first_name ASC";
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	function fetchCaseList($filter, &$row_count, $order_field='',
@@ -1309,15 +1309,15 @@ class pikaCms
 		
 		if ($no_filters == false)
 		{
-			$result = pl_query('SELECT COUNT(case_id) AS count' . $sql);
-			$r = $result->fetchRow();
+			$result = DB::query('SELECT COUNT(case_id) AS count' . $sql);
+			$r = DBResult::fetchRow($result);
 			$row_count = $r["count"];
 		}
 		
 		else
 		{
-			$result = pl_query("SHOW TABLE STATUS FROM {$plSettings['db_name']} LIKE 'cases'");
-			$r = $result->fetchRow();
+			$result = DB::query("SHOW TABLE STATUS FROM {$plSettings['db_name']} LIKE 'cases'");
+			$r = DBResult::fetchRow($result);
 			$row_count = $r["Rows"];
 		}
 		
@@ -1346,7 +1346,7 @@ class pikaCms
 		
 		// echo "$full_sql";
 		
-		return pl_query($full_sql);
+		return DB::query($full_sql);
 	}
 	
 	
@@ -1360,7 +1360,7 @@ class pikaCms
 		else
 		$sql = "SELECT * FROM users ORDER BY last_name";
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -1374,7 +1374,7 @@ class pikaCms
 		}
 		
 		$sql = pl_build_sql("INSERT", "users", $a);
-		pl_query($sql);
+		DB::query($sql);
 		
 		$this->setPassword($a['user_id'], $a['password']);
 		
@@ -1385,7 +1385,7 @@ class pikaCms
 	function updateStaff($a)
 	{
 		$sql = pl_build_sql("UPDATE", "users", $a);
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		if (isset($a['password']))
 		{
@@ -1440,7 +1440,7 @@ class pikaCms
 		
 		//echo $sql;
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		return true;
 	}
@@ -1451,15 +1451,15 @@ class pikaCms
 		
 		$sql = "UPDATE users SET password='$password_md5' WHERE user_id=$user_id LIMIT 1";
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 	}
 	
 	function fetchStaffArray()
 	{
 		$sql = "SELECT * FROM users ORDER BY last_name";
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -1471,9 +1471,9 @@ class pikaCms
 	function fetchEnabledStaffArray()
 	{
 		$sql = "SELECT * FROM users where enabled=1 ORDER BY last_name";
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -1484,8 +1484,8 @@ class pikaCms
 	// GROUPS
 	function fetchGroups()
 	{
-		$sql = "SELECT * FROM groups";
-		$result = pl_query($sql);
+		$sql = "SELECT * FROM `groups`";
+		$result = DB::query($sql);
 		
 		return $result;
 	}
@@ -1493,10 +1493,10 @@ class pikaCms
 	function getGroupsMenuArray()
 	{
 		$a = array();
-		$sql = "SELECT group_id FROM groups";
-		$result = pl_query($sql);
+		$sql = "SELECT group_id FROM `groups`";
+		$result = DB::query($sql);
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a[$row['group_id']] = $row['group_id'];
 		}
@@ -1506,15 +1506,15 @@ class pikaCms
 	
 	function addGroup($a)
 	{
-		$sql = pl_build_sql('INSERT', 'groups', $a);
-		$result = pl_query($sql);
+		$sql = pl_build_sql('INSERT', '`groups`', $a);
+		$result = DB::query($sql);
 		return $result;
 	}
 	
 	function updateGroup($a)
 	{
-		$sql = pl_build_sql('UPDATE', 'groups', $a);
-		$result = pl_query($sql);
+		$sql = pl_build_sql('UPDATE', '`groups`:', $a);
+		$result = DB::query($sql);
 		return $result;
 	}
 	
@@ -1527,7 +1527,7 @@ class pikaCms
 		// Filter elements need to be escaped
 		foreach ($filter as $key => $val)
 		{
-			$filter[$key] = mysql_real_escape_string($val);
+			$filter[$key] = DB::escapeString($val);
 		}
 		
 		
@@ -1571,9 +1571,9 @@ class pikaCms
 
 			$sql = "SELECT count(*) FROM pb_attorneys WHERE 1" . $sql_filter;
 			
-			$result = pl_query($sql);
+			$result = DB::query($sql);
 			
-			$row = $result->fetchRow();
+			$row = DBResult::fetchRow($result);
 			
 			$pba_count = $row["count(*)"];
 			
@@ -1581,7 +1581,7 @@ class pikaCms
 			$sql = "SELECT * FROM pb_attorneys WHERE 1" . $sql_filter . " ORDER BY last_name, first_name" . $sql_limit;
 		}
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -1593,7 +1593,7 @@ class pikaCms
 		$a['pba_id'] = pl_new_id("pb_attorneys");
 		
 		$sql = pl_build_sql('INSERT', 'pb_attorneys', $a);
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		return $a['pba_id'];
 	}
@@ -1605,16 +1605,16 @@ class pikaCms
 		
 		$sql = pl_build_sql('UPDATE', 'pb_attorneys', $a);
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 	}
 	
 	function fetchPbAttorneyArray()
 	{
 		$sql = "SELECT * FROM pb_attorneys ORDER BY last_name";
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		$a = array();  // make sure we return an empty array if no attys are found
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a[$row['pba_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -1626,7 +1626,7 @@ class pikaCms
 	{
 		$lc = pl_mogrify_date($last_case_date);
 		$sql = "UPDATE pb_attorneys SET last_case='$lc' WHERE pba_id='$pba_id' LIMIT 1";
-		pl_query($sql);
+		DB::query($sql);
 	}
 	
 	
@@ -1640,7 +1640,7 @@ class pikaCms
 		{
 			$sql = "SELECT activities.*, cases.number FROM activities LEFT JOIN cases ON activities.case_id=cases.case_id WHERE act_id='$act_id' LIMIT 1";
 			
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 		
 		else if ($start_date && $end_date)
@@ -1664,7 +1664,7 @@ class pikaCms
 			
 			// echo $sql;
 			
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 		
 		else
@@ -1672,7 +1672,7 @@ class pikaCms
 			$sql = "SELECT *
 				    FROM activities
 				    WHERE act_code='$act_code'";
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 		
 	}
@@ -1716,8 +1716,8 @@ class pikaCms
 			$sql .= " AND funding='{$filter["funding"]}'";
 		}
 		
-		$result = pl_query('SELECT COUNT(*) AS count' . $sql);
-		$r = $result->fetchRow();
+		$result = DB::query('SELECT COUNT(*) AS count' . $sql);
+		$r = DBResult::fetchRow($result);
 		$contact_count = $r["count"];
 		
 		// next, re-run the query, and only retrieve the records that will be
@@ -1739,7 +1739,7 @@ class pikaCms
 		
 		//echo $full_sql;
 		
-		return pl_query($full_sql);
+		return DB::query($full_sql);
 	}
 	
 	
@@ -1756,7 +1756,7 @@ class pikaCms
 		AND completed = 0
 		ORDER BY act_id ASC LIMIT 1000";
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -1776,7 +1776,7 @@ class pikaCms
 		AND completed = 0
 		ORDER BY act_date ASC, act_time ASC, act_id ASC LIMIT 1000";
 
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -1837,7 +1837,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 ) order by act_date ASC, act_time ASC;
 */
 		//echo $sql;
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 
 	
@@ -1858,7 +1858,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		AND act_date = '$act_date'
 		AND completed = 1
 		ORDER BY act_time ASC, act_id ASC LIMIT 1000";
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -1934,7 +1934,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 			$e = explode(',', $filter['category']);
 			foreach ($e as $key => $val)
 			{
-				$e[$key] = "'" . mysql_real_escape_string(trim($val)) . "'";
+				$e[$key] = "'" . DB::escapeString(trim($val)) . "'";
 			}
 			$f = implode(', ', $e);
 			
@@ -1942,8 +1942,8 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		}
 
 
-		$result = pl_query('SELECT COUNT(*) AS count' . $sql);
-		$r = $result->fetchRow();
+		$result = DB::query('SELECT COUNT(*) AS count' . $sql);
+		$r = DBResult::fetchRow($result);
 		$contact_count = $r["count"];
 		
 		// next, re-run the query, and only retrieve the records that will be
@@ -1968,7 +1968,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		$full_sql = 'SELECT act_id, act_type, act_date, act_time, act_end_time, hours, completed, location, activities.funding,
 				activities.user_id, category, summary, cases.case_id, number, office, client_id, last_name, first_name, phone, area_code, phone_notes' . $sql;
 		
-		return pl_query($full_sql);
+		return DB::query($full_sql);
 	}
 	
 	
@@ -2015,7 +2015,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		*/
 		
 		$sql = pl_build_sql('INSERT', 'activities', $a);
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
 		// echo $sql;
 		
@@ -2061,7 +2061,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		}
 		*/
 		$sql = pl_build_sql('UPDATE', 'activities', $a);
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 	}
 	
 	
@@ -2069,7 +2069,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 	{
 		$result = $this->fetchActivity($act_id);
 				
-		return $this->newActivity(array_merge($result->fetchRow(), $override_vals));
+		return $this->newActivity(array_merge(DBResult::fetchRow($result), $override_vals));
 	}
 
 	
@@ -2085,14 +2085,14 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		for($i = 1; $i < $a_count; $i++)
 		$sql .= " AND notes LIKE '%{$a[$i]}%'";
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
 	function deleteActivity($act_id='')
 	{
 		$sql = "DELETE FROM activities WHERE act_id=$act_id LIMIT 1";
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 	
@@ -2104,13 +2104,13 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		if ($motd_id)
 		{
 			$sql = "SELECT * FROM motd WHERE motd_id=$motd_id LIMIT 1";
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 		
 		else
 		{
 			$sql = "SELECT motd.*, users.* FROM motd LEFT JOIN users ON motd.user_id=users.user_id";
-			return pl_query($sql);
+			return DB::query($sql);
 		}
 	}
 	
@@ -2119,19 +2119,19 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 	{
 		$motd_id = pl_new_id('motd');
 		$a["motd_id"] = $motd_id;
-		$result = pl_query(pl_build_sql('INSERT', 'motd', $a));
+		$result = DB::query(pl_build_sql('INSERT', 'motd', $a));
 	}
 	
 	
 	function updateMotd($a)
 	{
-		$result = pl_query(pl_build_sql('UPDATE', 'motd', $a));
+		$result = DB::query(pl_build_sql('UPDATE', 'motd', $a));
 	}
 	
 	
 	function deleteMotd($a)
 	{
-		$result = pl_query("DELETE FROM motd WHERE motd_id=$a LIMIT 1");
+		$result = DB::query("DELETE FROM motd WHERE motd_id=$a LIMIT 1");
 	}
 	
 	
@@ -2140,7 +2140,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		$sql = "SELECT compens.*
 						FROM compens
 						WHERE compens.case_id=$case_id";
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 
 	
@@ -2149,7 +2149,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		$data['compen_id'] = pl_new_id('compens');
 		$sql = pl_build_sql('INSERT', 'compens', $data);
 		
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 
 	
@@ -2161,7 +2161,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 						LEFT JOIN charges ON case_charges.charge_id=charges.charge_id 
 						LEFT JOIN menu_disposition ON case_charges.disposition=menu_disposition.value 
 						WHERE case_id='$case_id'";
-		return pl_query($sql);
+		return DB::query($sql);
 	}
 	
 
@@ -2169,8 +2169,8 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 	{
 		// find the statute's charge_id
 		$sql = "SELECT charge_id FROM charges WHERE statute='$statute' LIMIT 1";
-		$result = pl_query($sql);
-		$row = $result->fetchRow();
+		$result = DB::query($sql);
+		$row = DBResult::fetchRow($result);
 		return $row['charge_id'];
 	}
 	
@@ -2182,8 +2182,8 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 
 		// initially assign the case's first charge as the primary charge
 		$sql = "SELECT COUNT(*) AS tally FROM case_charges WHERE case_id='$case_id'";
-		$result = pl_query($sql);
-		$row = $result->fetchRow();
+		$result = DB::query($sql);
+		$row = DBResult::fetchRow($result);
 		
 		if ($row['tally'] < 1)
 		{
@@ -2201,7 +2201,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 			$dispo_id_str = ", disposition=$dispo_id";
 		}
 
-		pl_query("INSERT INTO case_charges SET case_charge_id=$id, case_id=$case_id, charge_id=$charge_id$incident_date_str$dispo_id_str");
+		DB::query("INSERT INTO case_charges SET case_charge_id=$id, case_id=$case_id, charge_id=$charge_id$incident_date_str$dispo_id_str");
 		
 		return true;
 	}
@@ -2218,7 +2218,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		
 		//echo $sql;
 		
-		pl_query($sql);
+		DB::query($sql);
 		
 		return true;
 	}
@@ -2226,7 +2226,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 	function deleteCaseCharge($case_charge_id)
 	{
 		$sql = "DELETE FROM case_charges WHERE case_charge_id=$case_charge_id LIMIT 1";
-		pl_query($sql);
+		DB::query($sql);
 		return true;
 	}
 	
@@ -2235,9 +2235,9 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		$a = array();
 		$sql = "SELECT * FROM survey_questions LIMIT 50";
 		
-		$result = pl_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = $result->fetchRow())
+		while ($row = DBResult::fetchRow($result))
 		{
 			$a[] = $row;
 		}
@@ -2256,7 +2256,7 @@ select events.event_id AS table_id, 'events' AS label, user_id, CURRENT_DATE AS 
 		
 		$sql = "INSERT INTO survey_answers SET a_id=$a_id, q_id=$q_id, case_id=$case_id, answer='$answer'";
 		
-		pl_query($sql);
+		DB::query($sql);
 		
 		return true;
 	}

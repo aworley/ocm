@@ -28,7 +28,7 @@ $cases_table->records_per_page = $page_size;
 $cases_table->page_offset = $offset;
 
 $result = $contact->getCasesDb();
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if (strlen($row['number']) < 1)
 	{

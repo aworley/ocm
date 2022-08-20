@@ -34,6 +34,7 @@ $status = pl_grab_post('status');
 $county = pl_grab_post('county');
 $gender = pl_grab_post('gender');
 $undup = pl_grab_post('undup');
+$show_sql = pl_grab_post('show_sql');
 
 $menu_undup = pl_menu_get('undup');
 
@@ -63,9 +64,9 @@ $range1 = $range2 = "";
 
 $sql = '';
 
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
-$safe_ood = mysql_real_escape_string($ood);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
+$safe_ood = DB::escapeString($ood);
 
 if ($clb && $cle) 
 {
@@ -148,7 +149,7 @@ if ($x != false)
 if ($undup == 1 || ($undup == 0 && $undup != '')) 
 {
 		$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
-		$safe_undup = mysql_real_escape_string($undup);
+		$safe_undup = DB::escapeString($undup);
         $sql .= " AND undup = '{$safe_undup}'";
 }
 
@@ -160,8 +161,8 @@ $t->display_row_count(false);
 
 $h_sql = "SELECT SUM(children) AS t_children, SUM(adults) AS t_adults,
 			SUM(persons_helped) AS t_persons_helped FROM cases WHERE 1" . $sql;
-$result = mysql_query($h_sql) or trigger_error('This report has an error.');
-$row = mysql_fetch_assoc($result);
+$result = DB::query($h_sql) or trigger_error('This report has an error.');
+$row = DBResult::fetchRow($result);
 
 $t->add_row(array('1) Total number of Persons in all Households Served', '&nbsp;'));
 $t->add_row(array('Total Number of Adults', $row['t_adults']));
@@ -172,8 +173,8 @@ $t->add_row(array('Total Number of all Persons Served', $row['t_persons_helped']
 $t->add_row(array('', ''));
 
 $dv_sql = "SELECT SUM(dom_viol) AS t FROM cases WHERE 1" . $sql;
-$result = mysql_query($dv_sql) or trigger_error();
-$row = mysql_fetch_assoc($result);
+$result = DB::query($dv_sql) or trigger_error();
+$row = DBResult::fetchRow($result);
 $t->add_row(array('2) Total Number of Cases Involving Domestic Violence', $row['t']));
 
 

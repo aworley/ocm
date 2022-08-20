@@ -78,12 +78,12 @@ switch ($action) {
 		
 		$result = pikaActivity::getActivitiesCaseClient($filter, $dummy, 'date-user-time', $sort_order, 0, $row_limit);
 		$a['time_list'] = "";
-		if(mysql_num_rows($result) < 1) {
+		if(DBResult::numRows($result) < 1) {
 			$a['time_list'] .= "No records found.";
 		}
 		
 		$cal_array = array();
-		while($row = mysql_fetch_assoc($result)) {
+		while($row = DBResult::fetchRow($result)) {
 			//$cal_array[$row['act_date']][$row['user_id']][] = $row;	
 			if(is_numeric($row['user_id']))
 			{

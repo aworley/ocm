@@ -117,9 +117,9 @@ $range1 = $range2 = "";
 
 $sql = '';
 
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
-$safe_ood = mysql_real_escape_string($ood);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
+$safe_ood = DB::escapeString($ood);
 
 if ($clb && $cle) 
 {
@@ -222,9 +222,9 @@ $count_yes = 0;
 $count_no = 0;
 $count_na = 0;
 
-$result = mysql_query($results_sql) or trigger_error();
+$result = DB::query($results_sql) or trigger_error();
 // result should be a single row of totals
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$r = array();
 	$count_yes = $row['yes1'];
@@ -327,9 +327,9 @@ $t->set_table_title("Annual Benefits Plus Lump Sums");
 $t->display_row_count(false);
 $t->set_header(array('Funding','Yes','$ Federal','$ State','$ Child Support','$ Other'));
 
-$result = mysql_query($funding_sql) or trigger_error();
+$result = DB::query($funding_sql) or trigger_error();
 // result should be a single row of totals
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$r=array();
 	$r['benefits_funding'] = $benefits_funding['b1'];

@@ -96,93 +96,13 @@ if(!function_exists('pl_query'))
 {
 function pl_query($sql)
 {
-	static $db = null;
-	$plSettings = pl_settings_get_all();
-	
-	// Initialize the database connection, if necessary
-	if (!is_object($db))
-	{
-		require_once("DB.php");
-		$db_cx = "{$plSettings['db_type']}://{$plSettings['db_user']}:{$plSettings['db_password']}@{$plSettings['db_host']}/{$plSettings['db_name']}";
-		
-		$db = DB::connect($db_cx, 0);
-		
-		if (DB::isError($db))
-		{
-			$m = $db->getMessage() . "<br>Database Name:  {$db->dsn}" .
-			"Database Vendor:  {$db->phptype}";
-			trigger_error($m);
-		}
-		
-		$db->fetchmode = DB_FETCHMODE_ASSOC;
-	}
-	
-	$result = $db->query($sql);
-	
-	if (DB::isError($result))
-	{
-		if (defined('PL_DIE_ON_QUERY_ERROR') && PL_DIE_ON_QUERY_ERROR == false)
-		{
-			return null;
-		}
-		
-		else 
-		{
-			die(pika_error_notice($result->getMessage(), $result->getDebugInfo()));
-		}
-	}
-	
-	//echo $sql . "<br>\n";
-	
-	return $result;
+	require_once('app/extralib/lib/plQueryResult.php');
+
+	$result = DB::query($sql);
+	$a = DBResult::fetchArray($result);
+	$x = new plQueryResult($a);
+	return $x;
 }
-}
-
-
-function pl_query_cached_array_flush($sql)
-{
-	return pl_db_cache_rm($sql);
-	
-	$cache_path = '/tmp';
-	$cache_filename = "$cache_path/pl_cache_a-" . md5($sql) . ".php";
-	
-	return unlink($cache_filename);
-}
-
-
-function pl_query_cached_array($sql)
-{
-	return pl_db_cache_get($sql);
-	
-	static $db;
-	global $plSettings;
-	
-	$data = array();
-	$cache_path = '/tmp';
-	
-	$cache_filename = "$cache_path/pl_cache_a-" . md5($sql) . ".php";
-	
-	if (file_exists($cache_filename))
-	{
-		include($cache_filename);
-	}
-	
-	else
-	{		
-		$result = pl_query($sql);
-		
-		while ($row = $result->fetchRow())
-		{
-			$data[] = $row;
-		}
-		
-		$cache_data = "<?php\n" . pl_array_to_php("data", $data) . "\n ?>\n";
-		$fp = fopen($cache_filename, "w");
-		fputs($fp, $cache_data);
-		fclose($fp);
-	}
-	
-	return $data;
 }
 
 function pl_new_id($sequence)
@@ -478,9 +398,9 @@ if(!function_exists('pl_db_cache_get'))
 	function pl_db_cache_get($sql, $key_deprecated= null)
 	{
 		$a = array();
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -527,12 +447,12 @@ function pl_grab_vars($table, $append='')
 
 function pl_db_new_id($sequence)
 {	
-	mysql_query("LOCK TABLES counters WRITE");
-	mysql_query("UPDATE counters SET count=count+1 WHERE id = '$sequence' LIMIT 1");
-	$result = mysql_query("SELECT count FROM counters WHERE id = '$sequence'")
+	DB::query("LOCK TABLES counters WRITE");
+	DB::query("UPDATE counters SET count=count+1 WHERE id = '$sequence' LIMIT 1");
+	$result = DB::query("SELECT count FROM counters WHERE id = '$sequence'")
 		or trigger_error("The  \"$sequence\" counter is not working correctly.");
-	mysql_query("UNLOCK TABLES");
-	$row = mysql_fetch_assoc($result);
+	DB::query("UNLOCK TABLES");
+	$row = DBResult::fetchArray($result);
 	return $row['count'];
 }
 
@@ -616,7 +536,7 @@ function pl_table_autosql_update($table, $data)
 			
 			else
 			{
-				$w = mysql_real_escape_string($data["$key"]);
+				$w = DB::escapeString($data["$key"]);
 				$sql .= " $key = '$w'";
 			}
 			// hopefully this works with other DBs besides MySQL & Postgres...
@@ -693,7 +613,7 @@ function pl_table_autosql_insert($table, $data)
 			
 			else
 			{
-				$sql .= " $key='" . mysql_real_escape_string($data["$key"]) . "'";
+				$sql .= " $key='" . DB::escapeString($data["$key"]) . "'";
 			}
 			
 			$i++;

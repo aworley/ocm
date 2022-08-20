@@ -33,7 +33,7 @@ class pikaUserSession extends plBase
 		if(is_array($filter)) {
 			foreach ($filter as $key => $val)
 			{
-				$filter[$key] = mysql_real_escape_string($val);
+				$filter[$key] = DB::escapeString($val);
 			}
 			
 			if (isset($filter['user_id']) && is_numeric($filter['user_id']))
@@ -48,27 +48,27 @@ class pikaUserSession extends plBase
 			
 		}
 		// AMW - 2011-08-02 - Added users.password_expire.
-		$sql = "SELECT user_sessions.*, users.username, users.enabled, users.session_data, users.group_id AS group_name, groups.*, users.password_expire,
+		$sql = "SELECT user_sessions.*, users.username, users.enabled, users.session_data, users.group_id AS group_name, `groups`.*, users.password_expire,
 				(UNIX_TIMESTAMP() - last_updated) as seconds_elapsed
 				FROM user_sessions 
 				JOIN users ON user_sessions.user_id = users.user_id 
-				LEFT JOIN groups on groups.group_id = users.group_id 
+				LEFT JOIN `groups` on `groups`.group_id = users.group_id 
 				WHERE 1{$sql_filter}";
-		
+
 		if($order != 'ASC') {$order = 'DESC'; }
 		if ($order_field && $order){
-			$safe_order_field = mysql_real_escape_string($order_field);
-			$safe_order = mysql_real_escape_string($order);
+			$safe_order_field = DB::escapeString($order_field);
+			$safe_order = DB::escapeString($order);
 			$sql .= " ORDER BY {$safe_order_field} {$safe_order}";
 		}
-		
+
 		if ($first_row && $list_length){
 			$sql .= " LIMIT $first_row, $list_length";
 		} elseif ($list_length){
 			$sql .= " LIMIT $list_length";
 		}
 		//echo $sql;
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 		
 	}

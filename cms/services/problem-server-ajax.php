@@ -15,7 +15,7 @@ pika_init();
 
 $problem = pl_grab_get('problem');
 $problem = substr($problem, 0, 2);
-$safe_problem = mysql_real_escape_string($problem);
+$safe_problem = DB::escapeString($problem);
 
 $buffer = '';
 
@@ -26,8 +26,8 @@ $problem_xml = $doc->appendChild($problem_xml);
 if (strlen($problem) == 2)
 {
 	$sql = "SELECT value, label FROM menu_sp_problem WHERE value LIKE '{$safe_problem}%' ORDER BY menu_order";
-	$result = mysql_query($sql);
-	while ($row = mysql_fetch_assoc($result)) {
+	$result = DB::query($sql);
+	while ($row = DBResult::fetchRow($result)) {
 		$problem_node = $doc->createElement('problem');
 		$problem_node = $problem_xml->appendChild($problem_node);
 			$node = $doc->createElement('value', pl_clean_html($row['value']));

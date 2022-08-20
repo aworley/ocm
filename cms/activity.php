@@ -163,15 +163,26 @@ $filter['show_cases'] = '0';
 $row_count = 0;
 $open_cases_result = pikaMisc::getCases($filter,$row_count,'client_name','ASC',0,500);
 $open_case_menu_array = array();
-while($row = mysql_fetch_assoc($open_cases_result)) {
+while($row = DBResult::fetchRow($open_cases_result)) {
 	$open_case_menu_array[$row['case_id']] = $row;
 }
 
 $case_menu_args = array();
+$case_menu_js = '';
 
 if (pl_settings_get('autofill_time_funding') == 1)
 {
-	$case_menu_args = array('onchange=setFunding(this.value);setSmsVisibility();');
+	$case_menu_js .= 'setFunding(this.value);';
+}
+
+if ($act_type == 'C')
+{
+	$case_menu_js .= 'setSmsVisibility();';
+}
+
+if (strlen($case_menu_js) > 0)
+{
+	$case_menu_args[] = "onchange=" . $case_menu_js;
 }
 
 $act_row['new_case_menu'] = pikaTempLib::plugin('case_menu', 'case_id', 
@@ -202,7 +213,7 @@ $act_row['textFormat'] = $textformat->draw();
 require_once('pikaInterview.php');
 $result = pikaInterview::getInterviewsDB(1);
 $menu_interviews = array();
-while($row = mysql_fetch_assoc($result)) {
+while($row = DBResult::fetchRow($result)) {
         $menu_interviews[$row['interview_id']] = $row['name'];
 }
 

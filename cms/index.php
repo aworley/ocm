@@ -44,14 +44,14 @@ if ($password_expire && isset($auth_row['password_expire']) && $auth_row['passwo
 // End AMW
 
 $result = pikaMotd::getMotdDB();
-if (mysql_num_rows($result) < 1) 
+if (DBResult::numRows($result) < 1)
 {
 	$messages_text .= "<blockquote><tt>Welcome to the Pika Case Management System!</tt></blockquote>\n";
 }
 
 else 
 {
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$motd_id = pl_clean_html($row['motd_id']);
 		

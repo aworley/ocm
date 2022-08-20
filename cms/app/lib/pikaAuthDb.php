@@ -70,25 +70,25 @@ class pikaAuthDb
 		
 		if(!is_null($identity) && strlen($identity) > 0 && strlen($this->table_name) > 0)
 		{
-			$safe_identity = mysql_real_escape_string($identity);
+			$safe_identity = DB::escapeString($identity);
 			
 			$sql  = "SELECT user_id, username, enabled, password_expire, 
-					users.group_id AS group_name, groups.*, password
+					users.group_id AS group_name, `groups`.*, password
 					FROM {$this->table_name}
-					LEFT JOIN groups ON users.group_id=groups.group_id
+					LEFT JOIN `groups` ON users.group_id=groups.group_id
 					WHERE enabled = '1'
 					AND username='{$safe_identity}'
 					AND LENGTH(password) > 0";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 			
-			if (mysql_num_rows($result) == 1)
+			if (DBResult::numRows($result) == 1)
 			{
 				if (PHP_VERSION_ID >= 50303)
 				{
 					require_once('password_hash_compat.php');
 				}
 				
-				$row = mysql_fetch_assoc($result);
+				$row = DBResult::fetchRow($result);
 				// one user record matched the username and password
 				if (PHP_VERSION_ID >= 50303 && password_verify($credential, $row['password']))
 				{  // Identity & Credential match existing records - allow login

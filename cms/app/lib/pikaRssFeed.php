@@ -39,8 +39,8 @@ class pikaRssFeed extends plBase
 	
 	public static function getRssDB() {
 		$result_array = array();
-		$result = mysql_query("SELECT rss_feeds.* FROM rss_feeds WHERE 1;");
-		while ($row = mysql_fetch_assoc($result)) {
+		$result = DB::query("SELECT rss_feeds.* FROM rss_feeds WHERE 1;");
+		while ($row = DBResult::fetchRow($result)) {
 			$row['feed_cache'] = stripslashes($row['feed_cache']);
 			$result_array[] = $row;
 		}

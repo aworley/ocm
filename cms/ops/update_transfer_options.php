@@ -6,7 +6,7 @@
 /**********************************/
 
 /*
-This code adds/updates zipcodes in the zip_codes table in Pika.
+This code adds/updates case transfer options in the transfer_options table in Pika.
 */
 chdir("..");
 require_once ('pika-danio.php'); 
@@ -18,13 +18,13 @@ pika_init();
 $base_url = pl_settings_get('base_url');
 $action = pl_grab_post('action');
 $id = pl_grab_post('id');
-$safe_id = mysql_real_escape_string($id);
+$safe_id = DB::escapeString($id);
 $label = pl_grab_post('label');
-$safe_label = mysql_real_escape_string($label);
+$safe_label = DB::escapeString($label);
 $url = pl_grab_post('url');
-$safe_url = mysql_real_escape_string($url);
+$safe_url = DB::escapeString($url);
 $transfer_mode = pl_grab_post('transfer_mode');
-$safe_transfer_mode = mysql_real_escape_string($transfer_mode);
+$safe_transfer_mode = DB::escapeString($transfer_mode);
 $dummy = null;
 
 if (!pika_authorize("system", $dummy))
@@ -46,7 +46,7 @@ switch ($action) {
 				url='{$safe_url}', transfer_mode='{$safe_transfer_mode}';";
 		
 		
-		mysql_query($sql) or trigger_error();
+		DB::query($sql) or trigger_error();
 		
 		header("Location: {$base_url}/transfer_options.php");	
 		break;
@@ -60,7 +60,7 @@ switch ($action) {
 				LIMIT 1;";
 		
 		
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 		
 		header("Location: {$base_url}/transfer_options.php");	
 		break;
@@ -71,7 +71,7 @@ switch ($action) {
 				WHERE id='{$safe_id} 
 				LIMIT 1'";
 		
-		mysql_query($sql) or trigger_error("");
+		DB::query($sql) or trigger_error("");
 		
 		header("Location: {$base_url}/transfer_options.php");
 		break;

@@ -9,12 +9,6 @@ require_once('pikaDocument.php');
 
 set_time_limit(0);
 ini_set('memory_limit','64M');
-$db_host = 'localhost';
-$db_name = '';
-$db_user = '';
-$db_password = '';
-mysql_connect($db_host, $db_user, $db_password) or die('1');
-mysql_select_db($db_name) or die('2');
 
 $i = 0;
 $j = 0;

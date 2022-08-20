@@ -18,9 +18,9 @@ $k = 0;
 $l = 0;
 
 $sql = "SELECT MAX(file_size) AS largest_doc FROM documents LIMIT 1";
-$result = mysql_query($sql) or trigger_error($sql);
-if(mysql_num_rows($result) > 0) {
-	$row = mysql_fetch_assoc($result);
+$result = DB::query($sql) or trigger_error($sql);
+if(DBResult::numRows($result) > 0) {
+	$row = DBResult::fetchRow($result);
 	$largest_file = $row['largest_doc'];
 	echo "The largest file in doc_storage = ";
 	echo number_format($largest_file,0,'.',',') . " bytes";
@@ -28,9 +28,9 @@ if(mysql_num_rows($result) > 0) {
 } else {pika_exit('no max documents filesize!');}
 
 $sql = "SHOW VARIABLES LIKE 'max_allowed_packet'";
-$result = mysql_query($sql) or trigger_error($sql);
-if(mysql_num_rows($result) > 0) {
-	$row = mysql_fetch_assoc($result);
+$result = DB::query($sql) or trigger_error($sql);
+if(DBResult::numRows($result) > 0) {
+	$row = DBResult::fetchRow($result);
 	$mysql_max_file_size = $row['Value'];
 	echo "The largest allowable mysql insert = ";
 	echo number_format($mysql_max_file_size,0,'.',',') . " bytes";
@@ -45,10 +45,10 @@ echo " \n";
 echo " \n";
 
 $sql = "SELECT * FROM documents ORDER BY doc_id ASC";
-$result = mysql_query($sql) or die('3');
+$result = DB::query($sql) or die('3');
 $doc_storage = pl_settings_get('docs_directory');
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$path = $doc_storage . $row['filepath'] . "/" . $row['filename'];
 	

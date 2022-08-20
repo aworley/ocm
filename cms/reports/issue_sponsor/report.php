@@ -54,8 +54,8 @@ $close_date_end = pl_grab_post('close_date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_clb = mysql_real_escape_string(pl_date_mogrify($close_date_begin));
-$safe_cle = mysql_real_escape_string(pl_date_mogrify($close_date_end));
+$safe_clb = DB::escapeString(pl_date_mogrify($close_date_begin));
+$safe_cle = DB::escapeString(pl_date_mogrify($close_date_end));
 
 
 $where_sql = '';
@@ -91,11 +91,11 @@ $sql = "SELECT SUM(nbr) AS total_nbr
 
 //echo $sql;
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 $total_nbr = 0;
-if(mysql_num_rows($result) == 1)
+if(DBResult::numRows($result) == 1)
 {
-	$row = mysql_fetch_assoc($result);
+	$row = DBResult::fetchRow($result);
 	$total_nbr = $row['total_nbr'];
 }
 
@@ -133,8 +133,8 @@ $issue_totals = array();
 
 $sponsor_type_array = array();
 
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	//print_r($row);
 	$sponsor_type_array[$row['sponsor_type']][$row['issue_label']][$row['sub_issue_label']] = $row['total_nbr']; 

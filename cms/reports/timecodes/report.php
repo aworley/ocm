@@ -64,15 +64,15 @@ else
 // Run the Report
 // Check the time codes and ensure at least default values
 if(!$holidaycode) {$safe_holidaycode = 'SK';}
-else {$safe_holidaycode = mysql_real_escape_string($holidaycode);}
+else {$safe_holidaycode = DB::escapeString($holidaycode);}
 if(!$lunchcode) {$safe_lunchcode = 'SL'; }
-else {$safe_lunchcode = mysql_real_escape_string($lunchcode);}
+else {$safe_lunchcode = DB::escapeString($lunchcode);}
 if(!$vacationcode) {$safe_vacationcode = 'SV'; }
-else {$safe_vacationcode = mysql_real_escape_string($vacationcode);}
+else {$safe_vacationcode = DB::escapeString($vacationcode);}
 if(!$compcode) {$safe_compcode = 'SM'; }
-else {$safe_compcode = mysql_real_escape_string($compcode);}
+else {$safe_compcode = DB::escapeString($compcode);}
 if(!$sickcode) {$safe_sickcode = 'SS'; }
-else {$safe_sickcode = mysql_real_escape_string($sickcode);}
+else {$safe_sickcode = DB::escapeString($sickcode);}
 
 $sql = "SELECT	act_date, activities.user_id,
 		SUM(IF(category NOT IN 
@@ -97,14 +97,14 @@ if ($safe_user_list != false) {
 if ($date_start)
 {
 	$t->add_parameter('Date Start',$date_start);
-	$safe_date_start = mysql_real_escape_string(pl_date_mogrify($date_start));
+	$safe_date_start = DB::escapeString(pl_date_mogrify($date_start));
 	$sql .= " AND act_date >= '{$safe_date_start}'";
 }
 
 if ($date_end)
 {
 	$t->add_parameter('Date End',$date_end);
-	$safe_date_end = mysql_real_escape_string(pl_date_mogrify($date_end));
+	$safe_date_end = DB::escapeString(pl_date_mogrify($date_end));
 	$sql .= " AND act_date <= '{$safe_date_end}'";
 }
 
@@ -127,9 +127,9 @@ $totals = array('worktotal' => 0,
 
 $act_user = array();
 
-$result = mysql_query($sql) or trigger_error();
+$result = DB::query($sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = DBResult::fetchRow($result)) {
 	$act_user[$row['user_id']][] = $row;
 }
 

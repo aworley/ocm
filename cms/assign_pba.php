@@ -92,7 +92,7 @@ switch ($action)
 
 		$result = pikaPbAttorney::getPbAttorneys($filter, $pba_count, $order_field, $order, $offset, $page_size);
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$row['atty_address'] = pl_text_address($row);
 			$row['last_case'] = pl_date_unmogrify($row['last_case']);

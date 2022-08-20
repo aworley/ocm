@@ -37,6 +37,7 @@ $office = pl_grab_post('office');
 $problem = pl_grab_post('problem');
 $funding = pl_grab_post('funding');
 $user_id = pl_grab_post('user_id');
+$show_sql = pl_grab_post('show_sql');
 
 $opposing_name = pl_grab_post('opposing_name');
 
@@ -71,8 +72,8 @@ else
 
 
 
-$safe_date_start = mysql_real_escape_string(pl_date_mogrify($date_start));
-$safe_date_end = mysql_real_escape_string(pl_date_mogrify($date_end));
+$safe_date_start = DB::escapeString(pl_date_mogrify($date_start));
+$safe_date_end = DB::escapeString(pl_date_mogrify($date_end));
 
 if($date_start && $date_end)
 {
@@ -92,31 +93,31 @@ elseif ($date_end)
 if(strlen($funding) > 0)
 {
 	$t->add_parameter('Funding',pl_array_lookup($funding,$funding_array) . " ({$funding})");
-	$safe_funding = mysql_real_escape_string($funding);
+	$safe_funding = DB::escapeString($funding);
 	$where_sql .= " AND funding = '{$safe_funding}'";
 }
 if(strlen($problem) > 0)
 {
 	$t->add_parameter('Problem',pl_array_lookup($problem,$problem_array));
-	$safe_problem = mysql_real_escape_string($problem);
+	$safe_problem = DB::escapeString($problem);
 	$where_sql .= " AND problem = '{$safe_problem}'";
 }
 if(strlen($office) > 0)
 {
 	$t->add_parameter('Office',pl_array_lookup($office,$office_array) . " ({$office})");
-	$safe_office = mysql_real_escape_string($office);
+	$safe_office = DB::escapeString($office);
 	$where_sql .= " AND office = '{$safe_office}'";
 }
 if(strlen($user_id) > 0)
 {
 	$t->add_parameter('Staff',pl_array_lookup($user_id,$staff_array) . " ({$user_id})");
-	$safe_user_id = mysql_real_escape_string($user_id);
+	$safe_user_id = DB::escapeString($user_id);
 	$where_sql .= " AND (user_id = '{$safe_user_id}' OR cocounsel1 = '{$safe_user_id}' OR cocounsel2 = '{$safe_user_id}')";
 }
 if(strlen($case_county) > 0)
 {
 	$t->add_parameter('Case County', $case_county);
-	$safe_case_county = mysql_real_escape_string($case_county);
+	$safe_case_county = DB::escapeString($case_county);
 	$safe_case_county = pl_process_comma_vals($safe_case_county);
         $where_sql .= " AND case_county IN {$safe_case_county}";
 }
@@ -132,12 +133,12 @@ if(strlen($opposing_name) > 0)
 	$t->add_parameter('Opposing Name',$opposing_name);
 	if(strlen($opposing_last_name) > 0)
 	{
-		$safe_opposing_last_name = mysql_real_escape_string($opposing_last_name);
+		$safe_opposing_last_name = DB::escapeString($opposing_last_name);
 		$where_sql .= " AND opposing.last_name LIKE '{$safe_opposing_last_name}'";
 	}
 	if(strlen($opposing_first_name) > 0)
 	{
-		$safe_opposing_first_name = mysql_real_escape_string($opposing_first_name);
+		$safe_opposing_first_name = DB::escapeString($opposing_first_name);
 		$where_sql .= " AND opposing.first_name LIKE '{$safe_opposing_first_name}'";
 	}
 }
@@ -190,10 +191,10 @@ $t->title = $report_title;
 $t->display_row_count(true);
 $t->set_header(array('Opposing Party','Client Name', 'Case Number', 'Cause of Action', 'Date Filed', 'Case Opened', 'Case County'));
 	
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
 // interogate resulting output for report
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$rpt_row = array();	
 	$rpt_row['opposing_name'] = pikaTempLib::plugin('text_name','',$row,'',array("last_name=opposing_last_name","first_name=opposing_first_name","middle_name=opposing_middle_name","order=last"));

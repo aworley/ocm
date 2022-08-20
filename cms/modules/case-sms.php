@@ -58,12 +58,12 @@ function is_valid_number($number, $sid, $token)
 */
 function mysql_column_exists($table, $column)
 {
-	$clean_table = mysql_real_escape_string($table);
-	$clean_column = mysql_real_escape_string($column);
+	$clean_table = DB::escapeString($table);
+	$clean_column = DB::escapeString($column);
 	
-	$result = mysql_query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
+	$result = DB::query("SHOW COLUMNS FROM {$clean_table} LIKE '{$clean_column}'");
 	
-	if (mysql_num_rows($result) == 1)
+	if (DBResult::numRows($result) == 1)
 	{
 		return true;
 	}
@@ -115,9 +115,9 @@ $sql = "SELECT first_name, middle_name, last_name, extra_name,
 	WHERE conflict.case_id = {$safe_case_id}
 	AND conflict.relation_code = 1
 	ORDER BY last_name ASC, first_name ASC, extra_name ASC";
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if (strlen($row['area_code']) == 3 && strlen($row['phone']) == 8 &&
 			$row['ok_to_text'] == 1)
@@ -149,7 +149,7 @@ Cell Number:<br>
 <select name='cell'>{$mobile_options}</select><br>
 Message:<br>
 <textarea name=\"message\" rows=\"8\" maxlength=\"1600\" placeholder=\"Please enter your message here.\"></textarea><br>
-<input type='submit' name='send_sms' value='Send SMS'>
+<input type='submit' name='send_sms' value='Send SMS' class='btn btn-primary'>
 </form>";
 
 $save_case_changes = false;
@@ -162,11 +162,11 @@ if ($case1->unread_sms > 0)
 // Start SMS listing
 $sql = "SELECT act_date, act_time, summary, notes FROM activities WHERE act_type = 'S'"
 	. " AND case_id = {$safe_case_id} ORDER BY act_date DESC, act_time DESC";
-$result = mysql_query($sql);
+$result = DB::query($sql);
 
 $sms_listing_rows = '';
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$from_text = substr(htmlentities($row['summary']), 13);
 	$from_text = substr($from_text, 0, -1);
@@ -184,7 +184,7 @@ while ($row = mysql_fetch_assoc($result))
 	$sms_listing_rows .= "<tr><td><p>{$from_text}</p><p>" 
 		. pl_date_unmogrify($row['act_date']) . " "
 		. pl_time_unmogrify($row['act_time']) . "</p></td><td><strong>" 
-		. htmlentities($row['notes']) 
+		. nl2br(htmlentities($row['notes']), false)
 		. "</strong></td></tr>";
 }
 

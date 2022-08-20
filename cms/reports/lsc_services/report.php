@@ -69,6 +69,7 @@ $funding = pl_grab_post('funding');
 $office = pl_grab_post('office');
 $status = pl_grab_post('status');
 $county = pl_grab_post('county');
+$show_sql = pl_grab_post('show_sql');
 
 pl_menu_get('lsc_other_services');
 pl_menu_get('problem_2007');
@@ -119,8 +120,8 @@ if ($x != false)
 
 if($close_date_begin && $close_date_end) 
 {
-	$safe_close_date_begin = pl_date_mogrify(mysql_real_escape_string($close_date_begin));
-	$safe_close_date_end = pl_date_mogrify(mysql_real_escape_string($close_date_end));
+	$safe_close_date_begin = pl_date_mogrify(DB::escapeString($close_date_begin));
+	$safe_close_date_end = pl_date_mogrify(DB::escapeString($close_date_end));
 	$t->add_parameter('Closed Between',$close_date_begin . " - " . $close_date_end);
 	$extra_sql .= " AND act_date >= '{$safe_close_date_begin}'" .
 				  " AND act_date <= '{$safe_close_date_end}'";
@@ -134,9 +135,9 @@ $sql_models_used = "SELECT om_code, SUM(ph_measured) AS model_measured, SUM(ph_e
 					WHERE 1 {$extra_sql} 
 					GROUP BY om_code
 					ORDER BY om_code ASC";
-$result = mysql_query($sql_models_used) or trigger_error();
+$result = DB::query($sql_models_used) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$models[$row['om_code']] = array('model_measured' => $row['model_measured'],
 									'model_estimated' => $row['model_estimated']);
@@ -261,9 +262,9 @@ $sql_models_missing = "SELECT act_id, act_date, ph_measured, ph_estimated
 					WHERE 1	{$extra_sql_missing} 
 					ORDER BY act_date ASC";
 					
-$result_missing = mysql_query($sql_models_missing) or trigger_error();
+$result_missing = DB::query($sql_models_missing) or trigger_error();
 // load associative array
-while ($row = mysql_fetch_assoc($result_missing))
+while ($row = DBResult::fetchRow($result_missing))
 {
 	$blank_models[$row['act_id']] = $row;
 	$nulls_found = true;				

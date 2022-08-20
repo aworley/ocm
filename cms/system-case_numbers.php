@@ -37,10 +37,10 @@ $case_number = pl_grab_post('case_number');
 if($action == 'update') {
 	if($case_number >= 0 && is_numeric($case_number)) {
 		
-		$safe_case_number = mysql_real_escape_string($case_number);
-		mysql_query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
-		mysql_query("UPDATE counters SET count='{$safe_case_number}' WHERE id='case_number' LIMIT 1");
-		mysql_query("UNLOCK TABLES") or trigger_error('error');
+		$safe_case_number = DB::escapeString($case_number);
+		DB::query("LOCK TABLES counters WRITE") or trigger_error('counters table lock failed');
+		DB::query("UPDATE counters SET count='{$safe_case_number}' WHERE id='case_number' LIMIT 1");
+		DB::query("UNLOCK TABLES") or trigger_error('error');
 	}
 }
 
@@ -50,13 +50,13 @@ $sql = "SELECT COUNT(number) AS nbr
 		WHERE 1 
 		AND open_date >= '{$current_year}-01-01' 
 		AND open_date <= '{$current_year}-12-31'";
-$result = mysql_query($sql);
-$row = mysql_fetch_assoc($result);
+$result = DB::query($sql);
+$row = DBResult::fetchRow($result);
 $a['cases_ytd'] = $row['nbr'];
 
 $sql = "SELECT count FROM counters WHERE id = 'case_number' LIMIT 1";
-$result = mysql_query($sql);
-$row = mysql_fetch_assoc($result);
+$result = DB::query($sql);
+$row = DBResult::fetchRow($result);
 $a['new_number'] = $row['count'] + 1;
 $a['new_number_ex'] = "X-" . date('y') . "-" . str_pad(sprintf("%s", ($row['count'] + 1)), 5, '0', STR_PAD_LEFT);
 $a['case_number'] = $row['count'];

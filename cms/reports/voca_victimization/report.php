@@ -151,9 +151,9 @@ $total = array();
 					
 // handle the crazy date range selection
 $range1 = $range2 = "";
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
-$safe_ood = mysql_real_escape_string($ood);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
+$safe_ood = DB::escapeString($ood);
 
 if ($clb && $cle) {
 	$t->add_parameter('Closed Between',$close_date_begin . " - " . $close_date_end);
@@ -187,9 +187,9 @@ $t->display_row_count(false);
 $t->set_header($columns);
 
 
-$result = mysql_query($sql) or trigger_error();
+$result = DB::query($sql) or trigger_error();
 
-$row = mysql_fetch_row($result);
+$row = DBResult::fetchRow($result);
 
 $total=array_combine($labelnames, $row);
 
