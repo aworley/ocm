@@ -37,6 +37,7 @@ $office = pl_grab_post('office');
 $problem = pl_grab_post('problem');
 $funding = pl_grab_post('funding');
 $user_id = pl_grab_post('user_id');
+$show_sql = pl_grab_post('show_sql');
 
 $opposing_name = pl_grab_post('opposing_name');
 
