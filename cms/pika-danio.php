@@ -11,7 +11,7 @@ $auth_row = array();
 
 // CONSTANTS
 if(!defined('PIKA_VERSION'))   {  define('PIKA_VERSION', '7');       }
-if(!defined('PIKA_REVISION'))  {  define('PIKA_REVISION', '0');     }
+if(!defined('PIKA_REVISION'))  {  define('PIKA_REVISION', '1');     }
 if(!defined('PIKA_PATCH_LEVEL'))  {  define('PIKA_PATCH_LEVEL', '0');     }
 if(!defined('PIKA_CODE_NAME')) {  define('PIKA_CODE_NAME', 'danio'); }
 
