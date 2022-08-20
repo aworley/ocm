@@ -45,15 +45,15 @@ switch ($action)
 {
 	case 'edit':
 	
-		$outcome = mysql_real_escape_string($outcome);
+		$outcome = DB::escapeString($outcome);
 		$main_html['content'] = "<a href=\"{$base_url}/system-outcomes.php\">Return to Outcome Goals Listing</a>";
 		$main_html['content'] .= "<form action=\"{$base_url}/system-outcomes.php?action=update&outcome={$outcome}\" method=\"POST\">";
 		$main_html['content'] .= "<textarea name=\"values\" rows=\"18\" class=\"input-xxlarge\">";
 		$sql = "SELECT * FROM outcome_goals WHERE active = 1 AND problem ";
 		$sql .= " = '{$outcome}' ORDER BY outcome_goal_order ASC";
-		$result = mysql_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchRow($result))
 		{
 			$main_html['content'] .= "{$row['goal']}\n";
 		}
@@ -68,7 +68,7 @@ switch ($action)
 	case 'update':
 		require_once('pikaOutcomeGoal.php');
 		
-		$outcome = mysql_real_escape_string(pl_grab_get('outcome'));
+		$outcome = DB::escapeString(pl_grab_get('outcome'));
 		$values = pl_grab_post('values');
 		$new_goals = explode("\n",$values);
 		$old_goals = array();
@@ -77,9 +77,9 @@ switch ($action)
 		print_r($new_goals);
 
 		$sql = "SELECT * FROM outcome_goals WHERE problem='{$outcome}'";
-		$result = mysql_query($sql);
+		$result = DB::query($sql);
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$old_goals[$row['outcome_goal_id']] = $row['goal'];
 		}
@@ -88,7 +88,7 @@ switch ($action)
 		
 		// This code should be moved to an object eventually.
 		$sql = "UPDATE outcome_goals SET active = 0, outcome_goal_order = NULL WHERE problem='{$outcome}'";
-		$result = mysql_query($sql);
+		$result = DB::query($sql);
 		$i = 0;
 		
 		foreach($new_goals as $goal)

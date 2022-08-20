@@ -42,7 +42,7 @@ class pikaUser extends plBase
 	
 	public static function getUserDB() {
 		$sql = "SELECT * FROM users WHERE 1";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		return $result;
 	}
 	
@@ -51,7 +51,7 @@ class pikaUser extends plBase
 		if(is_array($filter)) {
 			foreach ($filter as $key => $val)
 			{
-				$filter[$key] = mysql_real_escape_string($val);
+				$filter[$key] = DB::escapeString($val);
 			}
 			
 			if (isset($filter['enabled']) && strlen($filter['enabled']))
@@ -111,10 +111,10 @@ class pikaUser extends plBase
 		
 		
 		$sql_count = "SELECT COUNT(*) AS nbr FROM users WHERE 1" . $sql_filter;
-		$result = mysql_query($sql_count) or trigger_error('SQL: ' . $sql_count . " Error: " . mysql_error());
+		$result = DB::query($sql_count) or trigger_error('SQL: ' . $sql_count . " Error: " . DB::error());
 		$row_count = 0;
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$row_count = $row['nbr'];
 		}
 		$sql = 	"SELECT users.*, FROM_UNIXTIME(MAX(user_sessions.last_updated)) as last_active 
@@ -148,7 +148,7 @@ class pikaUser extends plBase
 		}
 		$sql .= $sql_order . $sql_limit;
 		
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . " Error: " . DB::error());
 		
 		return $result;
 	}
@@ -166,7 +166,7 @@ class pikaUser extends plBase
 		$user_array = array();
 		$result = self::getUsers($filter,$row_count,'name');
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$user_array[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}

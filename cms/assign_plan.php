@@ -75,7 +75,7 @@ switch ($action)
 
 
 		$result = pikaPensionPlan::getPensionPlansDB($filter,$row_count,$order_field,$order,$offset,$page_size);	
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{	
 			$plan_name = "No Name";
 			if(isset($row['plan_name']) && strlen($row['plan_name']) > 0)

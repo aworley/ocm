@@ -11,14 +11,14 @@ require_once('pikaCase.php');
 
 function send_mail_notification($user_id, $case_id, $case_number, $sender_name)
 {
-	$safe_user_id = mysql_real_escape_string($user_id);
+	$safe_user_id = DB::escapeString($user_id);
 	
 	if (is_numeric($safe_user_id) 
 			&& strlen(pl_settings_get('sparkpost_from_address')) > 0 
 			&& strlen(pl_settings_get('sparkpost_api_key')) > 0)
 	{
-		$result = mysql_query("SELECT email FROM users WHERE user_id = {$safe_user_id}");
-		$row = mysql_fetch_assoc($result);
+		$result = DB::query("SELECT email FROM users WHERE user_id = {$safe_user_id}");
+		$row = DBResult::fetchRow($result);
 		
 		// Send email via SparkPost.
 		$to = $row['email'];
@@ -72,13 +72,13 @@ $body = $_POST['Body'];
 
 $case_id = '';
 
-$clean_number = mysql_real_escape_string($number);
+$clean_number = DB::escapeString($number);
 $phone = substr($clean_number, 5, 3) . '-' . substr($clean_number, 8);
 $area_code = substr($clean_number, 2, 3);
 
 $response_message = "If you are getting this message, an error has occurred.";
 
-$result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_name, extra_name 
+$result = DB::query("SELECT conflict.case_id, first_name, middle_name, last_name, extra_name 
 	FROM contacts 
 	LEFT JOIN conflict ON contacts.contact_id = conflict.contact_id
 	LEFT JOIN cases ON conflict.case_id = cases.case_id
@@ -87,10 +87,10 @@ $result = mysql_query("SELECT conflict.case_id, first_name, middle_name, last_na
 	AND ((area_code = '{$area_code}' AND phone = '{$phone}') 
 	OR (area_code_alt = '{$area_code}' AND phone_alt = '{$phone}'))");
 	
-$i = mysql_num_rows($result);
+$i = DBResult::numRows($result);
 $j = 0;  // Use this to keep track of whether this is the first row processed.
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$case_id = $row['case_id'];
 	$sender_name = pl_text_name($row);

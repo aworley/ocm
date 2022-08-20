@@ -26,7 +26,7 @@ class pikaPbAttorney extends plBase
 	
 	public static function getPbAttorneyDB(){
 		$sql = "SELECT * FROM pb_attorneys WHERE 1";
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
 		return $result;
 	}
 
@@ -37,7 +37,7 @@ class pikaPbAttorney extends plBase
 		// Filter elements need to be escaped
 		foreach ($filter as $key => $val)
 		{
-			$filter[$key] = mysql_real_escape_string($val);
+			$filter[$key] = DB::escapeString($val);
 		}
 
 		if (isset($filter['county']) && $filter['county']){
@@ -75,9 +75,9 @@ class pikaPbAttorney extends plBase
 				FROM pb_attorneys 
 				WHERE 1 $sql_filter";
 
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		if(mysql_num_rows($result) == 1) { 
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchRow($result);
 			$row_count = $row['nbr'];
 		} else { $row_count = 0; }
 		
@@ -85,7 +85,7 @@ class pikaPbAttorney extends plBase
 				FROM pb_attorneys 
 				WHERE 1 $sql_filter $order_sql $limit_sql";
 
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -94,7 +94,7 @@ class pikaPbAttorney extends plBase
 		$pba_array = array();
 		$result = self::getPbAttorneys($filter,$row_count,'name');
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$pba_array[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}

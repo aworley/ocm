@@ -119,7 +119,7 @@ else
 	$activity_list->records_per_page = $paging;
 	$activity_list->page_offset = $offset;
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if (strlen($row['summary']) > 0 && strlen($row['notes']) > 0)
 		{				

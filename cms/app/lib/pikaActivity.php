@@ -53,7 +53,7 @@ class pikaActivity extends plBase
 		{
 			$ignored_fields = array('user_list','pba_list');
 			if(!in_array($key,$ignored_fields)) {
-				$filter[$key] = mysql_real_escape_string($val);
+				$filter[$key] = DB::escapeString($val);
 			}
 		}
 		
@@ -106,12 +106,12 @@ class pikaActivity extends plBase
 		
 		
 		if (isset($filter['start_date']) && $filter['start_date'] && $filter['start_date'] != '0000-00-00'){
-			$safe_start_date = mysql_real_escape_string(pl_date_mogrify($filter['start_date']));
+			$safe_start_date = DB::escapeString(pl_date_mogrify($filter['start_date']));
 			$filter_sql .= " AND act_date >= '{$safe_start_date}'";
 		}
 		
 		if (isset($filter['end_date']) && $filter['end_date'] && $filter['end_date'] != '0000-00-00'){
-			$safe_end_date = mysql_real_escape_string(pl_date_mogrify($filter['end_date']));
+			$safe_end_date = DB::escapeString(pl_date_mogrify($filter['end_date']));
 			$filter_sql .= " AND act_date <= '{$safe_end_date}'";
 		}
 		
@@ -151,10 +151,10 @@ class pikaActivity extends plBase
 				LEFT JOIN cases ON activities.case_id=cases.case_id 
 				LEFT JOIN contacts ON cases.client_id=contacts.contact_id 
 				WHERE 1' . $filter_sql;
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$row_count = 0;
-		if(mysql_num_rows($result) > 0) {
-			$row = mysql_fetch_assoc($result);
+		if(DBResult::numRows($result) > 0) {
+			$row = DBResult::fetchRow($result);
 			$row_count = $row['count'];
 		}
 		
@@ -170,8 +170,8 @@ class pikaActivity extends plBase
 				LEFT JOIN contacts ON cases.client_id=contacts.contact_id 
 				WHERE 1' . $filter_sql;
 		
-		$safe_order_field = mysql_real_escape_string($order_field);
-		$safe_order = mysql_real_escape_string($order);
+		$safe_order_field = DB::escapeString($order_field);
+		$safe_order = DB::escapeString($order);
 		
 		if ($order_field == 'last_name' && $order){
 			$sql .= " ORDER BY last_name, first_name {$safe_order}";
@@ -188,7 +188,7 @@ class pikaActivity extends plBase
 			$sql .= " LIMIT $list_length";
 		}
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	

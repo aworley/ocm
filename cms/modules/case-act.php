@@ -91,7 +91,7 @@ else  // only show these if there are actually activities to sort...
 		$notes_form['notes_order'] = $notes_order->draw();
 	}
 	
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		if (strlen($row['summary']) > 0 && strlen($row['notes']) > 0)
 		{
@@ -140,7 +140,7 @@ require_once('pikaInterview.php');
 $result = pikaInterview::getInterviewsDB(1);
 $menu_interviews = array();
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	$menu_interviews[$row['interview_id']] = $row['name'];
 }

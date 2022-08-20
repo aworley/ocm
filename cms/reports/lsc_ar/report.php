@@ -77,9 +77,9 @@ $range1 = $range2 = "";
 
 $sql = '';
 
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
-$safe_ood = mysql_real_escape_string($ood);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
+$safe_ood = DB::escapeString($ood);
 
 if ($clb && $cle) 
 {
@@ -159,14 +159,14 @@ if ($x != false)
 if ($gender) 
 {
 	$t->add_parameter('Gender Code',$gender);
-	$safe_gender = mysql_real_escape_string($gender);
+	$safe_gender = DB::escapeString($gender);
 	$sql .= " AND gender='{$safe_gender}'";
 }
 
 if ($undup == 1 || ($undup == 0 && $undup != '')) 
 {
 		$t->add_parameter('Undup Service',pl_array_lookup($undup,$menu_undup));
-		$safe_undup = mysql_real_escape_string($undup);
+		$safe_undup = DB::escapeString($undup);
         $sql .= " AND undup = '{$safe_undup}'";
 }
 
@@ -190,8 +190,8 @@ $total['category'] = "";
 	$total["E"] = "0";
 	$total["total"] = "0";
 	
-$result = mysql_query($eth_sql) or trigger_error();
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($eth_sql) or trigger_error();
+while ($row = DBResult::fetchRow($result))
 {
 	$t->add_row($row);
 
@@ -219,9 +219,9 @@ $t->display_row_count(false);
 $total = 0;
 $vet_sql = "SELECT veteran_household, COUNT(*) AS a FROM cases WHERE 1"
 	. $sql . " GROUP BY veteran_household";
-$result = mysql_query($vet_sql) or trigger_error();
+$result = DB::query($vet_sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if ($row['veteran_household'] == '1')
 	{
@@ -258,9 +258,9 @@ $t->display_row_count(false);
 $total = 0;
 $vet_sql = "SELECT gender, COUNT(*) AS a FROM cases LEFT JOIN contacts ON cases.client_id=contacts.contact_id WHERE 1"
 	. $sql . " GROUP BY gender";
-$result = mysql_query($vet_sql) or trigger_error();
+$result = DB::query($vet_sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if ($row['gender'] == 'F')
 	{
@@ -307,9 +307,9 @@ $lang_sql = "SELECT CONCAT(IFNULL(language, 'No Code'), ' - ', IFNULL(label, '')
 	LEFT JOIN menu_language ON contacts.language = menu_language.value
 	WHERE 1"
 	. $sql . " GROUP BY language ORDER BY a DESC";
-$result = mysql_query($lang_sql) or trigger_error();
+$result = DB::query($lang_sql) or trigger_error();
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$t->add_row($row);
 	$total += $row['a'];

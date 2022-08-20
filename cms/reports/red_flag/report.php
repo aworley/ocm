@@ -67,8 +67,8 @@ $sql = "SELECT cases.*, contacts.*
 
 
 
-$safe_open_date_begin = mysql_real_escape_string(pl_date_mogrify($open_date_begin));
-$safe_open_date_end = mysql_real_escape_string(pl_date_mogrify($open_date_end));
+$safe_open_date_begin = DB::escapeString(pl_date_mogrify($open_date_begin));
+$safe_open_date_end = DB::escapeString(pl_date_mogrify($open_date_end));
 
 if ($open_date_begin && $open_date_end) {
 	$t->add_parameter('Cases Opened Between',$open_date_begin . " - " . $open_date_end);
@@ -87,8 +87,8 @@ if ($open_date_begin && $open_date_end) {
 
 $clb = pl_date_mogrify($close_date_begin);
 $cle = pl_date_mogrify($close_date_end);
-$safe_clb = mysql_real_escape_string($clb);
-$safe_cle = mysql_real_escape_string($cle);
+$safe_clb = DB::escapeString($clb);
+$safe_cle = DB::escapeString($cle);
 
 if ($clb) 
 {
@@ -146,8 +146,8 @@ $t->display_row_count(true);
 $t->set_header(array('Number','Client','Status','Office','Atty','Open Date','Close Date','Flags'));
 
 $limit_count = 0;
-$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-while ($row = mysql_fetch_assoc($result))
+$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+while ($row = DBResult::fetchRow($result))
 {
 	$flags_array = pikaFlags::generateFlags($row['case_id']);
 	if(count($flags_array) > 0) {

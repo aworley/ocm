@@ -54,8 +54,8 @@ $date_end = pl_grab_post('date_end');
 $show_sql = pl_grab_post('show_sql');
 
 
-$safe_ds = mysql_real_escape_string(pl_date_mogrify($date_start));
-$safe_de = mysql_real_escape_string(pl_date_mogrify($date_end));
+$safe_ds = DB::escapeString(pl_date_mogrify($date_start));
+$safe_de = DB::escapeString(pl_date_mogrify($date_end));
 
 
 $where_sql = '';
@@ -85,9 +85,9 @@ $t->set_header(array("Client Matters"));
 $t->display_row_count(false);
 
 $sql = "SELECT COUNT(DISTINCT client_id) as clients FROM cases WHERE 1{$where_sql}";
-$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 
-$row = mysql_fetch_assoc($result);
+$row = DBResult::fetchRow($result);
 $t->add_row($row);
 
 if($show_sql) {
@@ -102,9 +102,9 @@ $sql = "SELECT
 		IFNULL(SUM(annuity_total_cash_accumulated),0) as annuity_total_cash_accumulated,
 		IFNULL(SUM(annuity_total_present_value),0) as annuity_total_present_value
 		 FROM cases WHERE 1{$where_sql}";
-$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 
-$row = mysql_fetch_assoc($result);
+$row = DBResult::fetchRow($result);
 $t->add_row(array($row['annuity_total_cash_accumulated'] . " to " . $row['annuity_total_present_value']));
 
 if($show_sql) {
@@ -149,9 +149,9 @@ $t->set_header($cols);
 $pension_services = pl_menu_get('pension_services');
 
 
-$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	$row['pension_services'] = pl_array_lookup($row['pension_services'],$pension_services);
 	$t->add_row($row);
@@ -201,9 +201,9 @@ $t->set_header($cols);
 $pension_services = pl_menu_get('pension_services');
 
 
-$result = mysql_query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . mysql_error());
+$result = DB::query($sql) or trigger_error('SQL:' . $sql . ' Error: ' . DB::error());
 
-while($row = mysql_fetch_assoc($result))
+while($row = DBResult::fetchRow($result))
 {
 	$row['pension_services'] = pl_array_lookup($row['pension_services'],$pension_services);
 	$t->add_row($row);

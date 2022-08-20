@@ -41,7 +41,7 @@ class pikaInterview extends plBase
 		
 		$sql .= " ORDER BY name ASC, enabled DESC;";
 		
-		return mysql_query($sql);
+		return DB::query($sql);
 	}
 	
 	public function save() {

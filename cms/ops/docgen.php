@@ -205,7 +205,7 @@ $a['full_address'] = pikaTempLib::plugin('text_address','',$recipient_row,'',arr
 
 $result = $case1->getContactsDb();
 $referral_agencies = '';
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	if($row['relation_code'] == 50) {
 		$row['full_address'] = pikaTempLib::plugin('text_address','',$row,'',array('nobreak',"output={$output_format}"));

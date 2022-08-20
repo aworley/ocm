@@ -41,7 +41,7 @@ function pba_list($field_name = null, $field_value = null, $menu_array = null, $
 	$pba_array = array();
 	$row_count = 0;
 	$result = pikaPbAttorney::getPbAttorneys(array(),$row_count,'atty_name','ASC',0,0);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = DBResult::fetchRow($result))
 	{
 		$pba_array[$row['pba_id']] = pikaTempLib::plugin('text_name','',$row,'',array('order=last','no_extra','no_middle'));
 	}

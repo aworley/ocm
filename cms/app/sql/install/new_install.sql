@@ -1,3 +1,5 @@
+SET sql_mode = '';
+
 --
 -- Table structure for table `activities`
 --
@@ -195,6 +197,8 @@ CREATE TABLE `cases` (
   `doc2` int(11) default NULL,
   `vawa_served` tinyint(4) default NULL,
   `unread_sms` tinyint(4) NOT NULL default 0,
+  lsc_justice_gap TINYINT,
+  udf JSON,
   PRIMARY KEY  (`case_id`),
   UNIQUE KEY `number` (`number`),
   KEY `client_id` (`client_id`),
@@ -868,6 +872,15 @@ CREATE TABLE `menu_yes_no` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE TABLE `menu_lsc_justice_gap` (
+  `value` tinyint(4) DEFAULT NULL,
+  `label` char(128) DEFAULT NULL,
+  `menu_order` tinyint(4) NOT NULL DEFAULT '0',
+  KEY `label` (`label`),
+  KEY `menu_order` (`menu_order`),
+  KEY `val` (`value`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Table structure for table `motd`
 --
@@ -957,6 +970,15 @@ CREATE TABLE `rss_feeds` (
   PRIMARY KEY  (`feed_id`)
 ) ENGINE = INNODB;
 
+--
+-- Table structure for table `screens`
+--
+
+CREATE TABLE `screens` (
+  `screen_id` int(11) DEFAULT NULL,
+  `screen_name` char(32) NOT NULL,
+  `screen_fields` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- 
 -- Table structure for table `settings`
@@ -995,6 +1017,16 @@ CREATE TABLE transfers (
   KEY accepted (accepted)
 ) ENGINE = INNODB;
 
+--
+-- Table structure for table `udfs`
+--
+
+CREATE TABLE `udfs` (
+  `udf_id` int(11) DEFAULT NULL,
+  `label` char(64) DEFAULT NULL,
+  `data_type` char(2) DEFAULT NULL,
+  `table_name` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `users`
@@ -1140,6 +1172,7 @@ INSERT INTO `menu_just_income` VALUES ('A','Govmt. Benefits Program',0),('B','Hi
 INSERT INTO `menu_language` VALUES ('A','Albanian',0),('B','Cambodian',1),('C','Creole',2),('D','Somali',3),('E','English',4),('F','French',6),('G','German',7),('H','Sign Language',8),('I','Italian',9),('J','Japanese',10),('K','Korean',11),('L','Hmong',12),('M','Mandarin',13),('O','Other',14),('P','Polish',15),('R','Russian',16),('S','Spanish',17),('T','Turkish',18),('V','Vietnamese',19),('W','Serbian',20),('X','Cantonese',21),('Y','Yiddish',22);
 INSERT INTO `menu_lit_status` VALUES ('1','Defendant',0),('2','Petitioner',1),('3','Plaintiff',2),('4','Respondent',3),('5','Appellant',4);
 INSERT INTO `menu_lsc_income_change` VALUES ('0','Not Likely to Change',0),('1','Likely to Increase',1),('2','Likely to Decrease',2);
+INSERT INTO `menu_lsc_justice_gap` VALUES (1,'Unable to Serve - Ineligible',0),(2,'Unable to Serve - Conflict of Interest',1),(3,'Unable to Serve - Outside of Program Priorities or Case Acceptance Guidelines',2),(4,'Unable to Serve - Insufficient Resources',3),(5,'Unable to Serve - Other Reasons',4),(6,'Unable to Serve Fully - Insufficient Resources - Provision of Legal Information or Pro Se Resources',5),(7,'Unable to Serve Fully - Insufficient Resources - Provided Limited Service',6),(12,'Unable to Serve Fully - Insufficient Resources - Provided Some Extended Service',7),(8,'Fully Served - Provision of Legal Information or Pro Se Resources',8),(9,'Fully Served - Provision of Limited Services',9),(10,'Fully Served - Extended Service Case Accepted',10),(11,'Pending',11);
 INSERT INTO `menu_lsc_other_services` VALUES ('101','101 - Presentations to community groups',0),('102','102 - Legal education brochures',1),('103','103 - Legal education materials posted on web sites',2),('104','104 - Newsletter articles addressing Legal Ed topics',3),('105','105 - Video legal education materials',4),('109','109 - Other CLE',5),('111','111 - Workshops or Clinics',6),('112','112 - Help desk at court',7),('113','113 - Self-help printed materials (e.g. divorce kits)',8),('114','114 - Self-help materials posted on web site',9),('115','115 - Self-help materials posted on kiosks',10),('119','119 - Other Pro Se assistance',11),('121','121 - Referred to other provider of civil legal services',12),('122','122 - Referred to private bar',13),('123','123 - Referred to provider of human or social services',14),('129','129 - Referred to other source of  assistance',15);
 INSERT INTO `menu_main_benefit` VALUES ('0000','0000 00 No Main Benefit for Client',0),('0101','0101 01 Obtained federal bankruptcy protection',1),('0201','0201 02 Stopped debt collection harassment',2),('0301','0301 03 Overcame illegal sales contracts and/or warranties',3),('0401','0401 04 Overcame discrimination in obtaining credit',4),('0501','0501 05 Prevented or overcame utility termination',5),('0601','0601 06 Loans/Installment Purch.',6),('0701','0701 07 Prevented or overcame utility termination',7),('0801','0801 08 Unfair Sales Practices',8),('0901','0901 09 Obtained advice, brief services or referral on Consumer matter',9),('1103','1103 11 Obtained advice, brief services or referral on an Ed. matter',10),('2101','2101 21 Overcame job discrimination',11),('2201','2201 22 Obtained wages due',12),('2903','2903 29 Obtained advice, brief services or referral on Employment. matter',13),('3001','3001 30 Successful Adoption',14),('3102','3102 31 Obtained or preserved right to visitation',15),('3201','3201 32 Obtained a divorce, legal separation, or annulment',16),('3302','3302 33 Obtained guardianship for adoption for dependent child',17),('3401','3401 34 Name Change',18),('3501','3501 35 Prevented termination of parental rights',19),('3601','3601 36 Established paternity for a child',20),('3701','3701 37 Obtained protective order for victim of domestic violence',21),('3802','3802 38 Removed/Reduced Unfair Child Support',22),('3901','3901 39 Obtained advice, brief services or referral on a Family matter',23),('4101','4101 41 Delinquent',24),('4203','4203 42 Obtained advice, brief services or referral on Juvenile matter',25),('4901','4901 49 Other Juvenile',26),('5101','5101 51 Gained access to Medicare or Medicaid provider',27),('5201','5201 52 Obtained/preserved/increased Medicare or Medicaid benefits/rights',28),('5907','5907 59 Obtained advice, brief services or referral on a Health matter',29),('6101','6101 61 Obtained access to housing',30),('6201','6201 62 Avoided foreclosure or other loss of home',31),('6305','6305 63 Obtained repairs to dwelling',32),('6401','6401 64 Prevented denial of public housing tenant\'s rights',33),('6902','6902 69 Obtained advice, brief services or referral on a Housing matter',34),('7101','7101 71 Obtained/preserved/increased AFDC/other welfare benefit/right',35),('7201','7201 72 Black Lung',36),('7301','7301 73 Obtained/preserved/increased food stamps eligibility/right',37),('7401','7401 74 Social Security',38),('7501','7501 75 Obtained/preserved/increased SSI/SSD benefit/right',39),('7601','7601 76 Obtained/preserved/increased Unemployment comp. benefit/right',40),('7701','7701 77 Obtained/preserved/increased Veterans Benefits',41),('7801','7801 78 Obtained/preserved/increased Worker\'s Compensation',42),('7901','7901 79 Obtained advice, brief services or referral on an Income M. matter',43),('8105','8105 81 Other Immigration Benefit',44),('8201','8201 82 Mental Health',45),('8301','8301 83 Prisoner\'s Rights',46),('8402','8402 84 Obtained/preserved/increased benefits/rights of instit. persons',47),('8901','8901 89 Obtained advice, brief services or referral on an Ind. Rights matter',48),('9102','9102 91 Obtained assistance with other structural or governance issues.',49),('9201','9201 92 Indian / Tribal Law',50),('9301','9301 93 Overcame illegal taking of or restriction to a driver\'s license',51),('9401','9401 94 Defended a Torts action',52),('9502','9502 95 Obtained a living will or health proxy or power of attorney',53),('9901','9901 99 Obtained other benefit',54);
 INSERT INTO `menu_marital` VALUES ('S','Single',0),('M','Married',1),('D','Divorced',2),('W','Widowed',3),('P','Separated',4);

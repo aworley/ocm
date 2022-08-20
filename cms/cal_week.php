@@ -225,7 +225,7 @@ function draw_week($cal_date='', $user_id='', $user_list)
 	// Get activities for this week
 	$result = $pk->fetchActivitiesCaseClient($filter, $tmp, 'user_id, act_time', 'ASC', 0, 1000);
 
-	while ($row = $result->fetchRow())
+	while ($row = DBResult::fetchRow($result))
 	{
 		if (1 == $row["completed"])
 		{

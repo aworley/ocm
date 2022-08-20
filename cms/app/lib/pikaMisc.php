@@ -31,10 +31,10 @@ class pikaMisc
 	public static function fetchPbAttorneyArray()
 	{
 		$sql = "SELECT * FROM pb_attorneys ORDER BY last_name";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$a = array();  // make sure we return an empty array if no attys are found
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[$row['pba_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -47,9 +47,9 @@ class pikaMisc
 	public static function fetchStaffArray()
 	{
 		$sql = "SELECT * FROM users ORDER BY last_name";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -62,9 +62,9 @@ class pikaMisc
 	{
 		$a = array();
 		$sql = "SELECT user_id, first_name, middle_name, last_name, extra_name FROM users WHERE enabled = '1' AND attorney = '1' OR user_id IN ('{$v1}', '{$v2}', '{$v3}') ORDER BY last_name, first_name, middle_name";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[$row['user_id']] = "{$row['last_name']}, {$row['first_name']} {$row['middle_name']} {$row['extra_name']}";
 		}
@@ -92,16 +92,16 @@ class pikaMisc
 	public static function getActivitiesByText($text_str, &$row_count, $order_field='act_date', $order='ASC', $first_row='0', $list_length='50')
 	{
 		
-		$clean_text_str = mysql_real_escape_string($text_str);
+		$clean_text_str = DB::escapeString($text_str);
 		
 		$sql = "SELECT COUNT(*) as nbr
 				FROM activities
 				WHERE summary LIKE '%{$clean_text_str}%'
 				OR notes LIKE '%{$clean_text_str}%'";
 		//echo $sql;
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+		if(DBResult::numRows($result) == 1) {
+			$row = DBResult::fetchArray($result);
 			$row_count = $row['nbr'];
 		} else { $row_count = 0; }
 		
@@ -114,29 +114,29 @@ class pikaMisc
 			$safe_order = 'DESC';
 		} else { $safe_order = 'ASC'; }
 		if($order_field) {
-			$safe_order_field = mysql_real_escape_string($order_field);
+			$safe_order_field = DB::escapeString($order_field);
 			$sql .= " ORDER BY {$safe_order_field} {$safe_order}";
 		}
 		if(!$first_row || !is_numeric($first_row)) {
 			$first_row = 0;
 		}
-		$safe_first_row = mysql_real_escape_string($first_row);
+		$safe_first_row = DB::escapeString($first_row);
 		if(!$list_length || !is_numeric($list_length)) {
 			$list_length = 50;
 		}
-		$safe_list_length = mysql_real_escape_string($list_length);
+		$safe_list_length = DB::escapeString($list_length);
 		$sql .= " LIMIT $safe_first_row, $safe_list_length";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
 	public function getCasesAll()
 	{
 		$sql = "SELECT * FROM cases ORDER BY number ASC LIMIT 5000";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		$a = array();
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -157,7 +157,7 @@ class pikaMisc
 
 		foreach ($filter as $key => $val)
 		{
-			$filter[$key] = mysql_real_escape_string($val);
+			$filter[$key] = DB::escapeString($val);
 			
 			// Determine whether the row count SQL can be used or not.
 			if ('show_cases' == $key)
@@ -241,7 +241,7 @@ class pikaMisc
 
 		if (isset($filter["status"]) && $filter["status"])
 		{
-			$sql .= " AND status={$filter["status"]}";
+			$sql .= " AND status='{$filter["status"]}'";
 		}
 
 
@@ -323,8 +323,8 @@ class pikaMisc
 			$mini_sql .= " UNION ALL SELECT COUNT(case_id) AS case_sub_count {$sql} AND cases.cocounsel1 = '{$filter["user_id"]}'";
 			$mini_sql .= " UNION ALL SELECT COUNT(case_id) AS case_sub_count {$sql} AND cases.cocounsel2 = '{$filter["user_id"]}') AS case_count_tmp";
 			// Reminder/note:  case_count_tmp is the name of the table created by the UNIONs.
-			$result = mysql_query($mini_sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-			$row = mysql_fetch_assoc($result);
+			$result = DB::query($mini_sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+			$row = DBResult::fetchArray($result);
 			$row_count = $row['case_count'];
 		}
 		
@@ -342,8 +342,8 @@ class pikaMisc
 				$count_sql = 'SELECT COUNT(case_id) AS count' . $sql;
 			}
 			
-			$result = mysql_query($count_sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-			$row = mysql_fetch_assoc($result);
+			$result = DB::query($count_sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+			$row = DBResult::fetchArray($result);
 			$row_count = $row['count'];
 		}
 
@@ -353,8 +353,8 @@ class pikaMisc
 
 		// Determine whether to use the supervisor field.
 		$sup = "";
-		$sresult = mysql_query("DESCRIBE cases supervisor");
-		if (mysql_num_rows($sresult) == 1)
+		$sresult = DB::query("DESCRIBE cases supervisor");
+		if (DBResult::numRows($sresult) == 1)
 		{
 			$sup = " cases.supervisor,";
 		}
@@ -419,7 +419,7 @@ class pikaMisc
 		} elseif ($list_length){
 			$full_sql .= " LIMIT $list_length";
 		}
-		$result = mysql_query($full_sql) or trigger_error("SQL: " . $full_sql . " Error: " . mysql_error());
+		$result = DB::query($full_sql) or trigger_error("SQL: " . $full_sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -519,8 +519,8 @@ class pikaMisc
 			$match_last = 'last_name';
 		}
 
-		$clean_mp_first = mysql_real_escape_string($mp_first);
-		$clean_mp_last = mysql_real_escape_string($mp_last);
+		$clean_mp_first = DB::escapeString($mp_first);
+		$clean_mp_last = DB::escapeString($mp_last);
 
 		/*	Organizations will only have a $last_name, which makes them a
 		special case.
@@ -549,7 +549,7 @@ class pikaMisc
 			trigger_error('Missing last name - cannot search');
 		}
 		
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -577,33 +577,33 @@ class pikaMisc
 				*/
 		
 		$x = pl_keywords_build($first_name, $middle_name, $last_name, $extra_name);
-		$clean_x = mysql_real_escape_string($x);
+		$clean_x = DB::escapeString($x);
 		
 		if (strlen($first_name) > 0)
 		{
 			$first_name_weight = "IF(a.first_name LIKE '" .
-				mysql_real_escape_string($first_name) . "', 1.05, 1.0) * ";
+				DB::escapeString($first_name) . "', 1.05, 1.0) * ";
 		}
 		
 		if (strlen($last_name) > 0)
 		{
 			$last_name_weight = "IF(a.last_name LIKE '" .
-				mysql_real_escape_string($last_name) . "', 1.05, 1.0) * ";
+				DB::escapeString($last_name) . "', 1.05, 1.0) * ";
 		}
 		
 		if (strlen($birth_date) == 10)
 		{
 			$birth_date_weight = "IF(birth_date = '" .
-				mysql_real_escape_string($birth_date) . "', 1.20, 1.0) * ";
+				DB::escapeString($birth_date) . "', 1.20, 1.0) * ";
 		}
 		
 		if (strlen($ssn) > 3)
 		{
 			$ssn_weight = "IF(a.ssn LIKE '" .
-				mysql_real_escape_string($ssn) . "', 1.02, 1.0) * ";
+				DB::escapeString($ssn) . "', 1.02, 1.0) * ";
 		}
 		
-		$clean_last_name = mysql_real_escape_string($last_name);
+		$clean_last_name = DB::escapeString($last_name);
 		$sql = "SELECT contacts.*,
 					{$first_name_weight}{$last_name_weight}{$birth_date_weight}{$ssn_weight}
 					match(keywords) against('{$clean_x}') as score,
@@ -612,19 +612,19 @@ class pikaMisc
 					FROM aliases as a LEFT JOIN contacts ON a.contact_id=contacts.contact_id
 					where match(keywords) against('{$clean_x}') 
 					order by score desc";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		if (mysql_num_rows($result) == 0)
+		if (DBResult::numRows($result) == 0)
 		{
 			$sql = "SELECT count(*) as a FROM aliases";
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-			$row = mysql_fetch_assoc($result);
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+			$row = DBResult::fetchArray($result);
 			
 			if ($row['a'] > 0)
 			{
 				$sql = "SELECT count(*) as a FROM aliases WHERE keywords IS NOT NULL";
-				$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-				$row = mysql_fetch_assoc($result);
+				$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+				$row = DBResult::fetchArray($result);
 				
 				if ($row['a'] == 0)
 				{
@@ -641,10 +641,10 @@ class pikaMisc
 	public static function getContactOffset($last_name, $first_name = '', $middle_name = '')
 	{
 		// Note:  names should all be handled case-insensitively.  :)
-		$clean_last_name = mysql_real_escape_string(strtolower($last_name));
-		$clean_first_name = mysql_real_escape_string(strtolower($first_name));
-		$clean_middle_name = mysql_real_escape_string(strtolower($middle_name));
-		$clean_letter = mysql_real_escape_string(strtolower($last_name[0]));
+		$clean_last_name = DB::escapeString(strtolower($last_name));
+		$clean_first_name = DB::escapeString(strtolower($first_name));
+		$clean_middle_name = DB::escapeString(strtolower($middle_name));
+		$clean_letter = DB::escapeString(strtolower($last_name[0]));
 
 		if (strlen($first_name) > 1)
 		{
@@ -656,29 +656,29 @@ class pikaMisc
 			$sql = "SELECT COUNT(*) AS 'position' FROM aliases WHERE last_name LIKE '{$clean_letter}%' AND last_name < '{$clean_last_name}'";
 		}
 
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-		$row = mysql_fetch_assoc($result);
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+		$row = DBResult::fetchArray($result);
 		return $row['position'];
 	}
 
 	public static function getContactsAlphabetically(&$dataset_size, $letter, $offset, $limit = 5)
 	{
-		$clean_letter = mysql_real_escape_string($letter);
-		$clean_offset = mysql_real_escape_string($offset);
-		$clean_limit = mysql_real_escape_string($limit);
+		$clean_letter = DB::escapeString($letter);
+		$clean_offset = DB::escapeString($offset);
+		$clean_limit = DB::escapeString($limit);
 
-		// get the total number of contacts
-		$result = mysql_query("SELECT COUNT(*) AS Rows FROM aliases WHERE last_name LIKE '{$clean_letter}%'")
+		// get the total number of contacts ## modified 072219 following db server version upgrade: replaced "Rows" alias (reserved word as of version 10.2.4) ##
+		$result = DB::query("SELECT COUNT(*) AS RowCount FROM aliases WHERE last_name LIKE '{$clean_letter}%'")
 			or trigger_error("Could not count the full list of alias records.");
-		$row = mysql_fetch_assoc($result);
-		$dataset_size = $row['Rows'];
+		$row = DBResult::fetchArray($result);
+		$dataset_size = $row['RowCount'];
 
 		$sql = "SELECT contacts.*, aliases.last_name AS last_name, aliases.first_name AS first_name, aliases.extra_name AS extra_name, aliases.middle_name AS middle_name
 			    FROM aliases LEFT JOIN contacts ON aliases.contact_id=contacts.contact_id 
 				WHERE aliases.last_name LIKE '{$clean_letter}%'
 			    ORDER BY aliases.last_name, aliases.first_name, aliases.extra_name, aliases.middle_name
 			    LIMIT {$clean_offset}, {$clean_limit}";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -692,7 +692,7 @@ class pikaMisc
 		
 		foreach ($filter as $key => $val)
 		{
-			$filter[$key] = mysql_real_escape_string($val);
+			$filter[$key] = DB::escapeString($val);
 		}
 
 		if (isset($filter['notes']))
@@ -727,7 +727,7 @@ class pikaMisc
 		}
 		
 		$full_sql .= " ORDER BY last_name, first_name";
-		$result = mysql_query($full_sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($full_sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -738,9 +738,9 @@ class pikaMisc
 		$a = array();
 		$sql = "SELECT summary, act_time FROM activities WHERE user_id={$auth_row['user_id']} LIMIT 10";
 		//$sql = "SELECT summary, act_time FROM activities";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -751,11 +751,11 @@ class pikaMisc
 	
 	public static function getIntakes()
 	{
-		$result = mysql_query('SELECT intakes.*, contacts.first_name as \'contacts.first_name\', contacts.middle_name AS \'contacts.middle_name\',
+		$result = DB::query('SELECT intakes.*, contacts.first_name as \'contacts.first_name\', contacts.middle_name AS \'contacts.middle_name\',
 			contacts.last_name AS \'contacts.last_name\', contacts.extra_name AS \'contacts.extra_name\', 
 			area_code, phone FROM intakes 
 			LEFT JOIN contacts ON intakes.client_id=contacts.contact_id
-			ORDER BY last_name, first_name') or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+			ORDER BY last_name, first_name') or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 
@@ -999,13 +999,15 @@ class pikaMisc
 		lists w/o filters.  Instead of doing a "COUNT(*)" to determine
 		the number of records in the resulting list, it uses "SHOW STATUS
 		TABLES" to get the number of records in the 'cases' table.  This
-		is of course MySQL-specific.
+		is of course MySQL-specific. ## modified 072219 following db server 
+		version upgrade: replaced "Rows" alias (reserved word as of version 
+		10.2.4) ##
 		*/
 		$db_name = pl_settings_get('db_name');
-		$result = mysql_query("SELECT COUNT(*) AS Rows FROM cases WHERE matter = '1' AND active_matter = '1'")
+		$result = DB::query("SELECT COUNT(*) AS RowCount FROM cases WHERE matter = '1' AND active_matter = '1'")
 		or trigger_error("Count not count all matters records");
-		$row = mysql_fetch_assoc($result);
-		$row_count = $row['Rows'];
+		$row = DBResult::fetchArray($result);
+		$row_count = $row['RowCount'];
 
 
 		/*	next, run a query on matter-mode case record, sorting the results and only
@@ -1039,7 +1041,7 @@ class pikaMisc
 			WHERE matter = '1' AND active_matter = '1'";
 
 		$sql .= " LIMIT {$list_length}";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -1047,7 +1049,7 @@ class pikaMisc
 	public static function getMotdEntries()
 	{
 		$sql = "SELECT motd.*, users.* FROM motd LEFT JOIN users ON motd.user_id = users.user_id";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 	
@@ -1057,7 +1059,7 @@ class pikaMisc
 		$a = array();
 		pikaMisc::getMotdEntries();
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -1075,9 +1077,9 @@ class pikaMisc
 	{
 		$a = array();
 		$sql = "SELECT * FROM megareports ORDER BY report_title ASC";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		
-		while ($row = mysql_fetch_assoc($result)) 
+		while ($row = DBResult::fetchArray($result))
 		{
 			$a[] = $row;
 		}
@@ -1143,13 +1145,11 @@ class pikaMisc
 			break;
 			
 			case 'contacts':
-			default:
 			$pager_url = 'addressbook.php';
 			$template_file = 'subtemplates/contact_list.html';
 			break;
 			
 			case 'case_contact':
-			default:
 			$pager_url = 'case_contact.php';
 			$template_file = 'subtemplates/case_contact_list.html';
 			$case_id = pl_grab_get('case_id');
@@ -1193,7 +1193,7 @@ class pikaMisc
 			$high_score = null;
 			$cutoff_score = null;
 			
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchArray($result))
 			{
 				if (pl_mysql_column_exists('aliases', 'keywords'))
 				{
@@ -1335,7 +1335,7 @@ class pikaMisc
 			$i = 1;
 			$j = 0;
 			$matches_found = 0;
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchArray($result))
 			{
 				$row['row_class'] = $i;
 				
@@ -1399,7 +1399,7 @@ class pikaMisc
 
 			$i = 1;
 			$matches_found = 0;
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchArray($result))
 			{
 				$row['row_class'] = $i;
 				if ($i > 1)
@@ -1446,7 +1446,7 @@ class pikaMisc
 
 			$i = 1;
 			$matches_found = 0;
-			while ($row = mysql_fetch_assoc($result))
+			while ($row = DBResult::fetchArray($result))
 			{
 				$row['row_class'] = $i;
 				if ($i > 1)
@@ -1493,7 +1493,7 @@ class pikaMisc
 
 			$result = $intake->getContactsDb();
 			
-			while ($r = mysql_fetch_assoc($result))
+			while ($r = DBResult::fetchArray($result))
 			{
 				$content_t['case_contacts'] .= "<i class=\"icon-user\"></i> " . pl_text_name($r) 
 				. " (" . $r['role'] . ")&nbsp;&nbsp;&nbsp;";
@@ -1547,7 +1547,7 @@ class pikaMisc
 		$sql = "SELECT compens.*
 						FROM compens
 						WHERE compens.case_id=$case_id";
-		$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
+		$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
 		return $result;
 	}
 }

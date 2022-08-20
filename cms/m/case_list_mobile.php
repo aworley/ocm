@@ -128,7 +128,7 @@ else
 // begin CASE LIST
 $i = 1;
 $result = pikaMisc::getCases($filter, $row_count, $order_field, $order, $offset, $page_size);
-while ($row = mysql_fetch_assoc($result))
+while ($row = DBResult::fetchRow($result))
 {
 	$row['row_class'] = $i;
 	

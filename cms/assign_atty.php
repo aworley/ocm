@@ -97,7 +97,7 @@ if ($do_search)
 {
 $result = pika_get_attorneys($filter, $pba_count, $offset, $pikaDefPaging);
 
-while ($row = $result->fetchRow())
+while ($row = DBResult::fetchRow($result))
 {
 	$row['full_address'] = pl_format_address($row);
 	$row['full_name'] = pl_format_name($row);

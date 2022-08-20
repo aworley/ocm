@@ -63,7 +63,7 @@ if (!pika_authorize('users', $a))
 
 $result = pikaGroup::getGroupsDB();
 $groups = array();
-while ($row = mysql_fetch_assoc($result)) 
+while ($row = DBResult::fetchRow($result))
 {
 	$groups[$row['group_id']] = $row['group_id'];
 }
@@ -146,7 +146,7 @@ switch ($action)
 		$row_count = 0;
 		$result = pikaUser::getUsers($filter,$row_count,$order_field,$order,$offset,$page_size);
 		
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = DBResult::fetchRow($result))
 		{
 			$r = array();
 			$r['user_id'] = $row['user_id'];

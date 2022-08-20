@@ -21,6 +21,7 @@ class pikaTransfer extends plBase
 	{
 		$this->db_table = 'transfers';
 		parent::__construct($transfer_id);
+		$this->created = date('Y-m-d G:i:s');
 	}
 }
 

@@ -46,9 +46,9 @@ class pikaDocument extends plBase
 						AND doc_id = {$folder}
 						AND folder = 1
 						LIMIT 1";
-					$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-					if (mysql_num_rows($result) != 0) {
-						$row = mysql_fetch_assoc($result);
+					$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+					if (DBResult::numRows($result) != 0) {
+						$row = DBResult::fetchRow($result);
 						$folder_ptr = $folder = $row['folder_ptr'];
 						$folders[] = $row;
 					}
@@ -71,16 +71,16 @@ class pikaDocument extends plBase
 									);
 		$folder_sql = '';
 		if (!is_null($folder) && $folder && is_numeric($folder)) {
-			$safe_folder = mysql_real_escape_string($folder);
+			$safe_folder = DB::escapeString($folder);
 			$folder_sql = "AND folder_ptr = '{$safe_folder}'";
 		} else {
 			$folder_sql = "AND (folder_ptr IS NULL OR folder_ptr = '0')";
 		}
 		if(isset($doc_type_mappings[$doc_type])) {
-			$safe_doc_type = mysql_real_escape_string($doc_type);
+			$safe_doc_type = DB::escapeString($doc_type);
 			$id_lookup = '';
 			if(!is_null($id) && $doc_type_mappings[$doc_type]) {
-				$safe_id = mysql_real_escape_string($id);
+				$safe_id = DB::escapeString($id);
 				$id_lookup = "AND {$doc_type_mappings[$doc_type]} = '{$safe_id}'";
 			}
 			$sql = "SELECT doc_id, doc_name,
@@ -94,8 +94,8 @@ class pikaDocument extends plBase
 					ORDER BY folder DESC, doc_name ASC
 					LIMIT 5000";
 			//echo $sql;
-			$result = mysql_query($sql) or trigger_error("SQL: " . $sql . " Error: " . mysql_error());
-			while ($row = mysql_fetch_assoc($result)) {
+			$result = DB::query($sql) or trigger_error("SQL: " . $sql . " Error: " . DB::error());
+			while ($row = DBResult::fetchRow($result)) {
 				$file_array[] = $row;		
 			}
 		}
@@ -107,7 +107,7 @@ class pikaDocument extends plBase
 	
 	public static function getDocumentsByText($text_str)
 	{
-		$clean_text_str = mysql_real_escape_string($text_str);
+		$clean_text_str = DB::escapeString($text_str);
 		$limit = 30;
 		
 		
@@ -129,7 +129,7 @@ class pikaDocument extends plBase
 					OR description LIKE '%{$clean_text_str}%' 
 					OR doc_text LIKE '%{$clean_text_str}%')
 				LIMIT {$limit}";
-		$result = mysql_query($sql) or trigger_error(mysql_error());
+		$result = DB::query($sql) or trigger_error(DB::error());
 		return $result;
 	}
 	
@@ -345,16 +345,16 @@ class pikaDocument extends plBase
 	
 	public function isFolder($folder_ptr = null) {
 		if (!is_null($folder_ptr) && is_numeric($folder_ptr)) {
-			$folder_ptr = mysql_real_escape_string($folder_ptr);
+			$folder_ptr = DB::escapeString($folder_ptr);
 			$sql = "SELECT folder 
 					FROM doc_storage 
 					WHERE 1 
 					AND folder = 1 
 					AND doc_id = {$folder_ptr}
 					LIMIT 1";
-			$result = mysql_query($sql) or trigger_error();
+			$result = DB::query($sql) or trigger_error();
 			
-			if (mysql_num_rows($result) == 1) { return true;}
+			if (DBResult::numRows($result) == 1) { return true;}
 			else { return false; }
 		}
 		else { return false; }
@@ -365,18 +365,18 @@ class pikaDocument extends plBase
 		$folder_array = array();
 		
 		if (isset($filter['doc_type']) && $filter['doc_type']) {
-			$safe_doc_type = mysql_real_escape_string($filter['doc_type']);
+			$safe_doc_type = DB::escapeString($filter['doc_type']);
 			$selection_sql = " AND doc_type = '{$safe_doc_type}' ";
 		} else {
 			return $folder_array;
 		}
 		
 		if ($filter['doc_type'] == 'C' && isset($filter['case_id']) && is_numeric($filter['case_id'])) {
-			$safe_case_id = mysql_real_escape_string($filter['case_id']);
+			$safe_case_id = DB::escapeString($filter['case_id']);
 			$selection_sql = " AND case_id = '{$safe_case_id}'";
 		}
 		if ($filter['doc_type'] == 'R' && isset($filter['report_name']) && strlen($filter['report_name'])) {
-			$safe_report_name = mysql_real_escape_string($filter['report_name']);
+			$safe_report_name = DB::escapeString($filter['report_name']);
 			$selection_sql = " AND report_name = '{$safe_report_name}'";
 		}
 		
@@ -388,8 +388,8 @@ class pikaDocument extends plBase
 						{$selection_sql} 
 						AND folder = 1";
 		//echo $sql;
-		$result = mysql_query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . mysql_error());
-		while ($row = mysql_fetch_assoc($result)) {
+		$result = DB::query($sql) or trigger_error('SQL: ' . $sql . ' Error: ' . DB::error());
+		while ($row = DBResult::fetchRow($result)) {
 			$folder_array[] = $row;
 		}
 		return $folder_array;
