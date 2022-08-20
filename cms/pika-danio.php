@@ -460,9 +460,12 @@ function pika_init()
 
 	
 	// destroy all MAGIC QUOTES
-	if (get_magic_quotes_runtime() == true)
+	if (PHP_VERSION_ID < 80000)
 	{
+	  if (get_magic_quotes_runtime() == true)
+	  {
 		set_magic_quotes_runtime(false);
+	  }
 	}
 	
 	/* The default pl_template tag prefix and suffix are '[[' and ']]',
